@@ -1,0 +1,25 @@
+.logotipo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logotipo__imagem {
+  width: var(--tamanho-icone, 48px);
+  height: var(--tamanho-icone, 48px);
+  object-fit: contain;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Substituto textual exibido enquanto não houver a imagem do logo. */
+.logotipo__substituto {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+  color: var(--cor-texto);
+}
+
+.logotipo__destaque {
+  color: var(--cor-principal);
+}

@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Tela de login — layout em duas colunas (destaque + formulário)
+   ========================================================================== */
+
+.login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ----- Painel de destaque (lado esquerdo) ----- */
+
+.login__destaque {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 4rem;
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(224, 205, 85, 0.12),
+      transparent 55%
+    ),
+    linear-gradient(160deg, #1d1c17 0%, #141414 70%);
+  border-right: 1px solid var(--cor-borda);
+}
+
+.login__destaque-conteudo {
+  position: relative;
+  z-index: 2;
+  max-width: 420px;
+}
+
+.login__titulo-marca {
+  margin-top: 2.5rem;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  color: var(--cor-texto);
+}
+
+.login__subtitulo-marca {
+  margin-top: 1.25rem;
+  color: var(--cor-texto-suave);
+  font-size: 1.05rem;
+  max-width: 360px;
+}
+
+/* Listras diagonais decorativas (referência ao poste de barbearia). */
+.login__listras {
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 220px;
+  height: 140%;
+  transform: rotate(20deg);
+  opacity: 0.08;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--cor-principal) 0,
+    var(--cor-principal) 22px,
+    transparent 22px,
+    transparent 44px
+  );
+}
+
+/* ----- Painel do formulário (lado direito) ----- */
+
+.login__painel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--cor-fundo);
+}
+
+.login__cartao {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login__cabecalho {
+  margin-bottom: 2rem;
+}
+
+.login__titulo {
+  font-size: 1.9rem;
+  color: var(--cor-texto);
+}
+
+.login__descricao {
+  margin-top: 0.5rem;
+  color: var(--cor-texto-suave);
+}
+
+.login__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login__botao {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.login__erro {
+  padding: 0.75rem 1rem;
+  background-color: rgba(192, 83, 63, 0.12);
+  border: 1px solid var(--cor-erro);
+  border-radius: var(--raio-borda);
+  color: #e9b4a8;
+  font-size: 0.9rem;
+}
+
+.login__rodape {
+  margin-top: 2.5rem;
+  text-align: center;
+  color: var(--cor-texto-suave);
+  font-size: 0.8rem;
+}
+
+/* ----- Responsivo: em telas estreitas, esconde o painel de destaque ----- */
+
+@media (max-width: 860px) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  .login__destaque {
+    display: none;
+  }
+}

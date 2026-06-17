@@ -1,0 +1,82 @@
+<!--
+  Layout de login dividido em duas colunas:
+   - à esquerda, um painel de destaque com o logo e uma frase de impacto;
+   - à direita, o formulário de acesso.
+  Em telas pequenas o painel da esquerda é ocultado e só o formulário aparece.
+-->
+<div class="login">
+  <!-- Painel de destaque (lado esquerdo) -->
+  <aside class="login__destaque">
+    <div class="login__destaque-conteudo">
+      <app-logotipo [tamanho]="96" />
+
+      <h1 class="login__titulo-marca">
+        Estilo e precisão<br />em cada corte.
+      </h1>
+      <p class="login__subtitulo-marca">
+        Sistema de agendamento da sua barbearia. Gerencie horários, clientes e
+        serviços em um só lugar.
+      </p>
+    </div>
+
+    <!-- Listras decorativas em referência ao poste de barbearia. -->
+    <div class="login__listras" aria-hidden="true"></div>
+  </aside>
+
+  <!-- Formulário de acesso (lado direito) -->
+  <main class="login__painel">
+    <div class="login__cartao">
+      <div class="login__cabecalho">
+        <h2 class="login__titulo">Bem-vindo de volta</h2>
+        <p class="login__descricao">Entre com suas credenciais para continuar.</p>
+      </div>
+
+      <form class="login__formulario" (ngSubmit)="aoEnviar()">
+        <div class="campo">
+          <label class="campo__rotulo" for="email">E-mail</label>
+          <input
+            id="email"
+            class="campo__entrada"
+            type="email"
+            name="email"
+            placeholder="voce@exemplo.com"
+            autocomplete="email"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+          />
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="senha">Senha</label>
+          <input
+            id="senha"
+            class="campo__entrada"
+            type="password"
+            name="senha"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            [ngModel]="senha()"
+            (ngModelChange)="senha.set($event)"
+          />
+        </div>
+
+        <!-- Área de mensagem de erro (só aparece quando há erro). -->
+        @if (mensagemErro()) {
+          <p class="login__erro">{{ mensagemErro() }}</p>
+        }
+
+        <button
+          class="botao botao--principal login__botao"
+          type="submit"
+          [disabled]="carregando()"
+        >
+          {{ carregando() ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </form>
+
+      <p class="login__rodape">
+        Protótipo para apresentação — Igor Style's Barbearia &copy; 2026
+      </p>
+    </div>
+  </main>
+</div>

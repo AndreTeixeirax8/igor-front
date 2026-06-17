@@ -1,0 +1,23 @@
+/**
+ * Configuração central de acesso à API do back-end (barbeariax).
+ *
+ * O endereço base é "/api" porque, durante o desenvolvimento, o servidor do
+ * Angular encaminha tudo que começa com "/api" para o back-end em Go
+ * (http://localhost:3001) através do arquivo "proxy.conf.json". Dessa forma não
+ * precisamos lidar com CORS nem alterar o back-end.
+ */
+export const configuracaoApi = {
+  /** Caminho base de todas as rotas da API. */
+  enderecoBase: '/api',
+
+  /** Rotas de autenticação (login e registro). */
+  rotasAutenticacao: {
+    login: '/auth/login',
+    registrar: '/auth/registrar',
+  },
+
+  /** Rotas do módulo de usuários. */
+  rotasUsuario: {
+    meuPerfil: '/usuarios/me',
+  },
+};

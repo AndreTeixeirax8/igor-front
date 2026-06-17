@@ -1,0 +1,157 @@
+/* ==========================================================================
+   Estilos globais do sistema barbeariax (front-end)
+
+   Aqui ficam: as variáveis de cor da identidade visual, o "reset" básico e
+   alguns componentes reutilizáveis (botões, campos de formulário). A cor
+   principal (#E0CD55) vem do logo da empresa; as demais cores foram escolhidas
+   para harmonizar com ela em um tema escuro, no estilo de barbearias clássicas.
+   ========================================================================== */
+
+:root {
+  /* ----- Identidade visual ----- */
+  --cor-principal: #e0cd55; /* dourado do logo */
+  --cor-principal-clara: #f0e08a;
+  --cor-principal-escura: #c4b13f;
+
+  /* ----- Fundo (tema escuro) ----- */
+  --cor-fundo: #141414;
+  --cor-fundo-secundario: #1b1b1b;
+  --cor-superficie: #232323;
+  --cor-superficie-clara: #2b2b2b;
+  --cor-borda: #383838;
+
+  /* ----- Texto ----- */
+  --cor-texto: #f4f1e8;
+  --cor-texto-suave: #a8a39a;
+  --cor-texto-sobre-dourado: #1a1a1a;
+
+  /* ----- Cores de apoio (harmonizadas com o dourado) ----- */
+  --cor-sucesso: #5aa874;
+  --cor-erro: #c0533f;
+
+  /* ----- Tipografia ----- */
+  --fonte-titulo: 'Poppins', 'Segoe UI', sans-serif;
+  --fonte-texto: 'Inter', 'Segoe UI', sans-serif;
+
+  /* ----- Outros ----- */
+  --raio-borda: 12px;
+  --sombra-cartao: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --transicao-padrao: 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--fonte-texto);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   Botões reutilizáveis
+   ========================================================================== */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border: none;
+  border-radius: var(--raio-borda);
+  font-family: var(--fonte-titulo);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transicao-padrao),
+    background-color var(--transicao-padrao), opacity var(--transicao-padrao);
+}
+
+.botao:active {
+  transform: scale(0.98);
+}
+
+.botao:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Botão principal: fundo dourado, o destaque da interface. */
+.botao--principal {
+  background-color: var(--cor-principal);
+  color: var(--cor-texto-sobre-dourado);
+}
+
+.botao--principal:hover:not(:disabled) {
+  background-color: var(--cor-principal-clara);
+}
+
+/* Botão secundário: contornado, para ações menos importantes. */
+.botao--contorno {
+  background-color: transparent;
+  color: var(--cor-principal);
+  border: 1px solid var(--cor-principal);
+}
+
+.botao--contorno:hover:not(:disabled) {
+  background-color: rgba(224, 205, 85, 0.1);
+}
+
+/* ==========================================================================
+   Campos de formulário reutilizáveis
+   ========================================================================== */
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.campo__rotulo {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--cor-texto-suave);
+}
+
+.campo__entrada {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  color: var(--cor-texto);
+  font-size: 1rem;
+  font-family: var(--fonte-texto);
+  transition: border-color var(--transicao-padrao),
+    box-shadow var(--transicao-padrao);
+}
+
+.campo__entrada::placeholder {
+  color: #6b675f;
+}
+
+.campo__entrada:focus {
+  outline: none;
+  border-color: var(--cor-principal);
+  box-shadow: 0 0 0 3px rgba(224, 205, 85, 0.15);
+}
