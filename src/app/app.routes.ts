@@ -1,14 +1,18 @@
 import { Routes } from '@angular/router';
 
 import { autenticacaoGuarda } from './nucleo/guardas/autenticacao.guarda';
+import { adminGuarda } from './nucleo/guardas/admin.guarda';
+import { LayoutPainel } from './compartilhado/layout-painel/layout-painel';
 
 /**
- * Rotas da aplicação. As páginas são carregadas sob demanda (lazy loading) para
- * manter o pacote inicial leve.
+ * Rotas da aplicação. As páginas são carregadas sob demanda (lazy loading).
  *
- *  - /login     → tela de login (pública).
- *  - /principal → tela principal (protegida pelo guarda de autenticação).
- *  - qualquer outra rota cai no redirecionamento para /login.
+ * Estrutura:
+ *  - /login e /cadastro são telas públicas, fora do layout interno.
+ *  - As demais telas ficam dentro do layout do painel (barra lateral + topo) e
+ *    só são acessíveis para quem está autenticado:
+ *      - /principal → painel (qualquer usuário autenticado);
+ *      - /clientes  → lista de clientes (somente administradores).
  */
 export const routes: Routes = [
   {
@@ -22,13 +26,27 @@ export const routes: Routes = [
       import('./paginas/cadastro/cadastro').then((modulo) => modulo.Cadastro),
   },
   {
-    path: 'principal',
+    path: '',
+    component: LayoutPainel,
     canActivate: [autenticacaoGuarda],
-    loadComponent: () =>
-      import('./paginas/principal/principal').then(
-        (modulo) => modulo.Principal,
-      ),
+    children: [
+      {
+        path: 'principal',
+        loadComponent: () =>
+          import('./paginas/principal/principal').then(
+            (modulo) => modulo.Principal,
+          ),
+      },
+      {
+        path: 'clientes',
+        canActivate: [adminGuarda],
+        loadComponent: () =>
+          import('./paginas/clientes/clientes').then(
+            (modulo) => modulo.Clientes,
+          ),
+      },
+      { path: '', pathMatch: 'full', redirectTo: 'principal' },
+    ],
   },
-  { path: '', pathMatch: 'full', redirectTo: 'principal' },
-  { path: '**', redirectTo: 'principal' },
+  { path: '**', redirectTo: '' },
 ];

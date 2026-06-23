@@ -1,0 +1,197 @@
+/* ==========================================================================
+   Layout das áreas internas — barra lateral + topo + conteúdo
+   ========================================================================== */
+
+.painel {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+/* ----- Barra lateral ----- */
+
+.painel__lateral {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 1.25rem;
+  background-color: var(--cor-fundo-secundario);
+  border-right: 1px solid var(--cor-borda);
+}
+
+.painel__logo {
+  padding: 0 0.5rem 1.75rem;
+}
+
+.painel__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.painel__menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--raio-borda);
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-texto);
+  font-size: 0.95rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transicao-padrao),
+    color var(--transicao-padrao);
+}
+
+.painel__menu-item:hover:not(:disabled) {
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+
+.painel__menu-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.painel__menu-item--ativo {
+  background-color: rgba(224, 205, 85, 0.14);
+  color: var(--cor-principal);
+  font-weight: 600;
+}
+
+.painel__menu-icone {
+  font-size: 1.1rem;
+  width: 1.4rem;
+  text-align: center;
+}
+
+/* Etiqueta "Em breve" exibida nos itens ainda não implementados. */
+.painel__menu-tag {
+  margin-left: auto;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.65rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  color: var(--cor-texto-suave);
+}
+
+.painel__sair {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 0.9rem;
+  margin-top: 1rem;
+  background: transparent;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-texto);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao),
+    color var(--transicao-padrao);
+}
+
+.painel__sair:hover {
+  border-color: var(--cor-erro);
+  color: #e9b4a8;
+}
+
+/* ----- Conteúdo ----- */
+
+.painel__conteudo {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.painel__topo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1.25rem 3rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.painel__usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.painel__usuario-dados {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.painel__usuario-nome {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.painel__usuario-perfil {
+  font-size: 0.8rem;
+  color: var(--cor-principal);
+}
+
+.painel__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(
+    140deg,
+    var(--cor-principal) 0%,
+    var(--cor-principal-escura) 100%
+  );
+  color: var(--cor-texto-sobre-dourado);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+}
+
+.painel__pagina {
+  flex: 1;
+  padding: 2.5rem 3rem;
+}
+
+/* ----- Responsivo ----- */
+
+@media (max-width: 720px) {
+  .painel {
+    grid-template-columns: 1fr;
+  }
+
+  .painel__lateral {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .painel__menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1 1 100%;
+  }
+
+  .painel__menu-tag {
+    display: none;
+  }
+
+  .painel__topo {
+    padding: 1rem 1.5rem;
+  }
+
+  .painel__pagina {
+    padding: 1.5rem;
+  }
+}

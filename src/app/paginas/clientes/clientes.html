@@ -1,0 +1,80 @@
+<!-- Conteúdo da tela de clientes (exibida dentro do layout do painel). -->
+
+<!-- Cabeçalho da página -->
+<div class="clientes__cabecalho">
+  <div>
+    <h1 class="clientes__titulo">Clientes</h1>
+    <p class="clientes__subtitulo">
+      Usuários cadastrados no sistema da barbearia.
+    </p>
+  </div>
+
+  <!-- Campo de busca -->
+  <div class="clientes__busca">
+    <input
+      class="campo__entrada"
+      type="search"
+      name="busca"
+      placeholder="Buscar por nome, e-mail ou telefone..."
+      [ngModel]="termoBusca()"
+      (ngModelChange)="termoBusca.set($event)"
+    />
+  </div>
+</div>
+
+@if (carregando()) {
+  <!-- Estado de carregamento -->
+  <div class="clientes__aviso">Carregando clientes...</div>
+} @else if (mensagemErro()) {
+  <!-- Estado de erro, com a opção de tentar novamente -->
+  <div class="clientes__aviso clientes__aviso--erro">
+    <p>{{ mensagemErro() }}</p>
+    <button class="botao botao--contorno" type="button" (click)="carregar()">
+      Tentar novamente
+    </button>
+  </div>
+} @else if (totalExibido() === 0) {
+  <!-- Estado vazio (nenhum resultado) -->
+  <div class="clientes__aviso">
+    Nenhum cliente encontrado
+    {{ termoBusca() ? 'para a busca informada.' : '.' }}
+  </div>
+} @else {
+  <!-- Tabela de clientes -->
+  <div class="clientes__cartao">
+    <table class="tabela">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Perfil</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cliente of clientesFiltrados(); track cliente.id) {
+          <tr>
+            <td>
+              <div class="tabela__nome">
+                <span class="tabela__avatar">{{ iniciais(cliente.nome) }}</span>
+                <span>{{ cliente.nome }}</span>
+              </div>
+            </td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.telefone || '—' }}</td>
+            <td>
+              <span class="selo selo--{{ cliente.perfil }}">
+                {{ rotuloPerfil(cliente.perfil) }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <p class="clientes__total">
+    {{ totalExibido() }}
+    {{ totalExibido() === 1 ? 'cliente' : 'clientes' }}
+  </p>
+}

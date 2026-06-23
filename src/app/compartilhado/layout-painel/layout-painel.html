@@ -1,0 +1,61 @@
+<!--
+  Estrutura das áreas internas:
+   - barra lateral (navegação) à esquerda;
+   - topo com os dados do usuário e o botão de sair;
+   - área central onde cada página é exibida (<router-outlet>).
+-->
+<div class="painel">
+  <!-- ===== Barra lateral ===== -->
+  <aside class="painel__lateral">
+    <div class="painel__logo">
+      <app-logotipo [tamanho]="56" />
+    </div>
+
+    <nav class="painel__menu">
+      @for (item of itensMenuVisiveis(); track item.rotulo) {
+        @if (item.disponivel && item.rota) {
+          <!-- Item navegável: destaca-se sozinho quando é a rota atual. -->
+          <a
+            class="painel__menu-item"
+            [routerLink]="item.rota"
+            routerLinkActive="painel__menu-item--ativo"
+          >
+            <span class="painel__menu-icone">{{ item.icone }}</span>
+            <span>{{ item.rotulo }}</span>
+          </a>
+        } @else {
+          <!-- Item ainda não implementado: desabilitado, com etiqueta "Em breve". -->
+          <button class="painel__menu-item" type="button" disabled>
+            <span class="painel__menu-icone">{{ item.icone }}</span>
+            <span>{{ item.rotulo }}</span>
+            <span class="painel__menu-tag">Em breve</span>
+          </button>
+        }
+      }
+    </nav>
+
+    <button class="painel__sair" type="button" (click)="sair()">
+      <span class="painel__menu-icone">⎋</span>
+      <span>Sair</span>
+    </button>
+  </aside>
+
+  <!-- ===== Área de conteúdo ===== -->
+  <div class="painel__conteudo">
+    <!-- Topo com os dados do usuário autenticado. -->
+    <header class="painel__topo">
+      <div class="painel__usuario">
+        <div class="painel__usuario-dados">
+          <span class="painel__usuario-nome">{{ usuario()?.nome }}</span>
+          <span class="painel__usuario-perfil">{{ rotuloPerfil() }}</span>
+        </div>
+        <div class="painel__avatar">{{ iniciais() }}</div>
+      </div>
+    </header>
+
+    <!-- A página da rota atual é inserida aqui. -->
+    <main class="painel__pagina">
+      <router-outlet />
+    </main>
+  </div>
+</div>

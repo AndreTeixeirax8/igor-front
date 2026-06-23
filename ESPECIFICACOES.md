@@ -57,19 +57,23 @@ src/app/
 │   │   └── autenticacao.modelo.ts
 │   ├── servicos/
 │   │   ├── sessao.servico.ts        # Guarda token + usuário (localStorage)
-│   │   └── autenticacao.servico.ts  # Login / logout (chama a API)
+│   │   ├── autenticacao.servico.ts  # Login / cadastro / logout (chama a API)
+│   │   └── usuario.servico.ts       # Busca usuários (listagem — só admin)
 │   ├── interceptadores/
 │   │   └── token.interceptador.ts   # Anexa "Authorization: Bearer <token>"
 │   └── guardas/
-│       └── autenticacao.guarda.ts   # Protege rotas que exigem login
+│       ├── autenticacao.guarda.ts   # Protege rotas que exigem login
+│       └── admin.guarda.ts          # Protege rotas restritas a administradores
 │
 ├── compartilhado/              # Componentes reutilizáveis de interface
-│   └── logotipo/
+│   ├── logotipo/
+│   └── layout-painel/          # Casca das telas internas (barra lateral + topo)
 │
 ├── paginas/                    # As telas do sistema
 │   ├── login/                  # Tela de login
 │   ├── cadastro/               # Tela de criação de nova conta
-│   └── principal/              # Tela principal (painel) após o login
+│   ├── principal/              # Tela principal (painel) após o login
+│   └── clientes/               # Lista de clientes em tabela (somente admin)
 │
 ├── app.ts / app.html           # Componente raiz (só o <router-outlet>)
 ├── app.config.ts               # Providers: roteador + HttpClient + interceptador
@@ -91,9 +95,14 @@ src/app/
 
 | Ação           | Método e rota              | Corpo enviado                       | Resposta             |
 | -------------- | -------------------------- | ----------------------------------- | -------------------- |
-| Login          | `POST /api/auth/login`     | `{ email, senha }`                  | `{ token, usuario }` |
-| Cadastro       | `POST /api/auth/registrar` | `{ nome, email, telefone, senha }`  | `{ token, usuario }` |
-| Perfil próprio | `GET /api/usuarios/me`     | — (header com token)                | dados do usuário     |
+| Login           | `POST /api/auth/login`     | `{ email, senha }`                 | `{ token, usuario }` |
+| Cadastro        | `POST /api/auth/registrar` | `{ nome, email, telefone, senha }` | `{ token, usuario }` |
+| Perfil próprio  | `GET /api/usuarios/me`     | — (header com token)               | dados do usuário     |
+| Listar usuários | `GET /api/usuarios`        | — (header com token)               | lista de usuários    |
+
+> A listagem de usuários é **restrita a administradores** no back-end (responde
+> 403 para os demais). No front, além disso, a rota `/clientes` é protegida pela
+> `admin.guarda.ts` e o item "Clientes" só aparece no menu para administradores.
 
 > No cadastro o front **não** envia o perfil: o back-end cria todo novo usuário
 > como "cliente". Após o cadastro, o usuário é levado de volta à tela de login
@@ -143,11 +152,15 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - Tela de login conectada ao back (com tratamento de erros).
 - Tela de cadastro de nova conta (volta ao login com aviso de sucesso).
 - Sessão persistente (token no `localStorage`) e logout.
-- Proteção de rota: o painel só abre para usuário autenticado.
+- Proteção de rota: o painel só abre para usuário autenticado; a tela de
+  clientes só abre para administradores.
+- Layout interno compartilhado (barra lateral + topo) reaproveitado pelas telas.
 - Tela principal (painel) com identidade visual aplicada.
+- Tela de clientes: tabela com busca, contato e perfil (dados reais do back).
 
 **Ainda a fazer (próximas telas):**
 
-- Módulos de agendamentos, clientes e serviços ligados ao back.
+- Módulos de agendamentos e serviços ligados ao back.
+- Ações na tela de clientes (ver detalhes, editar, promover a admin via PUT).
 - Carregar dados reais nos cartões de resumo (hoje são valores fictícios).
 ```

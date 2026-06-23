@@ -19,5 +19,7 @@ export const configuracaoApi = {
   /** Rotas do módulo de usuários. */
   rotasUsuario: {
     meuPerfil: '/usuarios/me',
+    // Listagem de todos os usuários (rota protegida: somente administradores).
+    listar: '/usuarios',
   },
 };

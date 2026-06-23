@@ -1,80 +1,34 @@
-<!--
-  Tela principal (painel administrativo) com três áreas:
-   - barra lateral (menu de navegação);
-   - cabeçalho superior (saudação + dados do usuário + sair);
-   - conteúdo central (cartões de resumo e próximos agendamentos).
--->
-<div class="painel">
-  <!-- ===== Barra lateral ===== -->
-  <aside class="painel__lateral">
-    <div class="painel__logo">
-      <app-logotipo [tamanho]="56" />
-    </div>
+<!-- Conteúdo da página principal (o layout externo cuida da barra lateral). -->
 
-    <nav class="painel__menu">
-      @for (item of itensMenu; track item.rotulo) {
-        <button
-          class="painel__menu-item"
-          [class.painel__menu-item--ativo]="item.ativo"
-          type="button"
-        >
-          <span class="painel__menu-icone">{{ item.icone }}</span>
-          <span>{{ item.rotulo }}</span>
-        </button>
-      }
-    </nav>
-
-    <button class="painel__sair" type="button" (click)="sair()">
-      <span class="painel__menu-icone">⎋</span>
-      <span>Sair</span>
-    </button>
-  </aside>
-
-  <!-- ===== Área de conteúdo ===== -->
-  <div class="painel__conteudo">
-    <!-- Cabeçalho superior -->
-    <header class="painel__cabecalho">
-      <div>
-        <p class="painel__saudacao">Olá, {{ primeiroNome() }} 👋</p>
-        <h1 class="painel__titulo-pagina">Painel da barbearia</h1>
-      </div>
-
-      <div class="painel__usuario">
-        <div class="painel__usuario-dados">
-          <span class="painel__usuario-nome">{{ usuario()?.nome }}</span>
-          <span class="painel__usuario-perfil">{{ rotuloPerfil() }}</span>
-        </div>
-        <div class="painel__avatar">{{ iniciais() }}</div>
-      </div>
-    </header>
-
-    <!-- Cartões de resumo -->
-    <section class="painel__cartoes">
-      @for (cartao of cartoesResumo; track cartao.titulo) {
-        <article class="cartao-resumo">
-          <p class="cartao-resumo__titulo">{{ cartao.titulo }}</p>
-          <p class="cartao-resumo__valor">{{ cartao.valor }}</p>
-          <p class="cartao-resumo__detalhe">{{ cartao.detalhe }}</p>
-        </article>
-      }
-    </section>
-
-    <!-- Próximos agendamentos (espaço reservado) -->
-    <section class="painel__bloco">
-      <div class="painel__bloco-cabecalho">
-        <h2 class="painel__bloco-titulo">Próximos agendamentos</h2>
-        <button class="botao botao--contorno" type="button" disabled>
-          Em breve
-        </button>
-      </div>
-
-      <div class="painel__vazio">
-        <span class="painel__vazio-icone">✂</span>
-        <p class="painel__vazio-texto">
-          A lista de agendamentos aparecerá aqui assim que o módulo for
-          conectado ao back-end.
-        </p>
-      </div>
-    </section>
-  </div>
+<!-- Cabeçalho da página -->
+<div class="principal__cabecalho">
+  <p class="principal__saudacao">Olá, {{ primeiroNome() }} 👋</p>
+  <h1 class="principal__titulo">Painel da barbearia</h1>
 </div>
+
+<!-- Cartões de resumo -->
+<section class="principal__cartoes">
+  @for (cartao of cartoesResumo; track cartao.titulo) {
+    <article class="cartao-resumo">
+      <p class="cartao-resumo__titulo">{{ cartao.titulo }}</p>
+      <p class="cartao-resumo__valor">{{ cartao.valor }}</p>
+      <p class="cartao-resumo__detalhe">{{ cartao.detalhe }}</p>
+    </article>
+  }
+</section>
+
+<!-- Próximos agendamentos (espaço reservado) -->
+<section class="principal__bloco">
+  <div class="principal__bloco-cabecalho">
+    <h2 class="principal__bloco-titulo">Próximos agendamentos</h2>
+    <button class="botao botao--contorno" type="button" disabled>Em breve</button>
+  </div>
+
+  <div class="principal__vazio">
+    <span class="principal__vazio-icone">✂</span>
+    <p class="principal__vazio-texto">
+      A lista de agendamentos aparecerá aqui assim que o módulo for conectado ao
+      back-end.
+    </p>
+  </div>
+</section>
