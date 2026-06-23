@@ -6,6 +6,7 @@ import { configuracaoApi } from '../configuracao/configuracao-api';
 import { SessaoServico } from './sessao.servico';
 import {
   CredenciaisLogin,
+  DadosCadastro,
   RespostaAutenticacao,
 } from '../modelos/autenticacao.modelo';
 
@@ -36,6 +37,23 @@ export class AutenticacaoServico {
           this.sessao.iniciarSessao(resposta.token, resposta.usuario),
         ),
       );
+  }
+
+  /**
+   * Cria uma nova conta na API (rota /auth/registrar).
+   *
+   * Importante: aqui NÃO iniciamos a sessão automaticamente, mesmo que o
+   * back-end devolva um token. A intenção do fluxo é levar o usuário de volta à
+   * tela de login para que ele entre com as próprias credenciais.
+   *
+   * @param dados Nome, e-mail, telefone (opcional) e senha digitados.
+   * @returns Um Observable com a resposta do cadastro.
+   */
+  cadastrar(dados: DadosCadastro): Observable<RespostaAutenticacao> {
+    const enderecoCompleto =
+      configuracaoApi.enderecoBase + configuracaoApi.rotasAutenticacao.registrar;
+
+    return this.clienteHttp.post<RespostaAutenticacao>(enderecoCompleto, dados);
   }
 
   /**

@@ -31,6 +31,11 @@
         <p class="login__descricao">Entre com suas credenciais para continuar.</p>
       </div>
 
+      <!-- Aviso de sucesso (ex.: logo após criar uma conta). -->
+      @if (mensagemSucesso()) {
+        <p class="login__sucesso">{{ mensagemSucesso() }}</p>
+      }
+
       <form class="login__formulario" (ngSubmit)="aoEnviar()">
         <div class="campo">
           <label class="campo__rotulo" for="email">E-mail</label>
@@ -73,6 +78,13 @@
           {{ carregando() ? 'Entrando...' : 'Entrar' }}
         </button>
       </form>
+
+      <!-- Caminho para quem ainda não tem conta. -->
+      <div class="login__separador"><span>ou</span></div>
+
+      <a class="botao botao--contorno login__botao-cadastro" routerLink="/cadastro">
+        Criar uma conta
+      </a>
 
       <p class="login__rodape">
         Protótipo para apresentação — Igor Style's Barbearia &copy; 2026

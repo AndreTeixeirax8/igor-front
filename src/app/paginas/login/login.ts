@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { AutenticacaoServico } from '../../nucleo/servicos/autenticacao.servico';
@@ -14,13 +14,14 @@ import { RespostaErroApi } from '../../nucleo/modelos/autenticacao.modelo';
  */
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, Logotipo],
+  imports: [FormsModule, RouterLink, Logotipo],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
   private readonly autenticacaoServico = inject(AutenticacaoServico);
   private readonly roteador = inject(Router);
+  private readonly rotaAtual = inject(ActivatedRoute);
 
   /** Valores digitados nos campos do formulário (ligados via ngModel). */
   protected email = signal('');
@@ -31,6 +32,16 @@ export class Login {
 
   /** Mensagem de erro a ser exibida; vazia quando não há erro. */
   protected readonly mensagemErro = signal('');
+
+  /**
+   * Mensagem de sucesso (ex.: vinda da tela de cadastro). Vazia quando não há.
+   * É preenchida quando o login é aberto com o parâmetro "cadastroRealizado".
+   */
+  protected readonly mensagemSucesso = signal(
+    this.rotaAtual.snapshot.queryParamMap.get('cadastroRealizado') === '1'
+      ? 'Conta criada com sucesso! Agora é só entrar com seus dados.'
+      : '',
+  );
 
   /**
    * Executado ao enviar o formulário. Valida o preenchimento, dispara o login

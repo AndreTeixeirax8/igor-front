@@ -1,0 +1,129 @@
+<!--
+  Tela de cadastro de nova conta. Reaproveita o mesmo layout em duas colunas da
+  tela de login para manter a identidade visual: painel de destaque à esquerda e
+  formulário à direita.
+-->
+<div class="cadastro">
+  <!-- Painel de destaque (lado esquerdo) -->
+  <aside class="cadastro__destaque">
+    <div class="cadastro__destaque-conteudo">
+      <app-logotipo [tamanho]="96" />
+
+      <h1 class="cadastro__titulo-marca">
+        Faça parte<br />da Igor Style's.
+      </h1>
+      <p class="cadastro__subtitulo-marca">
+        Crie sua conta para agendar seus horários e acompanhar seus
+        atendimentos com praticidade.
+      </p>
+    </div>
+
+    <div class="cadastro__listras" aria-hidden="true"></div>
+  </aside>
+
+  <!-- Formulário de cadastro (lado direito) -->
+  <main class="cadastro__painel">
+    <div class="cadastro__cartao">
+      <div class="cadastro__cabecalho">
+        <h2 class="cadastro__titulo">Criar conta</h2>
+        <p class="cadastro__descricao">
+          Preencha seus dados para começar.
+        </p>
+      </div>
+
+      <form class="cadastro__formulario" (ngSubmit)="aoEnviar()">
+        <div class="campo">
+          <label class="campo__rotulo" for="nome">Nome completo</label>
+          <input
+            id="nome"
+            class="campo__entrada"
+            type="text"
+            name="nome"
+            placeholder="Seu nome"
+            autocomplete="name"
+            [ngModel]="nome()"
+            (ngModelChange)="nome.set($event)"
+          />
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="email">E-mail</label>
+          <input
+            id="email"
+            class="campo__entrada"
+            type="email"
+            name="email"
+            placeholder="voce@exemplo.com"
+            autocomplete="email"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+          />
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="telefone">
+            Telefone <span class="campo__opcional">(opcional)</span>
+          </label>
+          <input
+            id="telefone"
+            class="campo__entrada"
+            type="tel"
+            name="telefone"
+            placeholder="(00) 00000-0000"
+            autocomplete="tel"
+            [ngModel]="telefone()"
+            (ngModelChange)="telefone.set($event)"
+          />
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="senha">Senha</label>
+          <input
+            id="senha"
+            class="campo__entrada"
+            type="password"
+            name="senha"
+            placeholder="Mínimo de 6 caracteres"
+            autocomplete="new-password"
+            [ngModel]="senha()"
+            (ngModelChange)="senha.set($event)"
+          />
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="confirmacaoSenha">
+            Confirmar senha
+          </label>
+          <input
+            id="confirmacaoSenha"
+            class="campo__entrada"
+            type="password"
+            name="confirmacaoSenha"
+            placeholder="Repita a senha"
+            autocomplete="new-password"
+            [ngModel]="confirmacaoSenha()"
+            (ngModelChange)="confirmacaoSenha.set($event)"
+          />
+        </div>
+
+        <!-- Área de mensagem de erro (só aparece quando há erro). -->
+        @if (mensagemErro()) {
+          <p class="cadastro__erro">{{ mensagemErro() }}</p>
+        }
+
+        <button
+          class="botao botao--principal cadastro__botao"
+          type="submit"
+          [disabled]="carregando()"
+        >
+          {{ carregando() ? 'Criando conta...' : 'Criar conta' }}
+        </button>
+      </form>
+
+      <p class="cadastro__voltar">
+        Já tem uma conta?
+        <a class="cadastro__link" routerLink="/login">Entrar</a>
+      </p>
+    </div>
+  </main>
+</div>

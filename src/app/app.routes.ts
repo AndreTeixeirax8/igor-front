@@ -17,6 +17,11 @@ export const routes: Routes = [
       import('./paginas/login/login').then((modulo) => modulo.Login),
   },
   {
+    path: 'cadastro',
+    loadComponent: () =>
+      import('./paginas/cadastro/cadastro').then((modulo) => modulo.Cadastro),
+  },
+  {
     path: 'principal',
     canActivate: [autenticacaoGuarda],
     loadComponent: () =>

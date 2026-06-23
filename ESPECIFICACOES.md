@@ -68,6 +68,7 @@ src/app/
 │
 ├── paginas/                    # As telas do sistema
 │   ├── login/                  # Tela de login
+│   ├── cadastro/               # Tela de criação de nova conta
 │   └── principal/              # Tela principal (painel) após o login
 │
 ├── app.ts / app.html           # Componente raiz (só o <router-outlet>)
@@ -88,10 +89,15 @@ src/app/
 
 ### Rotas usadas neste protótipo
 
-| Ação           | Método e rota          | Corpo enviado            | Resposta                 |
-| -------------- | ---------------------- | ------------------------ | ------------------------ |
-| Login          | `POST /api/auth/login` | `{ email, senha }`       | `{ token, usuario }`     |
-| Perfil próprio | `GET /api/usuarios/me` | — (header com token)     | dados do usuário         |
+| Ação           | Método e rota              | Corpo enviado                       | Resposta             |
+| -------------- | -------------------------- | ----------------------------------- | -------------------- |
+| Login          | `POST /api/auth/login`     | `{ email, senha }`                  | `{ token, usuario }` |
+| Cadastro       | `POST /api/auth/registrar` | `{ nome, email, telefone, senha }`  | `{ token, usuario }` |
+| Perfil próprio | `GET /api/usuarios/me`     | — (header com token)                | dados do usuário     |
+
+> No cadastro o front **não** envia o perfil: o back-end cria todo novo usuário
+> como "cliente". Após o cadastro, o usuário é levado de volta à tela de login
+> para se autenticar (não aproveitamos o token devolvido no registro).
 
 O token JWT recebido no login é guardado no `localStorage` e enviado
 automaticamente em todas as requisições seguintes pelo interceptador.
@@ -135,13 +141,13 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 **Pronto (protótipo para apresentação):**
 
 - Tela de login conectada ao back (com tratamento de erros).
+- Tela de cadastro de nova conta (volta ao login com aviso de sucesso).
 - Sessão persistente (token no `localStorage`) e logout.
 - Proteção de rota: o painel só abre para usuário autenticado.
 - Tela principal (painel) com identidade visual aplicada.
 
 **Ainda a fazer (próximas telas):**
 
-- Tela e fluxo de cadastro de usuário.
 - Módulos de agendamentos, clientes e serviços ligados ao back.
 - Carregar dados reais nos cartões de resumo (hoje são valores fictícios).
 ```

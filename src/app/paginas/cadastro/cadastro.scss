@@ -1,8 +1,8 @@
 /* ==========================================================================
-   Tela de login — layout em duas colunas (destaque + formulário)
+   Tela de cadastro — mesmo layout em duas colunas da tela de login
    ========================================================================== */
 
-.login {
+.cadastro {
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 100vh;
@@ -10,7 +10,7 @@
 
 /* ----- Painel de destaque (lado esquerdo) ----- */
 
-.login__destaque {
+.cadastro__destaque {
   position: relative;
   overflow: hidden;
   display: flex;
@@ -25,28 +25,27 @@
   border-right: 1px solid var(--cor-borda);
 }
 
-.login__destaque-conteudo {
+.cadastro__destaque-conteudo {
   position: relative;
   z-index: 2;
   max-width: 420px;
 }
 
-.login__titulo-marca {
+.cadastro__titulo-marca {
   margin-top: 2.5rem;
   font-size: 2.6rem;
   line-height: 1.15;
   color: var(--cor-texto);
 }
 
-.login__subtitulo-marca {
+.cadastro__subtitulo-marca {
   margin-top: 1.25rem;
   color: var(--cor-texto-suave);
   font-size: 1.05rem;
   max-width: 360px;
 }
 
-/* Listras diagonais decorativas (referência ao poste de barbearia). */
-.login__listras {
+.cadastro__listras {
   position: absolute;
   top: -20%;
   right: -10%;
@@ -65,7 +64,7 @@
 
 /* ----- Painel do formulário (lado direito) ----- */
 
-.login__painel {
+.cadastro__painel {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,37 +72,42 @@
   background-color: var(--cor-fundo);
 }
 
-.login__cartao {
+.cadastro__cartao {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
 }
 
-.login__cabecalho {
-  margin-bottom: 2rem;
+.cadastro__cabecalho {
+  margin-bottom: 1.75rem;
 }
 
-.login__titulo {
+.cadastro__titulo {
   font-size: 1.9rem;
   color: var(--cor-texto);
 }
 
-.login__descricao {
+.cadastro__descricao {
   margin-top: 0.5rem;
   color: var(--cor-texto-suave);
 }
 
-.login__formulario {
+.cadastro__formulario {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
-.login__botao {
+.campo__opcional {
+  color: #6b675f;
+  font-weight: 400;
+}
+
+.cadastro__botao {
   margin-top: 0.5rem;
   width: 100%;
 }
 
-.login__erro {
+.cadastro__erro {
   padding: 0.75rem 1rem;
   background-color: rgba(192, 83, 63, 0.12);
   border: 1px solid var(--cor-erro);
@@ -112,54 +116,31 @@
   font-size: 0.9rem;
 }
 
-.login__sucesso {
-  margin-bottom: 1.25rem;
-  padding: 0.75rem 1rem;
-  background-color: rgba(90, 168, 116, 0.12);
-  border: 1px solid var(--cor-sucesso);
-  border-radius: var(--raio-borda);
-  color: #abdcbb;
+.cadastro__voltar {
+  margin-top: 1.75rem;
+  text-align: center;
+  color: var(--cor-texto-suave);
   font-size: 0.9rem;
 }
 
-/* Separador "ou" entre o login e a opção de criar conta. */
-.login__separador {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  color: var(--cor-texto-suave);
-  font-size: 0.85rem;
-}
-
-.login__separador::before,
-.login__separador::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background-color: var(--cor-borda);
-}
-
-.login__botao-cadastro {
-  width: 100%;
+.cadastro__link {
+  color: var(--cor-principal);
+  font-weight: 600;
   text-decoration: none;
 }
 
-.login__rodape {
-  margin-top: 2.5rem;
-  text-align: center;
-  color: var(--cor-texto-suave);
-  font-size: 0.8rem;
+.cadastro__link:hover {
+  text-decoration: underline;
 }
 
-/* ----- Responsivo: em telas estreitas, esconde o painel de destaque ----- */
+/* ----- Responsivo: esconde o painel de destaque em telas estreitas ----- */
 
 @media (max-width: 860px) {
-  .login {
+  .cadastro {
     grid-template-columns: 1fr;
   }
 
-  .login__destaque {
+  .cadastro__destaque {
     display: none;
   }
 }
