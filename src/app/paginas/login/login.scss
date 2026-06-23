@@ -103,6 +103,25 @@
   width: 100%;
 }
 
+/* Opção "Lembrar-me". */
+.login__lembrar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.login__lembrar input[type='checkbox'] {
+  width: 1.05rem;
+  height: 1.05rem;
+  /* Faz o checkbox usar a cor da marca quando marcado. */
+  accent-color: var(--cor-principal);
+  cursor: pointer;
+}
+
 .login__erro {
   padding: 0.75rem 1rem;
   background-color: rgba(192, 83, 63, 0.12);

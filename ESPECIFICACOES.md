@@ -150,6 +150,9 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 **Pronto (protótipo para apresentação):**
 
 - Tela de login conectada ao back (com tratamento de erros).
+- Opção "Lembrar-me": guarda e-mail e senha no navegador (`localStorage`) e
+  pré-preenche o login no próximo acesso. Atenção: a senha fica em texto puro,
+  então é indicado apenas para dispositivos de uso pessoal.
 - Tela de cadastro de nova conta (volta ao login com aviso de sucesso).
 - Sessão persistente (token no `localStorage`) e logout.
 - Proteção de rota: o painel só abre para usuário autenticado; a tela de

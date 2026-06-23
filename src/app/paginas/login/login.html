@@ -65,6 +65,17 @@
           />
         </div>
 
+        <!-- Opção de lembrar as credenciais neste navegador. -->
+        <label class="login__lembrar">
+          <input
+            type="checkbox"
+            name="lembrarMe"
+            [ngModel]="lembrarMe()"
+            (ngModelChange)="lembrarMe.set($event)"
+          />
+          <span>Lembrar meu e-mail e senha neste dispositivo</span>
+        </label>
+
         <!-- Área de mensagem de erro (só aparece quando há erro). -->
         @if (mensagemErro()) {
           <p class="login__erro">{{ mensagemErro() }}</p>
