@@ -55,15 +55,24 @@ src/app/
 │   ├── modelos/                 # Interfaces (tipos) que refletem o JSON do back
 │   │   ├── usuario.modelo.ts
 │   │   └── autenticacao.modelo.ts
-│   ├── servicos/
+│   ├── servicos/               # Um serviço por recurso da API
 │   │   ├── sessao.servico.ts        # Guarda token + usuário (localStorage)
-│   │   ├── autenticacao.servico.ts  # Login / cadastro / logout (chama a API)
-│   │   └── usuario.servico.ts       # Busca usuários (listagem — só admin)
+│   │   ├── autenticacao.servico.ts  # Login / cadastro / logout
+│   │   ├── usuario.servico.ts       # Lista (admin) e busca usuários
+│   │   ├── barbearia.servico.ts     # Barbearias
+│   │   ├── barbeiro.servico.ts      # Barbeiros
+│   │   ├── servico.servico.ts       # Serviços (corte, barba...)
+│   │   ├── disponibilidade.servico.ts # Grade de horários
+│   │   └── agendamento.servico.ts   # Agendamentos
+│   ├── modelos/                # Interfaces que espelham o JSON do back
+│   ├── util/
+│   │   └── data-hora.ts             # RFC 3339 com fuso local + formatação
 │   ├── interceptadores/
 │   │   └── token.interceptador.ts   # Anexa "Authorization: Bearer <token>"
 │   └── guardas/
-│       ├── autenticacao.guarda.ts   # Protege rotas que exigem login
-│       └── admin.guarda.ts          # Protege rotas restritas a administradores
+│       ├── autenticacao.guarda.ts   # Exige login
+│       ├── admin.guarda.ts          # Exige admin
+│       └── gestao.guarda.ts         # Exige admin ou dono
 │
 ├── compartilhado/              # Componentes reutilizáveis de interface
 │   ├── logotipo/
@@ -71,9 +80,12 @@ src/app/
 │
 ├── paginas/                    # As telas do sistema
 │   ├── login/                  # Tela de login
-│   ├── cadastro/               # Tela de criação de nova conta
-│   ├── principal/              # Tela principal (painel) após o login
-│   └── clientes/               # Lista de clientes em tabela (somente admin)
+│   ├── cadastro/               # Criação de nova conta
+│   ├── principal/              # Painel após o login
+│   ├── agendar/                # Cliente marca horário (barbearia→barbeiro→serviço→hora)
+│   ├── meus-agendamentos/      # Cliente vê e cancela seus agendamentos
+│   ├── clientes/               # Lista de clientes (somente admin)
+│   └── gestao/                 # Cadastro de barbearia/serviço/barbeiro/grade (admin/dono)
 │
 ├── app.ts / app.html           # Componente raiz (só o <router-outlet>)
 ├── app.config.ts               # Providers: roteador + HttpClient + interceptador
@@ -158,12 +170,23 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - Proteção de rota: o painel só abre para usuário autenticado; a tela de
   clientes só abre para administradores.
 - Layout interno compartilhado (barra lateral + topo) reaproveitado pelas telas.
+  O menu mostra itens conforme o perfil (Gestão para admin/dono; Clientes só admin).
 - Tela principal (painel) com identidade visual aplicada.
 - Tela de clientes: tabela com busca, contato e perfil (dados reais do back).
+- **Agendar** (cliente): escolhe barbearia → barbeiro → serviço → data/hora e
+  cria o agendamento (converte para RFC 3339 com fuso local; mostra a grade do
+  barbeiro como referência).
+- **Meus agendamentos** (cliente): lista e cancela os próprios agendamentos.
+- **Gestão** (admin/dono): cadastra barbearia e, dentro dela, serviços,
+  barbeiros e a grade de horários de cada barbeiro.
+- Camada de dados (serviços + modelos) cobrindo **todas** as rotas da API.
 
 **Ainda a fazer (próximas telas):**
 
-- Módulos de agendamentos e serviços ligados ao back.
-- Ações na tela de clientes (ver detalhes, editar, promover a admin via PUT).
+- Painel do gestor: lista de todos os agendamentos e mudança de status (a rota
+  e o serviço já existem; falta a tela).
+- Mostrar nomes (em vez de IDs) de barbeiro/serviço em "Meus agendamentos".
+- Edição/exclusão de barbearias, serviços e barbeiros (hoje há criação e leitura).
+- Dados reais nos cartões do painel (hoje fictícios).
 - Carregar dados reais nos cartões de resumo (hoje são valores fictícios).
 ```

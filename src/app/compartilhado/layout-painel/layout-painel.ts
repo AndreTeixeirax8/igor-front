@@ -4,20 +4,21 @@ import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/rou
 import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
 import { AutenticacaoServico } from '../../nucleo/servicos/autenticacao.servico';
 import { Logotipo } from '../logotipo/logotipo';
-import { rotuloDoPerfil } from '../../nucleo/modelos/usuario.modelo';
+import { rotuloDoPerfil, PerfilUsuario } from '../../nucleo/modelos/usuario.modelo';
 
 /**
  * Item do menu lateral.
  *  - rota: para onde o item navega (quando disponível).
  *  - disponivel: false indica uma tela ainda não implementada ("Em breve").
- *  - somenteAdmin: true faz o item aparecer apenas para administradores.
+ *  - perfisPermitidos: se informado, o item só aparece para esses perfis;
+ *    se ausente, aparece para qualquer usuário autenticado.
  */
 interface ItemMenu {
   rotulo: string;
   icone: string;
   rota?: string;
   disponivel: boolean;
-  somenteAdmin?: boolean;
+  perfisPermitidos?: PerfilUsuario[];
 }
 
 /**
@@ -40,9 +41,6 @@ export class LayoutPainel {
   /** Usuário autenticado atual (vem da sessão). */
   protected readonly usuario = this.sessao.usuario;
 
-  /** Indica se o usuário atual é administrador. */
-  private readonly ehAdmin = computed(() => this.usuario()?.perfil === 'admin');
-
   /** Rótulo amigável do perfil do usuário (ex.: "Administrador"). */
   protected readonly rotuloPerfil = computed(() => {
     const usuario = this.usuario();
@@ -52,28 +50,44 @@ export class LayoutPainel {
   /** Iniciais do usuário, exibidas no avatar. */
   protected readonly iniciais = computed(() => this.calcularIniciais());
 
-  /** Todos os itens do menu (alguns ainda marcados como "Em breve"). */
+  /** Todos os itens do menu. */
   private readonly itensMenu: ItemMenu[] = [
     { rotulo: 'Painel', icone: '▣', rota: '/principal', disponivel: true },
-    { rotulo: 'Agendamentos', icone: '🗓', disponivel: false },
+    { rotulo: 'Agendar', icone: '🗓', rota: '/agendar', disponivel: true },
+    {
+      rotulo: 'Meus agendamentos',
+      icone: '📋',
+      rota: '/meus-agendamentos',
+      disponivel: true,
+    },
+    {
+      rotulo: 'Gestão',
+      icone: '✂',
+      rota: '/gestao',
+      disponivel: true,
+      perfisPermitidos: ['admin', 'dono'],
+    },
     {
       rotulo: 'Clientes',
       icone: '👥',
       rota: '/clientes',
       disponivel: true,
-      somenteAdmin: true,
+      perfisPermitidos: ['admin'],
     },
-    { rotulo: 'Serviços', icone: '✂', disponivel: false },
-    { rotulo: 'Configurações', icone: '⚙', disponivel: false },
   ];
 
   /**
-   * Itens do menu que o usuário atual pode ver: os itens restritos a
-   * administradores são ocultados para os demais perfis.
+   * Itens do menu que o usuário atual pode ver: os itens com perfis restritos
+   * só aparecem para os perfis permitidos.
    */
-  protected readonly itensMenuVisiveis = computed(() =>
-    this.itensMenu.filter((item) => !item.somenteAdmin || this.ehAdmin()),
-  );
+  protected readonly itensMenuVisiveis = computed(() => {
+    const perfil = this.usuario()?.perfil;
+    return this.itensMenu.filter(
+      (item) =>
+        !item.perfisPermitidos ||
+        (perfil !== undefined && item.perfisPermitidos.includes(perfil)),
+    );
+  });
 
   /**
    * Encerra a sessão do usuário e o redireciona para a tela de login.

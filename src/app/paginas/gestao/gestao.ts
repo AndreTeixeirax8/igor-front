@@ -1,0 +1,260 @@
+import { Component, inject, signal, computed } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { BarbeariaServico } from '../../nucleo/servicos/barbearia.servico';
+import { BarbeiroServico } from '../../nucleo/servicos/barbeiro.servico';
+import { ServicoServico } from '../../nucleo/servicos/servico.servico';
+import { DisponibilidadeServico } from '../../nucleo/servicos/disponibilidade.servico';
+
+import { Barbearia } from '../../nucleo/modelos/barbearia.modelo';
+import { Barbeiro } from '../../nucleo/modelos/barbeiro.modelo';
+import { Servico } from '../../nucleo/modelos/servico.modelo';
+import {
+  Disponibilidade,
+  NOMES_DIAS_SEMANA,
+  nomeDiaSemana,
+} from '../../nucleo/modelos/disponibilidade.modelo';
+
+/**
+ * Tela de gestão (administradores e donos). Permite cadastrar uma barbearia e,
+ * dentro dela, seus serviços, barbeiros e a grade de horários de cada barbeiro
+ * — exatamente o que o cliente precisa para conseguir agendar.
+ */
+@Component({
+  selector: 'app-gestao',
+  imports: [FormsModule],
+  templateUrl: './gestao.html',
+  styleUrl: './gestao.scss',
+})
+export class Gestao {
+  private readonly barbeariaServico = inject(BarbeariaServico);
+  private readonly barbeiroServico = inject(BarbeiroServico);
+  private readonly servicoServico = inject(ServicoServico);
+  private readonly disponibilidadeServico = inject(DisponibilidadeServico);
+
+  /** Dias da semana para o seletor de disponibilidade. */
+  protected readonly diasSemana = NOMES_DIAS_SEMANA.map((nome, valor) => ({
+    valor,
+    nome,
+  }));
+
+  /** Listas. */
+  protected readonly barbearias = signal<Barbearia[]>([]);
+  protected readonly servicos = signal<Servico[]>([]);
+  protected readonly barbeiros = signal<Barbeiro[]>([]);
+  protected readonly disponibilidades = signal<Disponibilidade[]>([]);
+
+  /** Seleções. */
+  protected readonly barbeariaSelecionadaId = signal<number | null>(null);
+  protected readonly barbeiroSelecionadoId = signal<number | null>(null);
+
+  /** Mensagens de feedback. */
+  protected readonly mensagemErro = signal('');
+  protected readonly mensagemSucesso = signal('');
+
+  /** Formulário: nova barbearia. */
+  protected barbeariaNome = signal('');
+  protected barbeariaCidade = signal('');
+  protected barbeariaEstado = signal('');
+  protected barbeariaTelefone = signal('');
+
+  /** Formulário: novo serviço. */
+  protected servicoNome = signal('');
+  protected servicoDuracao = signal<number | null>(null);
+  protected servicoPreco = signal<number | null>(null);
+
+  /** Formulário: novo barbeiro. */
+  protected barbeiroIdUsuario = signal<number | null>(null);
+  protected barbeiroBio = signal('');
+
+  /** Formulário: nova disponibilidade. */
+  protected dispDia = signal(1);
+  protected dispInicio = signal('09:00');
+  protected dispFim = signal('18:00');
+
+  /** Barbearia atualmente selecionada (objeto completo). */
+  protected readonly barbeariaSelecionada = computed(() =>
+    this.barbearias().find((b) => b.id === this.barbeariaSelecionadaId()),
+  );
+
+  constructor() {
+    this.carregarBarbearias();
+  }
+
+  // ===== Barbearias ========================================================
+
+  private carregarBarbearias(): void {
+    this.barbeariaServico.listar().subscribe({
+      next: (lista) => this.barbearias.set(lista),
+      error: () => this.mensagemErro.set('Falha ao carregar barbearias.'),
+    });
+  }
+
+  protected criarBarbearia(): void {
+    if (!this.barbeariaNome().trim()) {
+      this.mensagemErro.set('Informe o nome da barbearia.');
+      return;
+    }
+    this.limparMensagens();
+
+    this.barbeariaServico
+      .criar({
+        nome: this.barbeariaNome().trim(),
+        cidade: this.barbeariaCidade().trim() || null,
+        estado: this.barbeariaEstado().trim() || null,
+        telefone: this.barbeariaTelefone().trim() || null,
+      })
+      .subscribe({
+        next: (criada) => {
+          this.mensagemSucesso.set('Barbearia criada com sucesso.');
+          this.barbeariaNome.set('');
+          this.barbeariaCidade.set('');
+          this.barbeariaEstado.set('');
+          this.barbeariaTelefone.set('');
+          this.barbearias.update((lista) => [...lista, criada]);
+          this.selecionarBarbearia(criada.id);
+        },
+        error: (erro) => this.mostrarErro(erro),
+      });
+  }
+
+  protected selecionarBarbearia(idBarbearia: number): void {
+    this.barbeariaSelecionadaId.set(idBarbearia);
+    this.barbeiroSelecionadoId.set(null);
+    this.disponibilidades.set([]);
+    this.limparMensagens();
+
+    this.servicoServico.listarPorBarbearia(idBarbearia).subscribe({
+      next: (lista) => this.servicos.set(lista),
+      error: (erro) => this.mostrarErro(erro),
+    });
+    this.barbeiroServico.listarPorBarbearia(idBarbearia).subscribe({
+      next: (lista) => this.barbeiros.set(lista),
+      error: (erro) => this.mostrarErro(erro),
+    });
+  }
+
+  // ===== Serviços ==========================================================
+
+  protected criarServico(): void {
+    const idBarbearia = this.barbeariaSelecionadaId();
+    if (idBarbearia === null) {
+      return;
+    }
+    if (!this.servicoNome().trim() || !this.servicoDuracao() || this.servicoPreco() === null) {
+      this.mensagemErro.set('Preencha nome, duração e preço do serviço.');
+      return;
+    }
+    this.limparMensagens();
+
+    this.servicoServico
+      .criar({
+        id_barbearia: idBarbearia,
+        nome: this.servicoNome().trim(),
+        duracao_minutos: this.servicoDuracao()!,
+        preco: this.servicoPreco()!,
+      })
+      .subscribe({
+        next: (criado) => {
+          this.mensagemSucesso.set('Serviço cadastrado.');
+          this.servicoNome.set('');
+          this.servicoDuracao.set(null);
+          this.servicoPreco.set(null);
+          this.servicos.update((lista) => [...lista, criado]);
+        },
+        error: (erro) => this.mostrarErro(erro),
+      });
+  }
+
+  // ===== Barbeiros =========================================================
+
+  protected criarBarbeiro(): void {
+    const idBarbearia = this.barbeariaSelecionadaId();
+    if (idBarbearia === null) {
+      return;
+    }
+    if (!this.barbeiroIdUsuario()) {
+      this.mensagemErro.set('Informe o ID do usuário que será barbeiro.');
+      return;
+    }
+    this.limparMensagens();
+
+    this.barbeiroServico
+      .criar({
+        id_usuario: this.barbeiroIdUsuario()!,
+        id_barbearia: idBarbearia,
+        bio: this.barbeiroBio().trim() || null,
+      })
+      .subscribe({
+        next: (criado) => {
+          this.mensagemSucesso.set('Barbeiro cadastrado.');
+          this.barbeiroIdUsuario.set(null);
+          this.barbeiroBio.set('');
+          this.barbeiros.update((lista) => [...lista, criado]);
+        },
+        error: (erro) => this.mostrarErro(erro),
+      });
+  }
+
+  protected selecionarBarbeiro(idBarbeiro: number): void {
+    this.barbeiroSelecionadoId.set(idBarbeiro);
+    this.limparMensagens();
+
+    this.disponibilidadeServico.listarPorBarbeiro(idBarbeiro).subscribe({
+      next: (lista) => this.disponibilidades.set(lista),
+      error: (erro) => this.mostrarErro(erro),
+    });
+  }
+
+  // ===== Disponibilidades ==================================================
+
+  protected criarDisponibilidade(): void {
+    const idBarbeiro = this.barbeiroSelecionadoId();
+    if (idBarbeiro === null) {
+      return;
+    }
+    this.limparMensagens();
+
+    this.disponibilidadeServico
+      .criar({
+        id_barbeiro: idBarbeiro,
+        dia_semana: this.dispDia(),
+        hora_inicio: this.dispInicio(),
+        hora_fim: this.dispFim(),
+      })
+      .subscribe({
+        next: (criada) => {
+          this.mensagemSucesso.set('Horário adicionado.');
+          this.disponibilidades.update((lista) => [...lista, criada]);
+        },
+        error: (erro) => this.mostrarErro(erro),
+      });
+  }
+
+  protected removerDisponibilidade(id: number): void {
+    this.disponibilidadeServico.remover(id).subscribe({
+      next: () => {
+        this.disponibilidades.update((lista) =>
+          lista.filter((faixa) => faixa.id !== id),
+        );
+      },
+      error: (erro) => this.mostrarErro(erro),
+    });
+  }
+
+  // ===== Auxiliares ========================================================
+
+  protected nomeDoDia(diaSemana: number): string {
+    return nomeDiaSemana(diaSemana);
+  }
+
+  private limparMensagens(): void {
+    this.mensagemErro.set('');
+    this.mensagemSucesso.set('');
+  }
+
+  private mostrarErro(erro: HttpErrorResponse): void {
+    this.mensagemErro.set(erro.error?.erro ?? 'Ocorreu um erro na operação.');
+  }
+}

@@ -1,0 +1,163 @@
+/* ==========================================================================
+   Tela de gestão (admin/dono)
+   ========================================================================== */
+
+.gestao__cabecalho {
+  margin-bottom: 1.5rem;
+}
+
+.gestao__titulo {
+  font-size: 1.9rem;
+}
+
+.gestao__subtitulo {
+  margin-top: 0.25rem;
+  color: var(--cor-texto-suave);
+}
+
+.gestao__aviso {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--raio-borda);
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}
+
+.gestao__aviso--erro {
+  background-color: rgba(192, 83, 63, 0.12);
+  border-color: var(--cor-erro);
+  color: #e9b4a8;
+}
+
+.gestao__aviso--ok {
+  background-color: rgba(90, 168, 116, 0.12);
+  border-color: var(--cor-sucesso);
+  color: #abdcbb;
+}
+
+.gestao__contexto {
+  margin: 0.5rem 0 1.5rem;
+  color: var(--cor-texto-suave);
+}
+
+.gestao__contexto strong {
+  color: var(--cor-principal);
+}
+
+/* ----- Blocos ----- */
+
+.bloco {
+  margin-bottom: 1.75rem;
+  padding: 1.5rem;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+}
+
+.bloco__titulo {
+  font-size: 1.2rem;
+  margin-bottom: 1.1rem;
+}
+
+.bloco__vazio {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+}
+
+/* ----- Chips selecionáveis (barbearias, barbeiros) ----- */
+
+.lista-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.chip {
+  padding: 0.5rem 1rem;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  color: var(--cor-texto);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao),
+    background-color var(--transicao-padrao);
+}
+
+.chip:hover {
+  border-color: var(--cor-principal);
+}
+
+.chip--ativo {
+  background-color: rgba(224, 205, 85, 0.14);
+  border-color: var(--cor-principal);
+  color: var(--cor-principal);
+  font-weight: 600;
+}
+
+/* ----- Listas de itens (serviços, horários) ----- */
+
+.lista-itens {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  font-size: 0.95rem;
+}
+
+.item__detalhe {
+  color: var(--cor-texto-suave);
+  font-size: 0.85rem;
+}
+
+.item__remover {
+  background: transparent;
+  border: none;
+  color: #e9b4a8;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.item__remover:hover {
+  text-decoration: underline;
+}
+
+/* ----- Formulários ----- */
+
+.formulario__linha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.formulario__linha .campo__entrada {
+  flex: 1;
+  min-width: 140px;
+  width: auto;
+}
+
+.campo--curto {
+  flex: 0 0 auto !important;
+  min-width: 90px !important;
+  max-width: 130px;
+}
+
+.formulario__dica {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}

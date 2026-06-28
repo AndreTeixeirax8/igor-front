@@ -27,4 +27,16 @@ export class UsuarioServico {
 
     return this.clienteHttp.get<Usuario[]>(enderecoCompleto);
   }
+
+  /**
+   * Busca um usuário pelo ID. Disponível para qualquer usuário autenticado.
+   * Usado, por exemplo, para mostrar o nome de um barbeiro (que referencia um
+   * usuário) na tela de agendamento.
+   */
+  buscarPorId(id: number): Observable<Usuario> {
+    const enderecoCompleto =
+      configuracaoApi.enderecoBase + configuracaoApi.rotasUsuario.listar + '/' + id;
+
+    return this.clienteHttp.get<Usuario>(enderecoCompleto);
+  }
 }

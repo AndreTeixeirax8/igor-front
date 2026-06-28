@@ -1,0 +1,161 @@
+<!-- Tela de agendamento em etapas (dentro do layout do painel). -->
+
+<div class="agendar__cabecalho">
+  <h1 class="agendar__titulo">Agendar horário</h1>
+  <p class="agendar__subtitulo">
+    Escolha a barbearia, o profissional, o serviço e o horário.
+  </p>
+</div>
+
+@if (mensagemErro()) {
+  <p class="agendar__erro">{{ mensagemErro() }}</p>
+}
+
+<!-- Passo 1: barbearia -->
+<section class="passo">
+  <h2 class="passo__titulo"><span class="passo__numero">1</span> Barbearia</h2>
+
+  @if (barbearias().length === 0) {
+    <p class="passo__vazio">Nenhuma barbearia disponível no momento.</p>
+  } @else {
+    <div class="opcoes">
+      @for (barbearia of barbearias(); track barbearia.id) {
+        <button
+          type="button"
+          class="opcao"
+          [class.opcao--ativa]="barbeariaSelecionadaId() === barbearia.id"
+          (click)="selecionarBarbearia(barbearia.id)"
+        >
+          <span class="opcao__nome">{{ barbearia.nome }}</span>
+          @if (barbearia.cidade) {
+            <span class="opcao__detalhe">{{ barbearia.cidade }}</span>
+          }
+        </button>
+      }
+    </div>
+  }
+</section>
+
+<!-- Passo 2: barbeiro -->
+@if (barbeariaSelecionadaId() !== null) {
+  <section class="passo">
+    <h2 class="passo__titulo"><span class="passo__numero">2</span> Profissional</h2>
+
+    @if (barbeiros().length === 0) {
+      <p class="passo__vazio">Esta barbearia ainda não tem barbeiros cadastrados.</p>
+    } @else {
+      <div class="opcoes">
+        @for (barbeiro of barbeiros(); track barbeiro.id) {
+          <button
+            type="button"
+            class="opcao"
+            [class.opcao--ativa]="barbeiroSelecionadoId() === barbeiro.id"
+            [disabled]="!barbeiro.ativo"
+            (click)="selecionarBarbeiro(barbeiro.id)"
+          >
+            <span class="opcao__nome">{{ nomeBarbeiro(barbeiro) }}</span>
+            @if (barbeiro.bio) {
+              <span class="opcao__detalhe">{{ barbeiro.bio }}</span>
+            }
+          </button>
+        }
+      </div>
+    }
+  </section>
+}
+
+<!-- Passo 3: serviço -->
+@if (barbeiroSelecionadoId() !== null) {
+  <section class="passo">
+    <h2 class="passo__titulo"><span class="passo__numero">3</span> Serviço</h2>
+
+    @if (servicos().length === 0) {
+      <p class="passo__vazio">Esta barbearia ainda não tem serviços cadastrados.</p>
+    } @else {
+      <div class="opcoes">
+        @for (servico of servicos(); track servico.id) {
+          <button
+            type="button"
+            class="opcao"
+            [class.opcao--ativa]="servicoSelecionadoId() === servico.id"
+            [disabled]="!servico.ativo"
+            (click)="selecionarServico(servico.id)"
+          >
+            <span class="opcao__nome">{{ servico.nome }}</span>
+            <span class="opcao__detalhe">
+              {{ servico.duracao_minutos }} min · R$ {{ servico.preco.toFixed(2) }}
+            </span>
+          </button>
+        }
+      </div>
+    }
+  </section>
+}
+
+<!-- Passo 4: data/hora -->
+@if (servicoSelecionadoId() !== null) {
+  <section class="passo">
+    <h2 class="passo__titulo"><span class="passo__numero">4</span> Data e hora</h2>
+
+    <!-- Grade de atendimento do barbeiro, como referência. -->
+    @if (disponibilidades().length > 0) {
+      <div class="grade">
+        <p class="grade__titulo">Atende em:</p>
+        <ul class="grade__lista">
+          @for (faixa of disponibilidades(); track faixa.id) {
+            <li class="grade__item">
+              {{ nomeDoDia(faixa.dia_semana) }}: {{ faixa.hora_inicio }}–{{ faixa.hora_fim }}
+            </li>
+          }
+        </ul>
+      </div>
+    } @else {
+      <p class="passo__vazio">
+        Este barbeiro ainda não tem horários cadastrados — o agendamento pode ser
+        recusado por estar fora do expediente.
+      </p>
+    }
+
+    <div class="campo agendar__campo">
+      <label class="campo__rotulo" for="dataHora">Escolha o horário</label>
+      <input
+        id="dataHora"
+        class="campo__entrada"
+        type="datetime-local"
+        name="dataHora"
+        [ngModel]="dataHora()"
+        (ngModelChange)="dataHora.set($event)"
+      />
+    </div>
+
+    <div class="campo agendar__campo">
+      <label class="campo__rotulo" for="observacoes">Observações (opcional)</label>
+      <input
+        id="observacoes"
+        class="campo__entrada"
+        type="text"
+        name="observacoes"
+        placeholder="Ex.: prefiro máquina 2"
+        [ngModel]="observacoes()"
+        (ngModelChange)="observacoes.set($event)"
+      />
+    </div>
+
+    <!-- Resumo -->
+    @if (servicoSelecionado(); as servico) {
+      <div class="resumo">
+        <span>Total: <strong>R$ {{ servico.preco.toFixed(2) }}</strong></span>
+        <span class="resumo__duracao">{{ servico.duracao_minutos }} minutos</span>
+      </div>
+    }
+
+    <button
+      class="botao botao--principal agendar__confirmar"
+      type="button"
+      [disabled]="!podeAgendar() || enviando()"
+      (click)="agendar()"
+    >
+      {{ enviando() ? 'Agendando...' : 'Confirmar agendamento' }}
+    </button>
+  </section>
+}

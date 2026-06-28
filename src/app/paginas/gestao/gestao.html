@@ -1,0 +1,157 @@
+<!-- Tela de gestão (admin/dono) — dentro do layout do painel. -->
+
+<div class="gestao__cabecalho">
+  <h1 class="gestao__titulo">Gestão</h1>
+  <p class="gestao__subtitulo">
+    Cadastre a barbearia, os serviços, os barbeiros e a grade de horários.
+  </p>
+</div>
+
+@if (mensagemErro()) {
+  <p class="gestao__aviso gestao__aviso--erro">{{ mensagemErro() }}</p>
+}
+@if (mensagemSucesso()) {
+  <p class="gestao__aviso gestao__aviso--ok">{{ mensagemSucesso() }}</p>
+}
+
+<!-- ===== Barbearias ===== -->
+<section class="bloco">
+  <h2 class="bloco__titulo">Barbearias</h2>
+
+  <div class="lista-chips">
+    @for (barbearia of barbearias(); track barbearia.id) {
+      <button
+        type="button"
+        class="chip"
+        [class.chip--ativo]="barbeariaSelecionadaId() === barbearia.id"
+        (click)="selecionarBarbearia(barbearia.id)"
+      >
+        {{ barbearia.nome }}
+      </button>
+    } @empty {
+      <p class="bloco__vazio">Nenhuma barbearia cadastrada ainda.</p>
+    }
+  </div>
+
+  <form class="formulario" (ngSubmit)="criarBarbearia()">
+    <div class="formulario__linha">
+      <input class="campo__entrada" placeholder="Nome *" name="bNome"
+        [ngModel]="barbeariaNome()" (ngModelChange)="barbeariaNome.set($event)" />
+      <input class="campo__entrada" placeholder="Cidade" name="bCidade"
+        [ngModel]="barbeariaCidade()" (ngModelChange)="barbeariaCidade.set($event)" />
+      <input class="campo__entrada campo--curto" placeholder="UF" maxlength="2" name="bEstado"
+        [ngModel]="barbeariaEstado()" (ngModelChange)="barbeariaEstado.set($event)" />
+      <input class="campo__entrada" placeholder="Telefone" name="bTelefone"
+        [ngModel]="barbeariaTelefone()" (ngModelChange)="barbeariaTelefone.set($event)" />
+      <button class="botao botao--principal" type="submit">Criar</button>
+    </div>
+  </form>
+</section>
+
+<!-- ===== Conteúdo da barbearia selecionada ===== -->
+@if (barbeariaSelecionada(); as barbearia) {
+  <p class="gestao__contexto">
+    Gerenciando: <strong>{{ barbearia.nome }}</strong>
+  </p>
+
+  <!-- Serviços -->
+  <section class="bloco">
+    <h2 class="bloco__titulo">Serviços</h2>
+
+    <ul class="lista-itens">
+      @for (servico of servicos(); track servico.id) {
+        <li class="item">
+          <span>{{ servico.nome }}</span>
+          <span class="item__detalhe">
+            {{ servico.duracao_minutos }} min · R$ {{ servico.preco.toFixed(2) }}
+          </span>
+        </li>
+      } @empty {
+        <li class="bloco__vazio">Nenhum serviço cadastrado.</li>
+      }
+    </ul>
+
+    <form class="formulario" (ngSubmit)="criarServico()">
+      <div class="formulario__linha">
+        <input class="campo__entrada" placeholder="Nome do serviço *" name="sNome"
+          [ngModel]="servicoNome()" (ngModelChange)="servicoNome.set($event)" />
+        <input class="campo__entrada campo--curto" type="number" placeholder="Min *" name="sDur"
+          [ngModel]="servicoDuracao()" (ngModelChange)="servicoDuracao.set($event)" />
+        <input class="campo__entrada campo--curto" type="number" step="0.01" placeholder="Preço *" name="sPreco"
+          [ngModel]="servicoPreco()" (ngModelChange)="servicoPreco.set($event)" />
+        <button class="botao botao--principal" type="submit">Adicionar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Barbeiros -->
+  <section class="bloco">
+    <h2 class="bloco__titulo">Barbeiros</h2>
+
+    <div class="lista-chips">
+      @for (barbeiro of barbeiros(); track barbeiro.id) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip--ativo]="barbeiroSelecionadoId() === barbeiro.id"
+          (click)="selecionarBarbeiro(barbeiro.id)"
+        >
+          Barbeiro #{{ barbeiro.id }} (usuário {{ barbeiro.id_usuario }})
+        </button>
+      } @empty {
+        <p class="bloco__vazio">Nenhum barbeiro cadastrado.</p>
+      }
+    </div>
+
+    <form class="formulario" (ngSubmit)="criarBarbeiro()">
+      <div class="formulario__linha">
+        <input class="campo__entrada campo--curto" type="number" placeholder="ID do usuário *" name="brId"
+          [ngModel]="barbeiroIdUsuario()" (ngModelChange)="barbeiroIdUsuario.set($event)" />
+        <input class="campo__entrada" placeholder="Bio (opcional)" name="brBio"
+          [ngModel]="barbeiroBio()" (ngModelChange)="barbeiroBio.set($event)" />
+        <button class="botao botao--principal" type="submit">Cadastrar</button>
+      </div>
+      <p class="formulario__dica">
+        O "ID do usuário" é o id de uma conta já cadastrada (veja na tela de Clientes).
+      </p>
+    </form>
+  </section>
+
+  <!-- Disponibilidades do barbeiro selecionado -->
+  @if (barbeiroSelecionadoId() !== null) {
+    <section class="bloco">
+      <h2 class="bloco__titulo">
+        Grade de horários — Barbeiro #{{ barbeiroSelecionadoId() }}
+      </h2>
+
+      <ul class="lista-itens">
+        @for (faixa of disponibilidades(); track faixa.id) {
+          <li class="item">
+            <span>{{ nomeDoDia(faixa.dia_semana) }}: {{ faixa.hora_inicio }}–{{ faixa.hora_fim }}</span>
+            <button class="item__remover" type="button" (click)="removerDisponibilidade(faixa.id)">
+              Remover
+            </button>
+          </li>
+        } @empty {
+          <li class="bloco__vazio">Nenhum horário cadastrado para este barbeiro.</li>
+        }
+      </ul>
+
+      <form class="formulario" (ngSubmit)="criarDisponibilidade()">
+        <div class="formulario__linha">
+          <select class="campo__entrada" name="dDia"
+            [ngModel]="dispDia()" (ngModelChange)="dispDia.set($event)">
+            @for (dia of diasSemana; track dia.valor) {
+              <option [ngValue]="dia.valor">{{ dia.nome }}</option>
+            }
+          </select>
+          <input class="campo__entrada campo--curto" type="time" name="dInicio"
+            [ngModel]="dispInicio()" (ngModelChange)="dispInicio.set($event)" />
+          <input class="campo__entrada campo--curto" type="time" name="dFim"
+            [ngModel]="dispFim()" (ngModelChange)="dispFim.set($event)" />
+          <button class="botao botao--principal" type="submit">Adicionar</button>
+        </div>
+      </form>
+    </section>
+  }
+}

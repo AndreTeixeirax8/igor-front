@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { autenticacaoGuarda } from './nucleo/guardas/autenticacao.guarda';
 import { adminGuarda } from './nucleo/guardas/admin.guarda';
+import { gestaoGuarda } from './nucleo/guardas/gestao.guarda';
 import { LayoutPainel } from './compartilhado/layout-painel/layout-painel';
 
 /**
@@ -38,12 +39,30 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'agendar',
+        loadComponent: () =>
+          import('./paginas/agendar/agendar').then((modulo) => modulo.Agendar),
+      },
+      {
+        path: 'meus-agendamentos',
+        loadComponent: () =>
+          import('./paginas/meus-agendamentos/meus-agendamentos').then(
+            (modulo) => modulo.MeusAgendamentos,
+          ),
+      },
+      {
         path: 'clientes',
         canActivate: [adminGuarda],
         loadComponent: () =>
           import('./paginas/clientes/clientes').then(
             (modulo) => modulo.Clientes,
           ),
+      },
+      {
+        path: 'gestao',
+        canActivate: [gestaoGuarda],
+        loadComponent: () =>
+          import('./paginas/gestao/gestao').then((modulo) => modulo.Gestao),
       },
       { path: '', pathMatch: 'full', redirectTo: 'principal' },
     ],

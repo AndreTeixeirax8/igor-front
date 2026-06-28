@@ -1,0 +1,61 @@
+<!-- Conteúdo da tela "Meus agendamentos" (dentro do layout do painel). -->
+
+<div class="meus__cabecalho">
+  <h1 class="meus__titulo">Meus agendamentos</h1>
+  <p class="meus__subtitulo">Acompanhe e gerencie os seus horários.</p>
+</div>
+
+@if (carregando()) {
+  <div class="meus__aviso">Carregando seus agendamentos...</div>
+} @else if (mensagemErro()) {
+  <div class="meus__aviso meus__aviso--erro">
+    <p>{{ mensagemErro() }}</p>
+    <button class="botao botao--contorno" type="button" (click)="carregar()">
+      Tentar novamente
+    </button>
+  </div>
+} @else if (agendamentos().length === 0) {
+  <div class="meus__aviso">
+    <span class="meus__vazio-icone">🗓</span>
+    <p>Você ainda não tem agendamentos. Que tal marcar um horário?</p>
+  </div>
+} @else {
+  <div class="meus__lista">
+    @for (agendamento of agendamentos(); track agendamento.id) {
+      <article class="cartao-agendamento">
+        <div class="cartao-agendamento__principal">
+          <p class="cartao-agendamento__data">
+            {{ formatar(agendamento.inicio_em) }}
+          </p>
+          <p class="cartao-agendamento__detalhe">
+            Barbeiro #{{ agendamento.id_barbeiro }} ·
+            Serviço #{{ agendamento.id_servico }}
+          </p>
+          @if (agendamento.observacoes) {
+            <p class="cartao-agendamento__obs">"{{ agendamento.observacoes }}"</p>
+          }
+        </div>
+
+        <div class="cartao-agendamento__lado">
+          <span class="selo selo--{{ agendamento.status }}">
+            {{ rotulo(agendamento.status) }}
+          </span>
+          <span class="cartao-agendamento__preco">
+            R$ {{ agendamento.preco_no_agendamento.toFixed(2) }}
+          </span>
+
+          @if (!encerrado(agendamento.status)) {
+            <button
+              class="botao botao--contorno cartao-agendamento__cancelar"
+              type="button"
+              [disabled]="cancelandoId() === agendamento.id"
+              (click)="cancelar(agendamento)"
+            >
+              {{ cancelandoId() === agendamento.id ? 'Cancelando...' : 'Cancelar' }}
+            </button>
+          }
+        </div>
+      </article>
+    }
+  </div>
+}

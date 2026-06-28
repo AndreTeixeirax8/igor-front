@@ -1,0 +1,170 @@
+/* ==========================================================================
+   Tela de agendamento (em etapas)
+   ========================================================================== */
+
+.agendar__cabecalho {
+  margin-bottom: 2rem;
+}
+
+.agendar__titulo {
+  font-size: 1.9rem;
+}
+
+.agendar__subtitulo {
+  margin-top: 0.25rem;
+  color: var(--cor-texto-suave);
+}
+
+.agendar__erro {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background-color: rgba(192, 83, 63, 0.12);
+  border: 1px solid var(--cor-erro);
+  border-radius: var(--raio-borda);
+  color: #e9b4a8;
+  font-size: 0.9rem;
+}
+
+/* ----- Passos ----- */
+
+.passo {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+}
+
+.passo__titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.15rem;
+  margin-bottom: 1.25rem;
+}
+
+.passo__numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background-color: var(--cor-principal);
+  color: var(--cor-texto-sobre-dourado);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.passo__vazio {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+}
+
+/* ----- Opções (cards selecionáveis) ----- */
+
+.opcoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.85rem;
+}
+
+.opcao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1rem 1.15rem;
+  text-align: left;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  color: var(--cor-texto);
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao),
+    background-color var(--transicao-padrao);
+}
+
+.opcao:hover:not(:disabled) {
+  border-color: var(--cor-principal);
+}
+
+.opcao:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.opcao--ativa {
+  border-color: var(--cor-principal);
+  background-color: rgba(224, 205, 85, 0.12);
+}
+
+.opcao__nome {
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+}
+
+.opcao__detalhe {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ----- Grade de horários (referência) ----- */
+
+.grade {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.15rem;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px dashed var(--cor-borda);
+  border-radius: var(--raio-borda);
+}
+
+.grade__titulo {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  margin-bottom: 0.5rem;
+}
+
+.grade__lista {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.grade__item {
+  padding: 0.25rem 0.7rem;
+  background-color: var(--cor-superficie-clara);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: var(--cor-texto);
+}
+
+/* ----- Campos e resumo ----- */
+
+.agendar__campo {
+  margin-bottom: 1.25rem;
+  max-width: 360px;
+}
+
+.resumo {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.1rem;
+}
+
+.resumo strong {
+  color: var(--cor-principal);
+  font-family: var(--fonte-titulo);
+}
+
+.resumo__duracao {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.agendar__confirmar {
+  width: 100%;
+  max-width: 360px;
+}

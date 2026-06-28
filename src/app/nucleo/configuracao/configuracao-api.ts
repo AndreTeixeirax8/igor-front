@@ -22,4 +22,22 @@ export const configuracaoApi = {
     // Listagem de todos os usuários (rota protegida: somente administradores).
     listar: '/usuarios',
   },
+
+  /** Caminho base das barbearias. */
+  rotaBarbearias: '/barbearias',
+
+  /** Caminho base dos barbeiros (listagem usa ?id_barbearia=). */
+  rotaBarbeiros: '/barbeiros',
+
+  /** Caminho base dos serviços (listagem usa ?id_barbearia=). */
+  rotaServicos: '/servicos',
+
+  /** Caminho base das disponibilidades (listagem usa ?id_barbeiro=). */
+  rotaDisponibilidades: '/disponibilidades',
+
+  /** Rotas do módulo de agendamentos. */
+  rotasAgendamento: {
+    base: '/agendamentos',
+    meus: '/agendamentos/meus',
+  },
 };
