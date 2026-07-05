@@ -135,6 +135,39 @@
   text-decoration: underline;
 }
 
+.item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.item__inativo {
+  color: var(--cor-texto-suave);
+  text-decoration: line-through;
+}
+
+.item__botoes {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.item__acao {
+  background: transparent;
+  border: none;
+  color: var(--cor-principal);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.item__acao:hover {
+  text-decoration: underline;
+}
+
+/* Linha de edição ocupa a largura toda do item. */
+.item__edicao {
+  width: 100%;
+}
+
 /* ----- Formulários ----- */
 
 .formulario__linha {

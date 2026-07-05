@@ -30,6 +30,15 @@ export interface Agendamento {
 }
 
 /**
+ * Horários livres de um barbeiro em um dia específico.
+ * "data" no formato "AAAA-MM-DD"; "horarios" no formato "HH:MM".
+ */
+export interface HorariosDia {
+  data: string;
+  horarios: string[];
+}
+
+/**
  * Dados enviados para criar um agendamento. O cliente é sempre o usuário
  * autenticado (não vai no corpo). "inicio_em" deve estar no formato RFC 3339.
  */

@@ -3,7 +3,7 @@
 <div class="agendar__cabecalho">
   <h1 class="agendar__titulo">Agendar horário</h1>
   <p class="agendar__subtitulo">
-    Escolha a barbearia, o profissional, o serviço e o horário.
+    Escolha a barbearia, o profissional, o serviço e o horário livre.
   </p>
 </div>
 
@@ -92,70 +92,104 @@
   </section>
 }
 
-<!-- Passo 4: data/hora -->
+<!-- Passo 4: calendário + horários -->
 @if (servicoSelecionadoId() !== null) {
   <section class="passo">
-    <h2 class="passo__titulo"><span class="passo__numero">4</span> Data e hora</h2>
+    <h2 class="passo__titulo"><span class="passo__numero">4</span> Dia e horário</h2>
 
-    <!-- Grade de atendimento do barbeiro, como referência. -->
-    @if (disponibilidades().length > 0) {
-      <div class="grade">
-        <p class="grade__titulo">Atende em:</p>
-        <ul class="grade__lista">
-          @for (faixa of disponibilidades(); track faixa.id) {
-            <li class="grade__item">
-              {{ nomeDoDia(faixa.dia_semana) }}: {{ faixa.hora_inicio }}–{{ faixa.hora_fim }}
-            </li>
-          }
-        </ul>
-      </div>
+    <!-- Navegação do mês -->
+    <div class="calendario__topo">
+      <button class="calendario__nav" type="button" (click)="mesAnterior()">‹</button>
+      <span class="calendario__mes">{{ rotuloMes() }}</span>
+      <button class="calendario__nav" type="button" (click)="proximoMes()">›</button>
+    </div>
+
+    <!-- Grade do mês -->
+    <div class="calendario">
+      @for (dia of cabecalhoSemana; track dia) {
+        <span class="calendario__cabecalho">{{ dia }}</span>
+      }
+
+      @for (celula of celulas(); track $index) {
+        @if (celula === null) {
+          <span class="calendario__vazio"></span>
+        } @else {
+          <button
+            type="button"
+            class="calendario__dia"
+            [class.calendario__dia--disponivel]="celula.disponivel"
+            [class.calendario__dia--selecionado]="diaSelecionado() === celula.data"
+            [class.calendario__dia--hoje]="celula.hoje"
+            [disabled]="!celula.disponivel"
+            (click)="selecionarDia(celula)"
+          >
+            {{ celula.dia }}
+          </button>
+        }
+      }
+    </div>
+
+    @if (carregandoHorarios()) {
+      <p class="passo__vazio">Buscando horários livres...</p>
     } @else {
-      <p class="passo__vazio">
-        Este barbeiro ainda não tem horários cadastrados — o agendamento pode ser
-        recusado por estar fora do expediente.
+      <p class="calendario__legenda">
+        Os dias em destaque têm horários livres. Selecione um dia para ver os horários.
       </p>
     }
 
-    <div class="campo agendar__campo">
-      <label class="campo__rotulo" for="dataHora">Escolha o horário</label>
-      <input
-        id="dataHora"
-        class="campo__entrada"
-        type="datetime-local"
-        name="dataHora"
-        [ngModel]="dataHora()"
-        (ngModelChange)="dataHora.set($event)"
-      />
-    </div>
-
-    <div class="campo agendar__campo">
-      <label class="campo__rotulo" for="observacoes">Observações (opcional)</label>
-      <input
-        id="observacoes"
-        class="campo__entrada"
-        type="text"
-        name="observacoes"
-        placeholder="Ex.: prefiro máquina 2"
-        [ngModel]="observacoes()"
-        (ngModelChange)="observacoes.set($event)"
-      />
-    </div>
-
-    <!-- Resumo -->
-    @if (servicoSelecionado(); as servico) {
-      <div class="resumo">
-        <span>Total: <strong>R$ {{ servico.preco.toFixed(2) }}</strong></span>
-        <span class="resumo__duracao">{{ servico.duracao_minutos }} minutos</span>
+    <!-- Horários do dia selecionado -->
+    @if (diaSelecionado() !== null) {
+      <div class="horarios">
+        <p class="horarios__titulo">Horários disponíveis</p>
+        @if (horariosDoDia().length === 0) {
+          <p class="passo__vazio">Nenhum horário livre neste dia.</p>
+        } @else {
+          <div class="horarios__lista">
+            @for (hora of horariosDoDia(); track hora) {
+              <button
+                type="button"
+                class="horario"
+                [class.horario--ativo]="horaSelecionada() === hora"
+                (click)="selecionarHora(hora)"
+              >
+                {{ hora }}
+              </button>
+            }
+          </div>
+        }
       </div>
     }
 
-    <button
-      class="botao botao--principal agendar__confirmar"
-      type="button"
-      [disabled]="!podeAgendar() || enviando()"
-      (click)="agendar()"
-    >
-      {{ enviando() ? 'Agendando...' : 'Confirmar agendamento' }}
-    </button>
+    <!-- Observações e confirmação -->
+    @if (horaSelecionada() !== null) {
+      <div class="campo agendar__campo">
+        <label class="campo__rotulo" for="observacoes">Observações (opcional)</label>
+        <input
+          id="observacoes"
+          class="campo__entrada"
+          type="text"
+          name="observacoes"
+          placeholder="Ex.: prefiro máquina 2"
+          [ngModel]="observacoes()"
+          (ngModelChange)="observacoes.set($event)"
+        />
+      </div>
+
+      @if (servicoSelecionado(); as servico) {
+        <div class="resumo">
+          <span>Total: <strong>R$ {{ servico.preco.toFixed(2) }}</strong></span>
+          <span class="resumo__duracao">{{ servico.duracao_minutos }} minutos</span>
+        </div>
+      }
+
+      <button
+        class="botao botao--principal agendar__confirmar"
+        type="button"
+        [disabled]="!podeAgendar() || enviando()"
+        (click)="agendar()"
+      >
+        {{ enviando() ? 'Agendando...' : 'Confirmar agendamento' }}
+      </button>
+    }
   </section>
 }

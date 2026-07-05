@@ -3,7 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { configuracaoApi } from '../configuracao/configuracao-api';
-import { Servico, DadosCriacaoServico } from '../modelos/servico.modelo';
+import {
+  Servico,
+  DadosCriacaoServico,
+  DadosAtualizacaoServico,
+} from '../modelos/servico.modelo';
 
 /**
  * Serviço que conversa com as rotas de serviços (corte, barba etc.) do back-end.
@@ -29,5 +33,10 @@ export class ServicoServico {
   /** Cadastra um novo serviço (dono ou admin). */
   criar(dados: DadosCriacaoServico): Observable<Servico> {
     return this.clienteHttp.post<Servico>(this.endereco, dados);
+  }
+
+  /** Atualiza um serviço existente (dono ou admin). */
+  atualizar(id: number, dados: DadosAtualizacaoServico): Observable<Servico> {
+    return this.clienteHttp.put<Servico>(`${this.endereco}/${id}`, dados);
   }
 }

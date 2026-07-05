@@ -64,6 +64,12 @@ export class Gestao {
   protected servicoDuracao = signal<number | null>(null);
   protected servicoPreco = signal<number | null>(null);
 
+  /** Edição de serviço: ID em edição (nulo quando nenhum) e campos do formulário. */
+  protected readonly servicoEmEdicaoId = signal<number | null>(null);
+  protected editServicoNome = signal('');
+  protected editServicoDuracao = signal<number | null>(null);
+  protected editServicoPreco = signal<number | null>(null);
+
   /** Formulário: novo barbeiro. */
   protected barbeiroIdUsuario = signal<number | null>(null);
   protected barbeiroBio = signal('');
@@ -165,6 +171,60 @@ export class Gestao {
         },
         error: (erro) => this.mostrarErro(erro),
       });
+  }
+
+  /** Entra no modo de edição de um serviço, preenchendo o formulário. */
+  protected iniciarEdicaoServico(servico: Servico): void {
+    this.servicoEmEdicaoId.set(servico.id);
+    this.editServicoNome.set(servico.nome);
+    this.editServicoDuracao.set(servico.duracao_minutos);
+    this.editServicoPreco.set(servico.preco);
+    this.limparMensagens();
+  }
+
+  /** Cancela a edição em andamento. */
+  protected cancelarEdicaoServico(): void {
+    this.servicoEmEdicaoId.set(null);
+  }
+
+  /** Salva as alterações do serviço em edição. */
+  protected salvarEdicaoServico(id: number): void {
+    if (!this.editServicoNome().trim() || !this.editServicoDuracao() || this.editServicoPreco() === null) {
+      this.mensagemErro.set('Preencha nome, duração e preço do serviço.');
+      return;
+    }
+    this.limparMensagens();
+
+    this.servicoServico
+      .atualizar(id, {
+        nome: this.editServicoNome().trim(),
+        duracao_minutos: this.editServicoDuracao()!,
+        preco: this.editServicoPreco()!,
+      })
+      .subscribe({
+        next: (atualizado) => {
+          this.mensagemSucesso.set('Serviço atualizado.');
+          this.servicoEmEdicaoId.set(null);
+          this.substituirServico(atualizado);
+        },
+        error: (erro) => this.mostrarErro(erro),
+      });
+  }
+
+  /** Ativa ou desativa um serviço (o back trata o campo "ativo"). */
+  protected alternarAtivoServico(servico: Servico): void {
+    this.limparMensagens();
+    this.servicoServico.atualizar(servico.id, { ativo: !servico.ativo }).subscribe({
+      next: (atualizado) => this.substituirServico(atualizado),
+      error: (erro) => this.mostrarErro(erro),
+    });
+  }
+
+  /** Substitui um serviço na lista pela versão atualizada. */
+  private substituirServico(servico: Servico): void {
+    this.servicos.update((lista) =>
+      lista.map((s) => (s.id === servico.id ? servico : s)),
+    );
   }
 
   // ===== Barbeiros =========================================================

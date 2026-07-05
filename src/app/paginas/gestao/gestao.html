@@ -61,10 +61,40 @@
     <ul class="lista-itens">
       @for (servico of servicos(); track servico.id) {
         <li class="item">
-          <span>{{ servico.nome }}</span>
-          <span class="item__detalhe">
-            {{ servico.duracao_minutos }} min · R$ {{ servico.preco.toFixed(2) }}
-          </span>
+          @if (servicoEmEdicaoId() === servico.id) {
+            <!-- Modo edição -->
+            <div class="formulario__linha item__edicao">
+              <input class="campo__entrada" placeholder="Nome" name="eNome{{ servico.id }}"
+                [ngModel]="editServicoNome()" (ngModelChange)="editServicoNome.set($event)" />
+              <input class="campo__entrada campo--curto" type="number" placeholder="Min" name="eDur{{ servico.id }}"
+                [ngModel]="editServicoDuracao()" (ngModelChange)="editServicoDuracao.set($event)" />
+              <input class="campo__entrada campo--curto" type="number" step="0.01" placeholder="Preço" name="ePreco{{ servico.id }}"
+                [ngModel]="editServicoPreco()" (ngModelChange)="editServicoPreco.set($event)" />
+              <button class="botao botao--principal" type="button" (click)="salvarEdicaoServico(servico.id)">
+                Salvar
+              </button>
+              <button class="item__acao" type="button" (click)="cancelarEdicaoServico()">
+                Cancelar
+              </button>
+            </div>
+          } @else {
+            <!-- Modo exibição -->
+            <div class="item__info">
+              <span [class.item__inativo]="!servico.ativo">{{ servico.nome }}</span>
+              <span class="item__detalhe">
+                {{ servico.duracao_minutos }} min · R$ {{ servico.preco.toFixed(2) }}
+                @if (!servico.ativo) { · <em>inativo</em> }
+              </span>
+            </div>
+            <div class="item__botoes">
+              <button class="item__acao" type="button" (click)="iniciarEdicaoServico(servico)">
+                Editar
+              </button>
+              <button class="item__acao" type="button" (click)="alternarAtivoServico(servico)">
+                {{ servico.ativo ? 'Desativar' : 'Ativar' }}
+              </button>
+            </div>
+          }
         </li>
       } @empty {
         <li class="bloco__vazio">Nenhum serviço cadastrado.</li>

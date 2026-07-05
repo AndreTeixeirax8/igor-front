@@ -176,23 +176,27 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
   O menu mostra itens conforme o perfil (Gestão para admin/dono; Clientes só admin).
 - Tela principal (painel) com identidade visual aplicada.
 - Tela de clientes: tabela com busca, contato e perfil (dados reais do back).
-- **Agendar** (cliente): escolhe barbearia → barbeiro → serviço → data/hora e
-  cria o agendamento (converte para RFC 3339 com fuso local; mostra a grade do
-  barbeiro como referência).
+- **Agendar** (cliente): escolhe barbearia → barbeiro → serviço e então um
+  **calendário do mês** mostra os dias com vaga; ao clicar no dia aparecem os
+  **horários livres** (calculados no back via `GET
+  /agendamentos/horarios-disponiveis`). O cliente clica no horário e confirma —
+  horários ocupados não aparecem, e um `409` (corrida) é tratado com aviso e
+  recarga da lista.
 - **Meus agendamentos** (cliente): lista e cancela os próprios agendamentos,
   mostrando os **nomes** de serviço e barbeiro.
 - **Agenda** (gestor: admin/dono/barbeiro): lista todos os agendamentos com
   filtro por status e permite **mudar o status** (confirmar, iniciar, concluir,
   não compareceu, cancelar); nomes resolvidos a partir dos IDs.
-- **Gestão** (admin/dono): cadastra barbearia e, dentro dela, serviços,
-  barbeiros e a grade de horários de cada barbeiro.
+- **Gestão** (admin/dono): cadastra barbearia e, dentro dela, serviços
+  (com **edição** de nome/duração/preço e **ativar/desativar**), barbeiros e a
+  grade de horários de cada barbeiro.
 - **Painel** com dados reais adaptados ao perfil (o cliente vê os próprios
   números; o gestor vê também os da barbearia) e atalhos rápidos.
 - Camada de dados (serviços + modelos) cobrindo **todas** as rotas da API.
 
 **Ainda a fazer (próximas telas):**
 
-- Edição/exclusão de barbearias, serviços e barbeiros (hoje há criação e leitura).
+- Edição de barbearias e barbeiros (serviços já têm edição/ativar-desativar).
 - Resolver nomes por lote (hoje uma chamada por ID, com cache).
 - Carregar dados reais nos cartões de resumo (hoje são valores fictícios).
 ```

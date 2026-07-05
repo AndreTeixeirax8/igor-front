@@ -23,3 +23,15 @@ export interface DadosCriacaoServico {
   duracao_minutos: number;
   preco: number;
 }
+
+/**
+ * Dados enviados para editar um serviço. Todos os campos são opcionais: envie
+ * apenas o que mudar.
+ */
+export interface DadosAtualizacaoServico {
+  nome?: string;
+  descricao?: string | null;
+  duracao_minutos?: number;
+  preco?: number;
+  ativo?: boolean;
+}

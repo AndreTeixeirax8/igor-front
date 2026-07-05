@@ -6,6 +6,7 @@ import { configuracaoApi } from '../configuracao/configuracao-api';
 import {
   Agendamento,
   DadosCriacaoAgendamento,
+  HorariosDia,
   StatusAgendamento,
 } from '../modelos/agendamento.modelo';
 
@@ -28,6 +29,24 @@ export class AgendamentoServico {
   /** Lista os agendamentos do usuário autenticado. */
   listarMeus(): Observable<Agendamento[]> {
     return this.clienteHttp.get<Agendamento[]>(this.enderecoMeus);
+  }
+
+  /**
+   * Consulta os horários livres de um barbeiro para um serviço, entre duas
+   * datas (formato "AAAA-MM-DD"). Devolve apenas os dias que têm horário livre.
+   */
+  horariosDisponiveis(
+    idBarbeiro: number,
+    idServico: number,
+    inicio: string,
+    fim: string,
+  ): Observable<HorariosDia[]> {
+    const parametros =
+      `?id_barbeiro=${idBarbeiro}&id_servico=${idServico}` +
+      `&inicio=${inicio}&fim=${fim}`;
+    return this.clienteHttp.get<HorariosDia[]>(
+      `${this.base}/horarios-disponiveis${parametros}`,
+    );
   }
 
   /** Lista todos os agendamentos (somente gestores). */

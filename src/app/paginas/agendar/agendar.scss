@@ -108,35 +108,136 @@
   color: var(--cor-texto-suave);
 }
 
-/* ----- Grade de horários (referência) ----- */
+/* ----- Calendário ----- */
 
-.grade {
-  margin-bottom: 1.5rem;
-  padding: 1rem 1.15rem;
+.calendario__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 360px;
+  margin-bottom: 1rem;
+}
+
+.calendario__mes {
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.calendario__nav {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--cor-borda);
   background-color: var(--cor-fundo-secundario);
-  border: 1px dashed var(--cor-borda);
-  border-radius: var(--raio-borda);
+  color: var(--cor-texto);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao);
 }
 
-.grade__titulo {
-  font-size: 0.85rem;
+.calendario__nav:hover {
+  border-color: var(--cor-principal);
+}
+
+.calendario {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  max-width: 360px;
+}
+
+.calendario__cabecalho {
+  text-align: center;
+  font-size: 0.75rem;
   color: var(--cor-texto-suave);
-  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
 }
 
-.grade__lista {
-  list-style: none;
+.calendario__vazio {
+  aspect-ratio: 1;
+}
+
+.calendario__dia {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: var(--cor-fundo-secundario);
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+  cursor: default;
+}
+
+/* Dias com horário livre ficam clicáveis e em destaque. */
+.calendario__dia--disponivel {
+  color: var(--cor-texto);
+  border-color: rgba(224, 205, 85, 0.4);
+  background-color: rgba(224, 205, 85, 0.1);
+  cursor: pointer;
+}
+
+.calendario__dia--disponivel:hover {
+  border-color: var(--cor-principal);
+}
+
+.calendario__dia--hoje {
+  font-weight: 700;
+}
+
+.calendario__dia--selecionado {
+  background-color: var(--cor-principal);
+  color: var(--cor-texto-sobre-dourado);
+  border-color: var(--cor-principal);
+}
+
+.calendario__legenda {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ----- Horários do dia ----- */
+
+.horarios {
+  margin-top: 1.5rem;
+}
+
+.horarios__titulo {
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+  margin-bottom: 0.6rem;
+}
+
+.horarios__lista {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.grade__item {
-  padding: 0.25rem 0.7rem;
-  background-color: var(--cor-superficie-clara);
-  border-radius: 999px;
-  font-size: 0.8rem;
+.horario {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  background-color: var(--cor-fundo-secundario);
   color: var(--cor-texto);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao),
+    background-color var(--transicao-padrao);
+}
+
+.horario:hover {
+  border-color: var(--cor-principal);
+}
+
+.horario--ativo {
+  background-color: var(--cor-principal);
+  color: var(--cor-texto-sobre-dourado);
+  border-color: var(--cor-principal);
+  font-weight: 600;
 }
 
 /* ----- Campos e resumo ----- */
