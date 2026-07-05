@@ -3,12 +3,12 @@
 <!-- Cabeçalho da página -->
 <div class="principal__cabecalho">
   <p class="principal__saudacao">Olá, {{ primeiroNome() }} 👋</p>
-  <h1 class="principal__titulo">Painel da barbearia</h1>
+  <h1 class="principal__titulo">Painel</h1>
 </div>
 
-<!-- Cartões de resumo -->
+<!-- Cartões de resumo (dados reais) -->
 <section class="principal__cartoes">
-  @for (cartao of cartoesResumo; track cartao.titulo) {
+  @for (cartao of cartoes(); track cartao.titulo) {
     <article class="cartao-resumo">
       <p class="cartao-resumo__titulo">{{ cartao.titulo }}</p>
       <p class="cartao-resumo__valor">{{ cartao.valor }}</p>
@@ -17,18 +17,17 @@
   }
 </section>
 
-<!-- Próximos agendamentos (espaço reservado) -->
+<!-- Ações rápidas -->
 <section class="principal__bloco">
-  <div class="principal__bloco-cabecalho">
-    <h2 class="principal__bloco-titulo">Próximos agendamentos</h2>
-    <button class="botao botao--contorno" type="button" disabled>Em breve</button>
-  </div>
+  <h2 class="principal__bloco-titulo">Ações rápidas</h2>
 
-  <div class="principal__vazio">
-    <span class="principal__vazio-icone">✂</span>
-    <p class="principal__vazio-texto">
-      A lista de agendamentos aparecerá aqui assim que o módulo for conectado ao
-      back-end.
-    </p>
+  <div class="principal__acoes">
+    <a class="botao botao--principal" routerLink="/agendar">Agendar horário</a>
+    <a class="botao botao--contorno" routerLink="/meus-agendamentos">
+      Meus agendamentos
+    </a>
+    @if (ehGestor()) {
+      <a class="botao botao--contorno" routerLink="/agenda">Ver a agenda</a>
+    }
   </div>
 </section>

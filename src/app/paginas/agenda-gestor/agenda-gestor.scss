@@ -1,0 +1,189 @@
+/* ==========================================================================
+   Agenda do gestor
+   ========================================================================== */
+
+.agenda__cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.agenda__titulo {
+  font-size: 1.9rem;
+}
+
+.agenda__subtitulo {
+  margin-top: 0.25rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ----- Filtros ----- */
+
+.agenda__filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtro {
+  padding: 0.45rem 0.9rem;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  color: var(--cor-texto-suave);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao), color var(--transicao-padrao);
+}
+
+.filtro:hover {
+  color: var(--cor-texto);
+}
+
+.filtro--ativo {
+  background-color: rgba(224, 205, 85, 0.14);
+  border-color: var(--cor-principal);
+  color: var(--cor-principal);
+  font-weight: 600;
+}
+
+.agenda__erro {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  background-color: rgba(192, 83, 63, 0.12);
+  border: 1px solid var(--cor-erro);
+  border-radius: var(--raio-borda);
+  color: #e9b4a8;
+  font-size: 0.9rem;
+}
+
+.agenda__aviso {
+  padding: 3rem 1rem;
+  text-align: center;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  color: var(--cor-texto-suave);
+}
+
+/* ----- Lista ----- */
+
+.agenda__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.linha-agenda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+}
+
+.linha-agenda__data {
+  font-family: var(--fonte-titulo);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.linha-agenda__detalhe {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--cor-texto);
+}
+
+.linha-agenda__detalhe strong {
+  color: var(--cor-principal);
+}
+
+.linha-agenda__servico {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.linha-agenda__acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.linha-agenda__botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.linha-agenda__botao {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+/* ----- Selo de status (mesmas cores da tela de agendamentos) ----- */
+
+.selo {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.selo--agendado {
+  color: var(--cor-principal);
+  background-color: rgba(224, 205, 85, 0.14);
+  border-color: rgba(224, 205, 85, 0.4);
+}
+
+.selo--confirmado {
+  color: #8fc9d6;
+  background-color: rgba(143, 201, 214, 0.12);
+  border-color: rgba(143, 201, 214, 0.3);
+}
+
+.selo--em_andamento {
+  color: #c2a6e0;
+  background-color: rgba(194, 166, 224, 0.12);
+  border-color: rgba(194, 166, 224, 0.3);
+}
+
+.selo--concluido {
+  color: var(--cor-sucesso);
+  background-color: rgba(90, 168, 116, 0.12);
+  border-color: rgba(90, 168, 116, 0.3);
+}
+
+.selo--cancelado,
+.selo--nao_compareceu {
+  color: #e9b4a8;
+  background-color: rgba(192, 83, 63, 0.12);
+  border-color: rgba(192, 83, 63, 0.3);
+}
+
+@media (max-width: 720px) {
+  .linha-agenda {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .linha-agenda__acoes {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .linha-agenda__botoes {
+    justify-content: flex-start;
+  }
+}

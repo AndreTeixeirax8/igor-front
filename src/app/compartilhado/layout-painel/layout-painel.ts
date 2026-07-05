@@ -61,6 +61,13 @@ export class LayoutPainel {
       disponivel: true,
     },
     {
+      rotulo: 'Agenda',
+      icone: '📆',
+      rota: '/agenda',
+      disponivel: true,
+      perfisPermitidos: ['admin', 'dono', 'barbeiro'],
+    },
+    {
       rotulo: 'Gestão',
       icone: '✂',
       rota: '/gestao',

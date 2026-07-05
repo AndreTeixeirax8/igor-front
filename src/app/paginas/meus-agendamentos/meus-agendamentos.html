@@ -28,8 +28,8 @@
             {{ formatar(agendamento.inicio_em) }}
           </p>
           <p class="cartao-agendamento__detalhe">
-            Barbeiro #{{ agendamento.id_barbeiro }} ·
-            Serviço #{{ agendamento.id_servico }}
+            {{ nomesServico()[agendamento.id_servico] ?? '...' }} ·
+            com {{ nomesBarbeiro()[agendamento.id_barbeiro] ?? '...' }}
           </p>
           @if (agendamento.observacoes) {
             <p class="cartao-agendamento__obs">"{{ agendamento.observacoes }}"</p>

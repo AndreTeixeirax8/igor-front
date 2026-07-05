@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { AgendamentoServico } from '../../nucleo/servicos/agendamento.servico';
+import { ResolvedorNomesServico } from '../../nucleo/servicos/resolvedor-nomes.servico';
 import {
   Agendamento,
   StatusAgendamento,
@@ -22,9 +23,14 @@ import { formatarDataHora } from '../../nucleo/util/data-hora';
 })
 export class MeusAgendamentos {
   private readonly agendamentoServico = inject(AgendamentoServico);
+  private readonly resolvedor = inject(ResolvedorNomesServico);
 
   /** Lista de agendamentos do usuário. */
   protected readonly agendamentos = signal<Agendamento[]>([]);
+
+  /** Mapas id → nome, para exibir barbeiro e serviço em vez dos IDs. */
+  protected readonly nomesBarbeiro = signal<Record<number, string | undefined>>({});
+  protected readonly nomesServico = signal<Record<number, string | undefined>>({});
 
   /** Indica que a lista está sendo carregada. */
   protected readonly carregando = signal(true);
@@ -47,6 +53,7 @@ export class MeusAgendamentos {
     this.agendamentoServico.listarMeus().subscribe({
       next: (lista) => {
         this.agendamentos.set(lista);
+        this.resolverNomes(lista);
         this.carregando.set(false);
       },
       error: () => {
@@ -95,5 +102,21 @@ export class MeusAgendamentos {
   /** Formata uma data ISO para exibição. */
   protected formatar(dataIso: string): string {
     return formatarDataHora(dataIso);
+  }
+
+  /** Resolve os nomes de barbeiro e serviço de cada agendamento (com cache). */
+  private resolverNomes(lista: Agendamento[]): void {
+    for (const agendamento of lista) {
+      this.resolvedor
+        .nomeDoBarbeiro(agendamento.id_barbeiro)
+        .subscribe((nome) =>
+          this.nomesBarbeiro.update((m) => ({ ...m, [agendamento.id_barbeiro]: nome })),
+        );
+      this.resolvedor
+        .nomeDoServico(agendamento.id_servico)
+        .subscribe((nome) =>
+          this.nomesServico.update((m) => ({ ...m, [agendamento.id_servico]: nome })),
+        );
+    }
   }
 }

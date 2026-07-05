@@ -63,7 +63,8 @@ src/app/
 │   │   ├── barbeiro.servico.ts      # Barbeiros
 │   │   ├── servico.servico.ts       # Serviços (corte, barba...)
 │   │   ├── disponibilidade.servico.ts # Grade de horários
-│   │   └── agendamento.servico.ts   # Agendamentos
+│   │   ├── agendamento.servico.ts   # Agendamentos
+│   │   └── resolvedor-nomes.servico.ts # Resolve IDs → nomes (com cache)
 │   ├── modelos/                # Interfaces que espelham o JSON do back
 │   ├── util/
 │   │   └── data-hora.ts             # RFC 3339 com fuso local + formatação
@@ -72,7 +73,8 @@ src/app/
 │   └── guardas/
 │       ├── autenticacao.guarda.ts   # Exige login
 │       ├── admin.guarda.ts          # Exige admin
-│       └── gestao.guarda.ts         # Exige admin ou dono
+│       ├── gestao.guarda.ts         # Exige admin ou dono
+│       └── gestor.guarda.ts         # Exige admin, dono ou barbeiro
 │
 ├── compartilhado/              # Componentes reutilizáveis de interface
 │   ├── logotipo/
@@ -84,6 +86,7 @@ src/app/
 │   ├── principal/              # Painel após o login
 │   ├── agendar/                # Cliente marca horário (barbearia→barbeiro→serviço→hora)
 │   ├── meus-agendamentos/      # Cliente vê e cancela seus agendamentos
+│   ├── agenda-gestor/          # Agenda: todos os agendamentos + status (gestor)
 │   ├── clientes/               # Lista de clientes (somente admin)
 │   └── gestao/                 # Cadastro de barbearia/serviço/barbeiro/grade (admin/dono)
 │
@@ -176,17 +179,20 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - **Agendar** (cliente): escolhe barbearia → barbeiro → serviço → data/hora e
   cria o agendamento (converte para RFC 3339 com fuso local; mostra a grade do
   barbeiro como referência).
-- **Meus agendamentos** (cliente): lista e cancela os próprios agendamentos.
+- **Meus agendamentos** (cliente): lista e cancela os próprios agendamentos,
+  mostrando os **nomes** de serviço e barbeiro.
+- **Agenda** (gestor: admin/dono/barbeiro): lista todos os agendamentos com
+  filtro por status e permite **mudar o status** (confirmar, iniciar, concluir,
+  não compareceu, cancelar); nomes resolvidos a partir dos IDs.
 - **Gestão** (admin/dono): cadastra barbearia e, dentro dela, serviços,
   barbeiros e a grade de horários de cada barbeiro.
+- **Painel** com dados reais adaptados ao perfil (o cliente vê os próprios
+  números; o gestor vê também os da barbearia) e atalhos rápidos.
 - Camada de dados (serviços + modelos) cobrindo **todas** as rotas da API.
 
 **Ainda a fazer (próximas telas):**
 
-- Painel do gestor: lista de todos os agendamentos e mudança de status (a rota
-  e o serviço já existem; falta a tela).
-- Mostrar nomes (em vez de IDs) de barbeiro/serviço em "Meus agendamentos".
 - Edição/exclusão de barbearias, serviços e barbeiros (hoje há criação e leitura).
-- Dados reais nos cartões do painel (hoje fictícios).
+- Resolver nomes por lote (hoje uma chamada por ID, com cache).
 - Carregar dados reais nos cartões de resumo (hoje são valores fictícios).
 ```

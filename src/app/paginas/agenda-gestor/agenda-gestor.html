@@ -1,0 +1,72 @@
+<!-- Agenda do gestor (dentro do layout do painel). -->
+
+<div class="agenda__cabecalho">
+  <div>
+    <h1 class="agenda__titulo">Agenda</h1>
+    <p class="agenda__subtitulo">Acompanhe e atualize os agendamentos.</p>
+  </div>
+  <button class="botao botao--contorno" type="button" (click)="carregar()">
+    Atualizar
+  </button>
+</div>
+
+<!-- Filtro por status -->
+<div class="agenda__filtros">
+  @for (opcao of opcoesFiltro; track opcao.valor) {
+    <button
+      type="button"
+      class="filtro"
+      [class.filtro--ativo]="filtro() === opcao.valor"
+      (click)="filtro.set(opcao.valor)"
+    >
+      {{ opcao.rotulo }}
+    </button>
+  }
+</div>
+
+@if (mensagemErro()) {
+  <p class="agenda__erro">{{ mensagemErro() }}</p>
+}
+
+@if (carregando()) {
+  <div class="agenda__aviso">Carregando a agenda...</div>
+} @else if (agendamentosFiltrados().length === 0) {
+  <div class="agenda__aviso">Nenhum agendamento para este filtro.</div>
+} @else {
+  <div class="agenda__lista">
+    @for (agendamento of agendamentosFiltrados(); track agendamento.id) {
+      <article class="linha-agenda">
+        <div class="linha-agenda__info">
+          <p class="linha-agenda__data">{{ formatar(agendamento.inicio_em) }}</p>
+          <p class="linha-agenda__detalhe">
+            <strong>{{ nomesCliente()[agendamento.id_cliente] ?? '...' }}</strong>
+            com {{ nomesBarbeiro()[agendamento.id_barbeiro] ?? '...' }}
+          </p>
+          <p class="linha-agenda__servico">
+            {{ nomesServico()[agendamento.id_servico] ?? '...' }} ·
+            R$ {{ agendamento.preco_no_agendamento.toFixed(2) }}
+          </p>
+        </div>
+
+        <div class="linha-agenda__acoes">
+          <span class="selo selo--{{ agendamento.status }}">
+            {{ rotulo(agendamento.status) }}
+          </span>
+
+          <div class="linha-agenda__botoes">
+            @for (acao of acoes(agendamento.status); track acao.status) {
+              <button
+                type="button"
+                class="botao botao--contorno linha-agenda__botao"
+                [disabled]="atualizandoId() === agendamento.id"
+                (click)="mudarStatus(agendamento, acao.status)"
+              >
+                {{ acao.rotulo }}
+              </button>
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+}

@@ -69,6 +69,18 @@
 
 .principal__bloco-titulo {
   font-size: 1.2rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Ações rápidas (botões de atalho). */
+.principal__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.principal__acoes .botao {
+  text-decoration: none;
 }
 
 .principal__vazio {

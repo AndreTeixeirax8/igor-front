@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { autenticacaoGuarda } from './nucleo/guardas/autenticacao.guarda';
 import { adminGuarda } from './nucleo/guardas/admin.guarda';
 import { gestaoGuarda } from './nucleo/guardas/gestao.guarda';
+import { gestorGuarda } from './nucleo/guardas/gestor.guarda';
 import { LayoutPainel } from './compartilhado/layout-painel/layout-painel';
 
 /**
@@ -48,6 +49,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./paginas/meus-agendamentos/meus-agendamentos').then(
             (modulo) => modulo.MeusAgendamentos,
+          ),
+      },
+      {
+        path: 'agenda',
+        canActivate: [gestorGuarda],
+        loadComponent: () =>
+          import('./paginas/agenda-gestor/agenda-gestor').then(
+            (modulo) => modulo.AgendaGestor,
           ),
       },
       {
