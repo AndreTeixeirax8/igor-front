@@ -106,25 +106,30 @@ src/app/
 - Por isso, no front, o endereço base é simplesmente `/api`
   (ver `nucleo/configuracao/configuracao-api.ts`).
 
-### Rotas usadas neste protótipo
+### Rotas consumidas pelo front
 
-| Ação           | Método e rota              | Corpo enviado                       | Resposta             |
-| -------------- | -------------------------- | ----------------------------------- | -------------------- |
-| Login           | `POST /api/auth/login`     | `{ email, senha }`                 | `{ token, usuario }` |
-| Cadastro        | `POST /api/auth/registrar` | `{ nome, email, telefone, senha }` | `{ token, usuario }` |
-| Perfil próprio  | `GET /api/usuarios/me`     | — (header com token)               | dados do usuário     |
-| Listar usuários | `GET /api/usuarios`        | — (header com token)               | lista de usuários    |
+Cada recurso tem um serviço Angular em `nucleo/servicos/`. Os **contratos
+completos** (corpo, respostas, permissões) estão em
+`../back/ESPECIFICACOES-API.md` — aqui vai só o mapa do que o front usa:
 
-> A listagem de usuários é **restrita a administradores** no back-end (responde
-> 403 para os demais). No front, além disso, a rota `/clientes` é protegida pela
-> `admin.guarda.ts` e o item "Clientes" só aparece no menu para administradores.
+| Recurso          | Serviço Angular              | Rotas consumidas                                                            |
+| ---------------- | ---------------------------- | -------------------------------------------------------------------------- |
+| Autenticação     | `autenticacao.servico.ts`    | `POST /auth/login`, `POST /auth/registrar`                                  |
+| Usuários         | `usuario.servico.ts`         | `GET /usuarios` (admin), `GET /usuarios/{id}`                               |
+| Barbearias       | `barbearia.servico.ts`       | `GET /barbearias`, `GET/POST/{id}`                                          |
+| Barbeiros        | `barbeiro.servico.ts`        | `GET /barbeiros?id_barbearia=`, `GET/{id}`, `POST`                          |
+| Serviços         | `servico.servico.ts`         | `GET /servicos?id_barbearia=`, `GET/{id}`, `POST`, `PUT /{id}` (editar)     |
+| Disponibilidades | `disponibilidade.servico.ts` | `GET /disponibilidades?id_barbeiro=`, `POST`, `DELETE /{id}`                |
+| Agendamentos     | `agendamento.servico.ts`     | `POST`, `GET /meus`, `GET /horarios-disponiveis`, `GET` (gestor), `PATCH /{id}/cancelar`, `PATCH /{id}/status` |
 
-> No cadastro o front **não** envia o perfil: o back-end cria todo novo usuário
-> como "cliente". Após o cadastro, o usuário é levado de volta à tela de login
-> para se autenticar (não aproveitamos o token devolvido no registro).
+> Permissões (resumo): leitura para qualquer autenticado; gestão de
+> barbearia/barbeiro/serviço/grade para **admin ou dono**; agenda e mudança de
+> status para **gestor** (admin/dono/barbeiro). As rotas são protegidas no back
+> e, no front, por guardas (`admin.guarda`, `gestao.guarda`, `gestor.guarda`).
 
-O token JWT recebido no login é guardado no `localStorage` e enviado
-automaticamente em todas as requisições seguintes pelo interceptador.
+> No cadastro o front **não** envia o perfil (o back cria como "cliente") e
+> devolve o usuário ao login para se autenticar. O token JWT do login é guardado
+> no `localStorage` e anexado automaticamente pelo interceptador.
 
 ---
 
