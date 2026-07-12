@@ -9,7 +9,7 @@
     </p>
   </div>
 
-  <!-- Campo de busca -->
+  <!-- Campo de busca (a busca é feita no back-end) -->
   <div class="clientes__busca">
     <input
       class="campo__entrada"
@@ -17,7 +17,7 @@
       name="busca"
       placeholder="Buscar por nome, e-mail ou telefone..."
       [ngModel]="termoBusca()"
-      (ngModelChange)="termoBusca.set($event)"
+      (ngModelChange)="aoBuscar($event)"
     />
   </div>
 </div>
@@ -25,23 +25,20 @@
 @if (mensagemSucesso()) {
   <p class="clientes__feedback clientes__feedback--ok">{{ mensagemSucesso() }}</p>
 }
-@if (mensagemErro() && !carregando() && !listaCompletaVazia()) {
+@if (mensagemErro() && usuarios().length > 0) {
   <p class="clientes__feedback clientes__feedback--erro">{{ mensagemErro() }}</p>
 }
 
 @if (carregando()) {
-  <!-- Estado de carregamento -->
   <div class="clientes__aviso">Carregando clientes...</div>
-} @else if (mensagemErro() && listaCompletaVazia()) {
-  <!-- Estado de erro, com a opção de tentar novamente -->
+} @else if (mensagemErro() && usuarios().length === 0) {
   <div class="clientes__aviso clientes__aviso--erro">
     <p>{{ mensagemErro() }}</p>
     <button class="botao botao--contorno" type="button" (click)="carregar()">
       Tentar novamente
     </button>
   </div>
-} @else if (totalExibido() === 0) {
-  <!-- Estado vazio (nenhum resultado) -->
+} @else if (usuarios().length === 0) {
   <div class="clientes__aviso">
     Nenhum cliente encontrado
     {{ termoBusca() ? 'para a busca informada.' : '.' }}
@@ -60,7 +57,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (cliente of clientesFiltrados(); track cliente.id) {
+        @for (cliente of usuarios(); track cliente.id) {
           @if (usuarioEmEdicaoId() === cliente.id) {
             <!-- Linha em modo de edição -->
             <tr class="tabela__editando">
@@ -134,8 +131,32 @@
     </table>
   </div>
 
-  <p class="clientes__total">
-    {{ totalExibido() }}
-    {{ totalExibido() === 1 ? 'cliente' : 'clientes' }}
-  </p>
+  <!-- Rodapé: total e navegação de páginas -->
+  <div class="clientes__rodape">
+    <span class="clientes__total">
+      {{ total() }} {{ total() === 1 ? 'usuário' : 'usuários' }}
+    </span>
+
+    <div class="paginacao">
+      <button
+        class="botao botao--contorno paginacao__botao"
+        type="button"
+        [disabled]="pagina() <= 1"
+        (click)="paginaAnterior()"
+      >
+        ‹ Anterior
+      </button>
+      <span class="paginacao__info">
+        Página {{ pagina() }} de {{ totalPaginas() }}
+      </span>
+      <button
+        class="botao botao--contorno paginacao__botao"
+        type="button"
+        [disabled]="pagina() >= totalPaginas()"
+        (click)="proximaPagina()"
+      >
+        Próxima ›
+      </button>
+    </div>
+  </div>
 }

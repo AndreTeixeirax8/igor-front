@@ -116,6 +116,14 @@ export class Gestao {
     this.barbearias().find((b) => b.id === this.barbeariaSelecionadaId()),
   );
 
+  /** Nome do barbeiro selecionado (para o título da grade de horários). */
+  protected readonly nomeBarbeiroSelecionado = computed(() => {
+    const barbeiro = this.barbeiros().find(
+      (b) => b.id === this.barbeiroSelecionadoId(),
+    );
+    return barbeiro ? this.nomeUsuario(barbeiro.id_usuario) : '';
+  });
+
   constructor() {
     this.carregarBarbearias();
     this.carregarUsuarios();
@@ -361,6 +369,14 @@ export class Gestao {
 
   protected nomeDoDia(diaSemana: number): string {
     return nomeDiaSemana(diaSemana);
+  }
+
+  /** Nome do usuário a partir do id (usa a lista já carregada). */
+  protected nomeUsuario(idUsuario: number): string {
+    return (
+      this.usuarios().find((u) => u.id === idUsuario)?.nome ??
+      `Usuário #${idUsuario}`
+    );
   }
 
   private limparMensagens(): void {

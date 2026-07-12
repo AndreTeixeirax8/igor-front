@@ -209,9 +209,35 @@
 }
 
 .clientes__total {
-  margin-top: 1rem;
   color: var(--cor-texto-suave);
   font-size: 0.85rem;
+}
+
+/* Rodapé com total + navegação de páginas. */
+.clientes__rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.paginacao {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.paginacao__botao {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.paginacao__info {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
 }
 
 /* ----- Responsivo ----- */

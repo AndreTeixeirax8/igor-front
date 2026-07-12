@@ -96,6 +96,11 @@
   font-weight: 600;
 }
 
+.chip__inativo {
+  color: var(--cor-texto-suave);
+  font-size: 0.75rem;
+}
+
 /* ----- Listas de itens (serviços, horários) ----- */
 
 .lista-itens {

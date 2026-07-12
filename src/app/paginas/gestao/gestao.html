@@ -126,7 +126,8 @@
           [class.chip--ativo]="barbeiroSelecionadoId() === barbeiro.id"
           (click)="selecionarBarbeiro(barbeiro.id)"
         >
-          Barbeiro #{{ barbeiro.id }} (usuário {{ barbeiro.id_usuario }})
+          {{ nomeUsuario(barbeiro.id_usuario) }}
+          @if (!barbeiro.ativo) { <span class="chip__inativo">(inativo)</span> }
         </button>
       } @empty {
         <p class="bloco__vazio">Nenhum barbeiro cadastrado.</p>
@@ -181,7 +182,7 @@
   @if (barbeiroSelecionadoId() !== null) {
     <section class="bloco">
       <h2 class="bloco__titulo">
-        Grade de horários — Barbeiro #{{ barbeiroSelecionadoId() }}
+        Grade de horários — {{ nomeBarbeiroSelecionado() }}
       </h2>
 
       <ul class="lista-itens">

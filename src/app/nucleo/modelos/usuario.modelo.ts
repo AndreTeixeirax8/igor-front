@@ -23,6 +23,16 @@ export interface Usuario {
 export type PerfilUsuario = 'cliente' | 'barbeiro' | 'dono' | 'admin';
 
 /**
+ * Página de usuários devolvida pela listagem paginada (GET /usuarios).
+ */
+export interface PaginaUsuarios {
+  itens: Usuario[];
+  total: number;
+  pagina: number;
+  tamanho: number;
+}
+
+/**
  * Dados enviados para editar um usuário (PUT /usuarios/{id}). Todos os campos
  * são opcionais: envie apenas o que mudar. O campo "perfil" só tem efeito para
  * administradores.

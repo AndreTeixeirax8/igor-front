@@ -1,9 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { configuracaoApi } from '../configuracao/configuracao-api';
-import { Usuario, DadosAtualizacaoUsuario } from '../modelos/usuario.modelo';
+import {
+  Usuario,
+  DadosAtualizacaoUsuario,
+  PaginaUsuarios,
+} from '../modelos/usuario.modelo';
 
 /**
  * Serviço responsável por buscar dados de usuários na API.
@@ -16,16 +21,28 @@ export class UsuarioServico {
   private readonly clienteHttp = inject(HttpClient);
 
   /**
-   * Lista todos os usuários cadastrados. Só funciona para administradores;
-   * para os demais perfis o back-end devolve 403 (acesso negado).
+   * Lista uma página de usuários (GET /usuarios). Permitido a admin e dono.
    *
-   * @returns Um Observable com a lista de usuários.
+   * @param pagina  Número da página (começa em 1).
+   * @param tamanho Quantidade de itens por página.
+   * @param busca   Filtro opcional por nome, e-mail ou telefone.
+   */
+  listarPagina(pagina: number, tamanho: number, busca = ''): Observable<PaginaUsuarios> {
+    const parametros =
+      `?pagina=${pagina}&tamanho=${tamanho}` +
+      (busca.trim() !== '' ? `&busca=${encodeURIComponent(busca.trim())}` : '');
+
+    return this.clienteHttp.get<PaginaUsuarios>(
+      configuracaoApi.enderecoBase + configuracaoApi.rotasUsuario.listar + parametros,
+    );
+  }
+
+  /**
+   * Traz uma lista de usuários para seletores (ex.: vincular um barbeiro).
+   * Busca uma página grande e devolve apenas os itens.
    */
   listarTodos(): Observable<Usuario[]> {
-    const enderecoCompleto =
-      configuracaoApi.enderecoBase + configuracaoApi.rotasUsuario.listar;
-
-    return this.clienteHttp.get<Usuario[]>(enderecoCompleto);
+    return this.listarPagina(1, 100).pipe(map((pagina) => pagina.itens));
   }
 
   /**

@@ -179,10 +179,10 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - Layout interno compartilhado (barra lateral + topo) reaproveitado pelas telas.
   O menu mostra itens conforme o perfil (Gestão para admin/dono; Clientes só admin).
 - Tela principal (painel) com identidade visual aplicada.
-- Tela de clientes (admin/dono): tabela com busca, contato e perfil, com
-  **edição** inline. Admin edita qualquer um (inclusive o perfil); dono edita só
-  clientes e barbeiros (não edita admin/dono nem altera perfil) — regra também
-  garantida no back.
+- Tela de clientes (admin/dono): tabela com **busca e paginação feitas no
+  back-end** e **edição** inline. Admin edita qualquer um (inclusive o perfil);
+  dono edita só clientes e barbeiros (não edita admin/dono nem altera perfil) —
+  regra também garantida no back.
 - **Agendar** (cliente): escolhe barbearia → barbeiro → serviço e então um
   **calendário do mês** mostra os dias com vaga; ao clicar no dia aparecem os
   **horários livres** (calculados no back via `GET

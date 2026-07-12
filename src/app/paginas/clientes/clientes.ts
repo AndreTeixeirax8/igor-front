@@ -10,14 +10,18 @@ import {
   rotuloDoPerfil,
 } from '../../nucleo/modelos/usuario.modelo';
 
+/** Quantidade de usuários por página. */
+const TAMANHO_PAGINA = 10;
+
 /**
- * Tela de clientes (administradores e donos). Lista os usuários em uma tabela
- * com busca e permite **editar** cada um.
+ * Tela de clientes (administradores e donos). Lista os usuários com **busca e
+ * paginação feitas no back-end** (para não sobrecarregar o front quando houver
+ * muitos usuários) e permite **editar** cada um.
  *
  * Regras de edição (aplicadas também no back-end):
- *  - administrador pode editar qualquer usuário, inclusive o perfil;
- *  - dono pode editar apenas clientes e barbeiros (não edita admin nem dono) e
- *    não pode alterar o perfil.
+ *  - administrador edita qualquer usuário, inclusive o perfil;
+ *  - dono edita apenas clientes e barbeiros (não edita admin nem dono) e não
+ *    altera o perfil.
  */
 @Component({
   selector: 'app-clientes',
@@ -29,20 +33,23 @@ export class Clientes {
   private readonly usuarioServico = inject(UsuarioServico);
   private readonly sessao = inject(SessaoServico);
 
-  /** Lista completa de usuários trazida da API. */
-  private readonly listaCompleta = signal<Usuario[]>([]);
+  /** Tamanho da página (exposto ao template). */
+  protected readonly tamanhoPagina = TAMANHO_PAGINA;
 
-  /** Texto digitado no campo de busca. */
+  /** Usuários da página atual. */
+  protected readonly usuarios = signal<Usuario[]>([]);
+
+  /** Estado da paginação e da busca. */
+  protected readonly pagina = signal(1);
+  protected readonly total = signal(0);
   protected readonly termoBusca = signal('');
 
-  /** Indica que a lista está sendo carregada da API. */
+  /** Estado de carregamento e mensagens. */
   protected readonly carregando = signal(true);
-
-  /** Mensagens de feedback. */
   protected readonly mensagemErro = signal('');
   protected readonly mensagemSucesso = signal('');
 
-  /** Edição: ID do usuário em edição (nulo quando nenhum) e campos do formulário. */
+  /** Edição: ID em edição (nulo quando nenhum) e campos do formulário. */
   protected readonly usuarioEmEdicaoId = signal<number | null>(null);
   protected editNome = signal('');
   protected editTelefone = signal('');
@@ -61,55 +68,67 @@ export class Clientes {
     () => this.sessao.usuario()?.perfil === 'admin',
   );
 
-  /**
-   * Lista exibida na tabela: a lista completa filtrada pelo termo de busca
-   * (nome, e-mail ou telefone). A busca ignora maiúsculas/minúsculas.
-   */
-  protected readonly clientesFiltrados = computed(() => {
-    const termo = this.termoBusca().trim().toLowerCase();
-    if (termo === '') {
-      return this.listaCompleta();
-    }
-
-    return this.listaCompleta().filter((usuario) => {
-      const telefone = usuario.telefone ?? '';
-      return (
-        usuario.nome.toLowerCase().includes(termo) ||
-        usuario.email.toLowerCase().includes(termo) ||
-        telefone.toLowerCase().includes(termo)
-      );
-    });
-  });
-
-  /** Quantidade de usuários atualmente exibidos. */
-  protected readonly totalExibido = computed(
-    () => this.clientesFiltrados().length,
+  /** Total de páginas, calculado a partir do total e do tamanho da página. */
+  protected readonly totalPaginas = computed(() =>
+    Math.max(1, Math.ceil(this.total() / TAMANHO_PAGINA)),
   );
 
-  /** Indica se nenhum usuário foi carregado (usado para erro de carregamento). */
-  protected readonly listaCompletaVazia = computed(
-    () => this.listaCompleta().length === 0,
-  );
+  /** Temporizador usado para "atrasar" a busca enquanto o usuário digita. */
+  private temporizadorBusca: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     this.carregar();
   }
 
-  /** Busca a lista de usuários na API e trata os possíveis erros. */
+  /** Busca a página atual de usuários na API. */
   protected carregar(): void {
     this.carregando.set(true);
     this.mensagemErro.set('');
 
-    this.usuarioServico.listarTodos().subscribe({
-      next: (usuarios) => {
-        this.listaCompleta.set(usuarios);
-        this.carregando.set(false);
-      },
-      error: (erro: HttpErrorResponse) => {
-        this.carregando.set(false);
-        this.mensagemErro.set(this.traduzirErro(erro));
-      },
-    });
+    this.usuarioServico
+      .listarPagina(this.pagina(), TAMANHO_PAGINA, this.termoBusca())
+      .subscribe({
+        next: (resultado) => {
+          this.usuarios.set(resultado.itens);
+          this.total.set(resultado.total);
+          this.pagina.set(resultado.pagina);
+          this.carregando.set(false);
+        },
+        error: (erro: HttpErrorResponse) => {
+          this.carregando.set(false);
+          this.mensagemErro.set(this.traduzirErro(erro));
+        },
+      });
+  }
+
+  /**
+   * Chamado a cada tecla na busca: guarda o termo, volta para a primeira página
+   * e recarrega com um pequeno atraso (evita uma requisição por tecla).
+   */
+  protected aoBuscar(valor: string): void {
+    this.termoBusca.set(valor);
+    this.pagina.set(1);
+
+    if (this.temporizadorBusca) {
+      clearTimeout(this.temporizadorBusca);
+    }
+    this.temporizadorBusca = setTimeout(() => this.carregar(), 350);
+  }
+
+  /** Vai para a página anterior, se houver. */
+  protected paginaAnterior(): void {
+    if (this.pagina() > 1) {
+      this.pagina.update((p) => p - 1);
+      this.carregar();
+    }
+  }
+
+  /** Vai para a próxima página, se houver. */
+  protected proximaPagina(): void {
+    if (this.pagina() < this.totalPaginas()) {
+      this.pagina.update((p) => p + 1);
+      this.carregar();
+    }
   }
 
   /**
@@ -120,7 +139,6 @@ export class Clientes {
     if (this.ehAdmin()) {
       return true;
     }
-    // Dono (a tela só abre para admin/dono): não edita admin nem dono.
     return usuario.perfil === 'cliente' || usuario.perfil === 'barbeiro';
   }
 
@@ -162,7 +180,7 @@ export class Clientes {
       next: (atualizado) => {
         this.mensagemSucesso.set('Usuário atualizado com sucesso.');
         this.usuarioEmEdicaoId.set(null);
-        this.listaCompleta.update((lista) =>
+        this.usuarios.update((lista) =>
           lista.map((u) => (u.id === atualizado.id ? atualizado : u)),
         );
       },
