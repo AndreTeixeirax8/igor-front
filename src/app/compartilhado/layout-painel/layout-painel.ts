@@ -52,7 +52,7 @@ export class LayoutPainel {
 
   /** Todos os itens do menu. */
   private readonly itensMenu: ItemMenu[] = [
-    { rotulo: 'Painel', icone: '▣', rota: '/principal', disponivel: true },
+    { rotulo: 'Painel', icone: '🏠', rota: '/principal', disponivel: true },
     { rotulo: 'Agendar', icone: '🗓', rota: '/agendar', disponivel: true },
     {
       rotulo: 'Meus agendamentos',
