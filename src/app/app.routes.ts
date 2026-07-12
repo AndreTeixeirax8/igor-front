@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { autenticacaoGuarda } from './nucleo/guardas/autenticacao.guarda';
-import { adminGuarda } from './nucleo/guardas/admin.guarda';
 import { gestaoGuarda } from './nucleo/guardas/gestao.guarda';
 import { gestorGuarda } from './nucleo/guardas/gestor.guarda';
 import { LayoutPainel } from './compartilhado/layout-painel/layout-painel';
@@ -61,7 +60,7 @@ export const routes: Routes = [
       },
       {
         path: 'clientes',
-        canActivate: [adminGuarda],
+        canActivate: [gestaoGuarda],
         loadComponent: () =>
           import('./paginas/clientes/clientes').then(
             (modulo) => modulo.Clientes,

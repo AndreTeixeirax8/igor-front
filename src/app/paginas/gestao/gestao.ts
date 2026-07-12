@@ -6,10 +6,12 @@ import { BarbeariaServico } from '../../nucleo/servicos/barbearia.servico';
 import { BarbeiroServico } from '../../nucleo/servicos/barbeiro.servico';
 import { ServicoServico } from '../../nucleo/servicos/servico.servico';
 import { DisponibilidadeServico } from '../../nucleo/servicos/disponibilidade.servico';
+import { UsuarioServico } from '../../nucleo/servicos/usuario.servico';
 
 import { Barbearia } from '../../nucleo/modelos/barbearia.modelo';
 import { Barbeiro } from '../../nucleo/modelos/barbeiro.modelo';
 import { Servico } from '../../nucleo/modelos/servico.modelo';
+import { Usuario } from '../../nucleo/modelos/usuario.modelo';
 import {
   Disponibilidade,
   NOMES_DIAS_SEMANA,
@@ -32,6 +34,7 @@ export class Gestao {
   private readonly barbeiroServico = inject(BarbeiroServico);
   private readonly servicoServico = inject(ServicoServico);
   private readonly disponibilidadeServico = inject(DisponibilidadeServico);
+  private readonly usuarioServico = inject(UsuarioServico);
 
   /** Dias da semana para o seletor de disponibilidade. */
   protected readonly diasSemana = NOMES_DIAS_SEMANA.map((nome, valor) => ({
@@ -74,6 +77,35 @@ export class Gestao {
   protected barbeiroIdUsuario = signal<number | null>(null);
   protected barbeiroBio = signal('');
 
+  /** Todos os usuários (para o seletor ao vincular um barbeiro). */
+  protected readonly usuarios = signal<Usuario[]>([]);
+  /** Texto de busca no seletor de usuário. */
+  protected buscaUsuario = signal('');
+
+  /** Usuário atualmente selecionado no formulário de barbeiro (ou undefined). */
+  protected readonly usuarioBarbeiroSelecionado = computed(() =>
+    this.usuarios().find((u) => u.id === this.barbeiroIdUsuario()),
+  );
+
+  /**
+   * Usuários que podem ser vinculados como barbeiro: exclui quem já é barbeiro
+   * desta barbearia e aplica a busca por nome/e-mail. Limita a 8 resultados.
+   */
+  protected readonly usuariosDisponiveis = computed(() => {
+    const termo = this.buscaUsuario().trim().toLowerCase();
+    const jaBarbeiros = new Set(this.barbeiros().map((b) => b.id_usuario));
+
+    return this.usuarios()
+      .filter((u) => !jaBarbeiros.has(u.id))
+      .filter(
+        (u) =>
+          termo === '' ||
+          u.nome.toLowerCase().includes(termo) ||
+          u.email.toLowerCase().includes(termo),
+      )
+      .slice(0, 8);
+  });
+
   /** Formulário: nova disponibilidade. */
   protected dispDia = signal(1);
   protected dispInicio = signal('09:00');
@@ -86,6 +118,15 @@ export class Gestao {
 
   constructor() {
     this.carregarBarbearias();
+    this.carregarUsuarios();
+  }
+
+  /** Carrega os usuários (usado no seletor ao vincular um barbeiro). */
+  private carregarUsuarios(): void {
+    this.usuarioServico.listarTodos().subscribe({
+      next: (lista) => this.usuarios.set(lista),
+      error: () => this.usuarios.set([]),
+    });
   }
 
   // ===== Barbearias ========================================================
@@ -229,13 +270,25 @@ export class Gestao {
 
   // ===== Barbeiros =========================================================
 
+  /** Seleciona o usuário que será vinculado como barbeiro. */
+  protected selecionarUsuarioBarbeiro(usuario: Usuario): void {
+    this.barbeiroIdUsuario.set(usuario.id);
+    this.buscaUsuario.set('');
+  }
+
+  /** Limpa a seleção do usuário, voltando para a busca. */
+  protected trocarUsuarioBarbeiro(): void {
+    this.barbeiroIdUsuario.set(null);
+    this.buscaUsuario.set('');
+  }
+
   protected criarBarbeiro(): void {
     const idBarbearia = this.barbeariaSelecionadaId();
     if (idBarbearia === null) {
       return;
     }
     if (!this.barbeiroIdUsuario()) {
-      this.mensagemErro.set('Informe o ID do usuário que será barbeiro.');
+      this.mensagemErro.set('Selecione o usuário que será barbeiro.');
       return;
     }
     this.limparMensagens();
@@ -251,6 +304,7 @@ export class Gestao {
           this.mensagemSucesso.set('Barbeiro cadastrado.');
           this.barbeiroIdUsuario.set(null);
           this.barbeiroBio.set('');
+          this.buscaUsuario.set('');
           this.barbeiros.update((lista) => [...lista, criado]);
         },
         error: (erro) => this.mostrarErro(erro),

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { configuracaoApi } from '../configuracao/configuracao-api';
-import { Usuario } from '../modelos/usuario.modelo';
+import { Usuario, DadosAtualizacaoUsuario } from '../modelos/usuario.modelo';
 
 /**
  * Serviço responsável por buscar dados de usuários na API.
@@ -38,5 +38,16 @@ export class UsuarioServico {
       configuracaoApi.enderecoBase + configuracaoApi.rotasUsuario.listar + '/' + id;
 
     return this.clienteHttp.get<Usuario>(enderecoCompleto);
+  }
+
+  /**
+   * Edita um usuário (PUT /usuarios/{id}). Permitido a administradores e donos;
+   * o back-end aplica as regras de quem pode editar quem.
+   */
+  atualizar(id: number, dados: DadosAtualizacaoUsuario): Observable<Usuario> {
+    const enderecoCompleto =
+      configuracaoApi.enderecoBase + configuracaoApi.rotasUsuario.listar + '/' + id;
+
+    return this.clienteHttp.put<Usuario>(enderecoCompleto, dados);
   }
 }

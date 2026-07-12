@@ -22,10 +22,17 @@
   </div>
 </div>
 
+@if (mensagemSucesso()) {
+  <p class="clientes__feedback clientes__feedback--ok">{{ mensagemSucesso() }}</p>
+}
+@if (mensagemErro() && !carregando() && !listaCompletaVazia()) {
+  <p class="clientes__feedback clientes__feedback--erro">{{ mensagemErro() }}</p>
+}
+
 @if (carregando()) {
   <!-- Estado de carregamento -->
   <div class="clientes__aviso">Carregando clientes...</div>
-} @else if (mensagemErro()) {
+} @else if (mensagemErro() && listaCompletaVazia()) {
   <!-- Estado de erro, com a opção de tentar novamente -->
   <div class="clientes__aviso clientes__aviso--erro">
     <p>{{ mensagemErro() }}</p>
@@ -49,25 +56,79 @@
           <th>E-mail</th>
           <th>Telefone</th>
           <th>Perfil</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         @for (cliente of clientesFiltrados(); track cliente.id) {
-          <tr>
-            <td>
-              <div class="tabela__nome">
-                <span class="tabela__avatar">{{ iniciais(cliente.nome) }}</span>
-                <span>{{ cliente.nome }}</span>
-              </div>
-            </td>
-            <td>{{ cliente.email }}</td>
-            <td>{{ cliente.telefone || '—' }}</td>
-            <td>
-              <span class="selo selo--{{ cliente.perfil }}">
-                {{ rotuloPerfil(cliente.perfil) }}
-              </span>
-            </td>
-          </tr>
+          @if (usuarioEmEdicaoId() === cliente.id) {
+            <!-- Linha em modo de edição -->
+            <tr class="tabela__editando">
+              <td>
+                <div class="tabela__nome">
+                  <span class="tabela__avatar">{{ iniciais(cliente.nome) }}</span>
+                  <input class="campo__entrada" name="eNome{{ cliente.id }}"
+                    [ngModel]="editNome()" (ngModelChange)="editNome.set($event)" />
+                </div>
+              </td>
+              <td>{{ cliente.email }}</td>
+              <td>
+                <input class="campo__entrada" name="eTel{{ cliente.id }}"
+                  placeholder="—"
+                  [ngModel]="editTelefone()" (ngModelChange)="editTelefone.set($event)" />
+              </td>
+              <td>
+                @if (ehAdmin()) {
+                  <select class="campo__entrada" name="ePerfil{{ cliente.id }}"
+                    [ngModel]="editPerfil()" (ngModelChange)="editPerfil.set($event)">
+                    @for (perfil of perfisDisponiveis; track perfil) {
+                      <option [ngValue]="perfil">{{ rotuloPerfil(perfil) }}</option>
+                    }
+                  </select>
+                } @else {
+                  <span class="selo selo--{{ cliente.perfil }}">
+                    {{ rotuloPerfil(cliente.perfil) }}
+                  </span>
+                }
+              </td>
+              <td>
+                <div class="tabela__acoes">
+                  <button class="tabela__acao" type="button" (click)="salvarEdicao(cliente.id)">
+                    Salvar
+                  </button>
+                  <button class="tabela__acao tabela__acao--neutra" type="button" (click)="cancelarEdicao()">
+                    Cancelar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            <!-- Linha normal -->
+            <tr>
+              <td>
+                <div class="tabela__nome">
+                  <span class="tabela__avatar">{{ iniciais(cliente.nome) }}</span>
+                  <span>{{ cliente.nome }}</span>
+                </div>
+              </td>
+              <td>{{ cliente.email }}</td>
+              <td>{{ cliente.telefone || '—' }}</td>
+              <td>
+                <span class="selo selo--{{ cliente.perfil }}">
+                  {{ rotuloPerfil(cliente.perfil) }}
+                </span>
+              </td>
+              <td>
+                @if (podeEditar(cliente)) {
+                  <button class="tabela__acao" type="button" (click)="iniciarEdicao(cliente)">
+                    Editar
+                  </button>
+                } @else {
+                  <span class="tabela__sem-acao">—</span>
+                }
+              </td>
+            </tr>
+          }
         }
       </tbody>
     </table>

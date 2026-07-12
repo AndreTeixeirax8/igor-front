@@ -23,6 +23,18 @@ export interface Usuario {
 export type PerfilUsuario = 'cliente' | 'barbeiro' | 'dono' | 'admin';
 
 /**
+ * Dados enviados para editar um usuário (PUT /usuarios/{id}). Todos os campos
+ * são opcionais: envie apenas o que mudar. O campo "perfil" só tem efeito para
+ * administradores.
+ */
+export interface DadosAtualizacaoUsuario {
+  nome?: string;
+  telefone?: string | null;
+  url_avatar?: string | null;
+  perfil?: PerfilUsuario;
+}
+
+/**
  * Devolve um rótulo amigável (para exibição na tela) a partir do perfil técnico.
  */
 export function rotuloDoPerfil(perfil: PerfilUsuario): string {

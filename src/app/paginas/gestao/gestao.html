@@ -134,16 +134,46 @@
     </div>
 
     <form class="formulario" (ngSubmit)="criarBarbeiro()">
+      <!-- Seletor do usuário a vincular -->
+      @if (usuarioBarbeiroSelecionado(); as usuario) {
+        <div class="seletor-usuario__escolhido">
+          <span>
+            Usuário: <strong>{{ usuario.nome }}</strong>
+            <span class="seletor-usuario__email">{{ usuario.email }}</span>
+          </span>
+          <button class="item__acao" type="button" (click)="trocarUsuarioBarbeiro()">
+            trocar
+          </button>
+        </div>
+      } @else {
+        <div class="seletor-usuario">
+          <input class="campo__entrada" name="buscaUsuario"
+            placeholder="Buscar usuário por nome ou e-mail..."
+            [ngModel]="buscaUsuario()" (ngModelChange)="buscaUsuario.set($event)" />
+
+          @if (usuariosDisponiveis().length > 0) {
+            <ul class="seletor-usuario__lista">
+              @for (usuario of usuariosDisponiveis(); track usuario.id) {
+                <li>
+                  <button type="button" class="seletor-usuario__opcao"
+                    (click)="selecionarUsuarioBarbeiro(usuario)">
+                    <span>{{ usuario.nome }}</span>
+                    <span class="seletor-usuario__email">{{ usuario.email }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="formulario__dica">Nenhum usuário disponível para vincular.</p>
+          }
+        </div>
+      }
+
       <div class="formulario__linha">
-        <input class="campo__entrada campo--curto" type="number" placeholder="ID do usuário *" name="brId"
-          [ngModel]="barbeiroIdUsuario()" (ngModelChange)="barbeiroIdUsuario.set($event)" />
         <input class="campo__entrada" placeholder="Bio (opcional)" name="brBio"
           [ngModel]="barbeiroBio()" (ngModelChange)="barbeiroBio.set($event)" />
         <button class="botao botao--principal" type="submit">Cadastrar</button>
       </div>
-      <p class="formulario__dica">
-        O "ID do usuário" é o id de uma conta já cadastrada (veja na tela de Clientes).
-      </p>
     </form>
   </section>
 

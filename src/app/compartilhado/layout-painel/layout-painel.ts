@@ -79,7 +79,7 @@ export class LayoutPainel {
       icone: '👥',
       rota: '/clientes',
       disponivel: true,
-      perfisPermitidos: ['admin'],
+      perfisPermitidos: ['admin', 'dono'],
     },
   ];
 

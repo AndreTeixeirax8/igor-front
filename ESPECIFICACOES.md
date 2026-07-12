@@ -72,7 +72,6 @@ src/app/
 │   │   └── token.interceptador.ts   # Anexa "Authorization: Bearer <token>"
 │   └── guardas/
 │       ├── autenticacao.guarda.ts   # Exige login
-│       ├── admin.guarda.ts          # Exige admin
 │       ├── gestao.guarda.ts         # Exige admin ou dono
 │       └── gestor.guarda.ts         # Exige admin, dono ou barbeiro
 │
@@ -180,7 +179,10 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - Layout interno compartilhado (barra lateral + topo) reaproveitado pelas telas.
   O menu mostra itens conforme o perfil (Gestão para admin/dono; Clientes só admin).
 - Tela principal (painel) com identidade visual aplicada.
-- Tela de clientes: tabela com busca, contato e perfil (dados reais do back).
+- Tela de clientes (admin/dono): tabela com busca, contato e perfil, com
+  **edição** inline. Admin edita qualquer um (inclusive o perfil); dono edita só
+  clientes e barbeiros (não edita admin/dono nem altera perfil) — regra também
+  garantida no back.
 - **Agendar** (cliente): escolhe barbearia → barbeiro → serviço e então um
   **calendário do mês** mostra os dias com vaga; ao clicar no dia aparecem os
   **horários livres** (calculados no back via `GET
@@ -193,8 +195,9 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
   filtro por status e permite **mudar o status** (confirmar, iniciar, concluir,
   não compareceu, cancelar); nomes resolvidos a partir dos IDs.
 - **Gestão** (admin/dono): cadastra barbearia e, dentro dela, serviços
-  (com **edição** de nome/duração/preço e **ativar/desativar**), barbeiros e a
-  grade de horários de cada barbeiro.
+  (com **edição** de nome/duração/preço e **ativar/desativar**), barbeiros
+  (vinculando um usuário por um **seletor de busca por nome/e-mail** — quem já é
+  barbeiro daquela barbearia é ocultado) e a grade de horários de cada barbeiro.
 - **Painel** com dados reais adaptados ao perfil (o cliente vê os próprios
   números; o gestor vê também os da barbearia) e atalhos rápidos.
 - Camada de dados (serviços + modelos) cobrindo **todas** as rotas da API.

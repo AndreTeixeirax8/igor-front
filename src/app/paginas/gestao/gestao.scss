@@ -194,3 +194,62 @@
   font-size: 0.8rem;
   color: var(--cor-texto-suave);
 }
+
+/* ----- Seletor de usuário (vincular barbeiro) ----- */
+
+.seletor-usuario {
+  max-width: 420px;
+  margin-bottom: 0.85rem;
+}
+
+.seletor-usuario__lista {
+  list-style: none;
+  margin-top: 0.4rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  overflow: hidden;
+}
+
+.seletor-usuario__opcao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  background-color: var(--cor-fundo-secundario);
+  border: none;
+  border-bottom: 1px solid var(--cor-borda);
+  color: var(--cor-texto);
+  cursor: pointer;
+  transition: background-color var(--transicao-padrao);
+}
+
+.seletor-usuario__lista li:last-child .seletor-usuario__opcao {
+  border-bottom: none;
+}
+
+.seletor-usuario__opcao:hover {
+  background-color: var(--cor-superficie-clara);
+}
+
+.seletor-usuario__email {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
+
+.seletor-usuario__escolhido {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+  padding: 0.7rem 1rem;
+  background-color: rgba(224, 205, 85, 0.1);
+  border: 1px solid rgba(224, 205, 85, 0.4);
+  border-radius: var(--raio-borda);
+  font-size: 0.9rem;
+}
+
+.seletor-usuario__escolhido strong {
+  color: var(--cor-principal);
+}
