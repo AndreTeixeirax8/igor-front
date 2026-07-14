@@ -45,11 +45,60 @@
     <!-- Topo com os dados do usuário autenticado. -->
     <header class="painel__topo">
       <div class="painel__usuario">
-        <div class="painel__usuario-dados">
-          <span class="painel__usuario-nome">{{ usuario()?.nome }}</span>
-          <span class="painel__usuario-perfil">{{ rotuloPerfil() }}</span>
-        </div>
-        <div class="painel__avatar">{{ iniciais() }}</div>
+        <!-- Clicar no nome/foto abre o menu do usuário. -->
+        <button
+          class="painel__usuario-botao"
+          type="button"
+          (click)="alternarMenu()"
+          [attr.aria-expanded]="menuAberto()"
+        >
+          <div class="painel__usuario-dados">
+            <span class="painel__usuario-nome">{{ usuario()?.nome }}</span>
+            <span class="painel__usuario-perfil">{{ rotuloPerfil() }}</span>
+          </div>
+          <div class="painel__avatar">
+            @if (usuario()?.url_avatar) {
+              <img
+                class="painel__avatar-imagem"
+                [src]="usuario()!.url_avatar"
+                alt="Foto de perfil"
+              />
+            } @else {
+              {{ iniciais() }}
+            }
+          </div>
+        </button>
+
+        @if (menuAberto()) {
+          <!-- Camada invisível que fecha o menu ao clicar fora dele. -->
+          <div class="painel__menu-fundo" (click)="fecharMenu()"></div>
+
+          <!-- Menu do usuário: perfil + editar meu perfil + sair. -->
+          <div class="painel__menu-usuario">
+            <div class="painel__menu-usuario-cabecalho">
+              <span class="painel__menu-usuario-nome">{{ usuario()?.nome }}</span>
+              <span class="painel__menu-usuario-perfil">{{ rotuloPerfil() }}</span>
+            </div>
+
+            <button
+              class="painel__menu-usuario-item"
+              type="button"
+              (click)="irParaMeuPerfil()"
+            >
+              <span class="painel__menu-icone">👤</span>
+              <span>Editar meu perfil</span>
+            </button>
+
+            <button
+              class="painel__menu-usuario-item painel__menu-usuario-item--sair"
+              type="button"
+              (click)="sair()"
+            >
+              <span class="painel__menu-icone">⎋</span>
+              <span>Sair</span>
+            </button>
+          </div>
+        }
       </div>
     </header>
 

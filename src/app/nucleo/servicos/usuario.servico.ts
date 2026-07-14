@@ -58,6 +58,18 @@ export class UsuarioServico {
   }
 
   /**
+   * Edita os dados do próprio usuário autenticado (PUT /usuarios/me). Disponível
+   * para qualquer usuário logado; o back-end pega o id pelo token e não permite
+   * alterar o perfil.
+   */
+  atualizarMeuPerfil(dados: DadosAtualizacaoUsuario): Observable<Usuario> {
+    const enderecoCompleto =
+      configuracaoApi.enderecoBase + configuracaoApi.rotasUsuario.meuPerfil;
+
+    return this.clienteHttp.put<Usuario>(enderecoCompleto, dados);
+  }
+
+  /**
    * Edita um usuário (PUT /usuarios/{id}). Permitido a administradores e donos;
    * o back-end aplica as regras de quem pode editar quem.
    */

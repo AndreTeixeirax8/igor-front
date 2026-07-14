@@ -1,0 +1,97 @@
+<!-- Tela "Meu perfil" (exibida dentro do layout do painel). -->
+
+<div class="perfil__cabecalho">
+  <h1 class="perfil__titulo">Meu perfil</h1>
+  <p class="perfil__subtitulo">Edite seus dados de cadastro e sua foto.</p>
+</div>
+
+@if (mensagemSucesso()) {
+  <p class="perfil__feedback perfil__feedback--ok">{{ mensagemSucesso() }}</p>
+}
+@if (mensagemErro()) {
+  <p class="perfil__feedback perfil__feedback--erro">{{ mensagemErro() }}</p>
+}
+
+<div class="perfil__cartao">
+  <!-- Foto de perfil (atual ou prévia da nova) -->
+  <div class="perfil__foto">
+    @if (previaFoto()) {
+      <img class="perfil__foto-imagem" [src]="previaFoto()" alt="Prévia da nova foto" />
+    } @else if (usuario()?.url_avatar) {
+      <img class="perfil__foto-imagem" [src]="usuario()!.url_avatar" alt="Foto atual" />
+    } @else {
+      <span class="perfil__foto-iniciais">{{ iniciais() }}</span>
+    }
+
+    <div class="perfil__foto-acoes">
+      <label class="botao botao--contorno" for="foto">
+        {{ fotoSelecionada() ? 'Trocar foto' : 'Enviar foto' }}
+      </label>
+      @if (fotoSelecionada()) {
+        <button class="perfil__foto-remover" type="button" (click)="removerFotoSelecionada()">
+          Descartar
+        </button>
+      }
+      <span class="perfil__foto-dica">PNG ou JPG (até 5 MB)</span>
+    </div>
+
+    <input
+      id="foto"
+      class="perfil__foto-entrada"
+      type="file"
+      name="foto"
+      accept="image/png,image/jpeg"
+      (change)="aoSelecionarFoto($event)"
+    />
+  </div>
+
+  <!-- Dados do perfil -->
+  <form class="perfil__formulario" (ngSubmit)="salvar()">
+    <div class="campo">
+      <label class="campo__rotulo" for="nome">Nome completo</label>
+      <input
+        id="nome"
+        class="campo__entrada"
+        type="text"
+        name="nome"
+        [ngModel]="nome()"
+        (ngModelChange)="nome.set($event)"
+      />
+    </div>
+
+    <div class="campo">
+      <label class="campo__rotulo" for="email">E-mail</label>
+      <!-- O e-mail é usado para login e não é editável por aqui. -->
+      <input
+        id="email"
+        class="campo__entrada"
+        type="email"
+        name="email"
+        [value]="usuario()?.email"
+        disabled
+      />
+    </div>
+
+    <div class="campo">
+      <label class="campo__rotulo" for="telefone">Telefone</label>
+      <input
+        id="telefone"
+        class="campo__entrada"
+        type="tel"
+        name="telefone"
+        placeholder="(00) 00000-0000"
+        [ngModel]="telefone()"
+        (ngModelChange)="telefone.set($event)"
+      />
+    </div>
+
+    <div class="campo">
+      <label class="campo__rotulo">Perfil</label>
+      <span class="selo selo--{{ usuario()?.perfil }}">{{ rotuloPerfil() }}</span>
+    </div>
+
+    <button class="botao botao--principal perfil__salvar" type="submit" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Salvar alterações' }}
+    </button>
+  </form>
+</div>

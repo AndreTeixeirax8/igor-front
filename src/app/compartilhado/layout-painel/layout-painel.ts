@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
@@ -47,8 +47,11 @@ export class LayoutPainel {
     return usuario ? rotuloDoPerfil(usuario.perfil) : '';
   });
 
-  /** Iniciais do usuário, exibidas no avatar. */
+  /** Iniciais do usuário, exibidas no avatar quando não há foto. */
   protected readonly iniciais = computed(() => this.calcularIniciais());
+
+  /** Controla a abertura do menu do usuário (ao clicar na foto/nome no topo). */
+  protected readonly menuAberto = signal(false);
 
   /** Todos os itens do menu. */
   private readonly itensMenu: ItemMenu[] = [
@@ -96,10 +99,27 @@ export class LayoutPainel {
     );
   });
 
+  /** Abre/fecha o menu do usuário exibido no topo. */
+  protected alternarMenu(): void {
+    this.menuAberto.update((aberto) => !aberto);
+  }
+
+  /** Fecha o menu do usuário (ex.: ao clicar fora dele). */
+  protected fecharMenu(): void {
+    this.menuAberto.set(false);
+  }
+
+  /** Fecha o menu e leva o usuário à tela de edição do próprio perfil. */
+  protected irParaMeuPerfil(): void {
+    this.fecharMenu();
+    this.roteador.navigate(['/meu-perfil']);
+  }
+
   /**
    * Encerra a sessão do usuário e o redireciona para a tela de login.
    */
   protected sair(): void {
+    this.fecharMenu();
     this.autenticacaoServico.sair();
     this.roteador.navigate(['/login']);
   }

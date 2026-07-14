@@ -51,6 +51,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'meu-perfil',
+        loadComponent: () =>
+          import('./paginas/meu-perfil/meu-perfil').then(
+            (modulo) => modulo.MeuPerfil,
+          ),
+      },
+      {
         path: 'agenda',
         canActivate: [gestorGuarda],
         loadComponent: () =>

@@ -41,6 +41,16 @@ export class SessaoServico {
   }
 
   /**
+   * Atualiza apenas os dados do usuário da sessão (sem mexer no token), tanto na
+   * memória quanto no localStorage. Usado quando o próprio usuário edita o
+   * perfil, para que o nome/foto exibidos no canto reflitam a mudança na hora.
+   */
+  atualizarUsuario(usuario: Usuario): void {
+    this.usuarioAtual.set(usuario);
+    localStorage.setItem(CHAVE_USUARIO, JSON.stringify(usuario));
+  }
+
+  /**
    * Encerra a sessão atual, limpando os dados da memória e do localStorage.
    */
   encerrarSessao(): void {

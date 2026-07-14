@@ -119,9 +119,28 @@
 }
 
 .painel__usuario {
+  position: relative; /* âncora do menu suspenso do usuário */
   display: flex;
   align-items: center;
   gap: 0.85rem;
+}
+
+/* O nome + avatar viram um botão para abrir o menu do usuário. */
+.painel__usuario-botao {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.3rem;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color var(--transicao-padrao);
+}
+
+.painel__usuario-botao:hover {
+  background-color: var(--cor-superficie);
 }
 
 .painel__usuario-dados {
@@ -155,6 +174,84 @@
   color: var(--cor-texto-sobre-dourado);
   font-family: var(--fonte-titulo);
   font-weight: 700;
+  overflow: hidden; /* mantém a foto dentro do círculo */
+}
+
+/* Foto de perfil exibida dentro do círculo do avatar. */
+.painel__avatar-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ----- Menu do usuário (suspenso, aberto pelo topo) ----- */
+
+/* Camada transparente que cobre a tela para capturar o clique "fora". */
+.painel__menu-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+}
+
+.painel__menu-usuario {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 21;
+  min-width: 220px;
+  padding: 0.5rem;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* Cabeçalho do menu: nome + perfil do usuário. */
+.painel__menu-usuario-cabecalho {
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 0.7rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.painel__menu-usuario-nome {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--cor-texto);
+}
+
+.painel__menu-usuario-perfil {
+  font-size: 0.8rem;
+  color: var(--cor-principal);
+}
+
+/* Itens clicáveis do menu (editar perfil, sair). */
+.painel__menu-usuario-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.7rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--raio-borda);
+  color: var(--cor-texto);
+  font-family: var(--fonte-texto);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transicao-padrao),
+    color var(--transicao-padrao);
+}
+
+.painel__menu-usuario-item:hover {
+  background-color: var(--cor-fundo-secundario);
+}
+
+/* O "Sair" ganha um tom de alerta ao passar o mouse. */
+.painel__menu-usuario-item--sair:hover {
+  color: #e9b4a8;
 }
 
 .painel__pagina {

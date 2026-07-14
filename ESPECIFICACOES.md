@@ -86,6 +86,7 @@ src/app/
 │   ├── agendar/                # Cliente marca horário (barbearia→barbeiro→serviço→hora)
 │   ├── meus-agendamentos/      # Cliente vê e cancela seus agendamentos
 │   ├── agenda-gestor/          # Agenda: todos os agendamentos + status (gestor)
+│   ├── meu-perfil/             # Edição do próprio perfil (nome, telefone, foto)
 │   ├── clientes/               # Lista de clientes (somente admin)
 │   └── gestao/                 # Cadastro de barbearia/serviço/barbeiro/grade (admin/dono)
 │
@@ -114,7 +115,7 @@ completos** (corpo, respostas, permissões) estão em
 | Recurso          | Serviço Angular              | Rotas consumidas                                                            |
 | ---------------- | ---------------------------- | -------------------------------------------------------------------------- |
 | Autenticação     | `autenticacao.servico.ts`    | `POST /auth/login`, `POST /auth/registrar`                                  |
-| Usuários         | `usuario.servico.ts`         | `GET /usuarios` (admin), `GET /usuarios/{id}`, `PUT /{id}`, `POST /{id}/foto` (foto de perfil) |
+| Usuários         | `usuario.servico.ts`         | `GET /usuarios` (admin), `GET /usuarios/{id}`, `PUT /me` (próprio perfil), `PUT /{id}`, `POST /{id}/foto` (foto de perfil) |
 | Barbearias       | `barbearia.servico.ts`       | `GET /barbearias`, `GET/POST/{id}`                                          |
 | Barbeiros        | `barbeiro.servico.ts`        | `GET /barbeiros?id_barbearia=`, `GET/{id}`, `POST`                          |
 | Serviços         | `servico.servico.ts`         | `GET /servicos?id_barbearia=`, `GET/{id}`, `POST`, `PUT /{id}` (editar)     |
@@ -183,6 +184,13 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
   clientes só abre para administradores.
 - Layout interno compartilhado (barra lateral + topo) reaproveitado pelas telas.
   O menu mostra itens conforme o perfil (Gestão para admin/dono; Clientes só admin).
+  No topo, o avatar mostra a **foto do usuário** (ou as iniciais) e, ao ser
+  clicado, abre um **menu** com o nome/perfil, o atalho "Editar meu perfil" e um
+  botão "Sair".
+- **Meu perfil** (qualquer usuário): edição do próprio nome, telefone e **foto**
+  (`PUT /usuarios/me` + `POST /usuarios/{id}/foto`). Ao salvar, a sessão é
+  atualizada para o topo refletir o novo nome/foto na hora. O e-mail (login) e o
+  perfil aparecem apenas para leitura.
 - Tela principal (painel) com identidade visual aplicada.
 - Tela de clientes (admin/dono): tabela com **busca e paginação feitas no
   back-end** e **edição** inline. Admin edita qualquer um (inclusive o perfil);
