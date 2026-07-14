@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { UsuarioServico } from '../../nucleo/servicos/usuario.servico';
 import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
+import { TemaServico, Tema } from '../../nucleo/servicos/tema.servico';
 import { Usuario, rotuloDoPerfil } from '../../nucleo/modelos/usuario.modelo';
 import { validarArquivoFoto } from '../../nucleo/util/validacao-foto';
 
@@ -24,9 +25,13 @@ import { validarArquivoFoto } from '../../nucleo/util/validacao-foto';
 export class MeuPerfil {
   private readonly usuarioServico = inject(UsuarioServico);
   private readonly sessao = inject(SessaoServico);
+  private readonly temaServico = inject(TemaServico);
 
   /** Usuário autenticado atual (fonte dos dados exibidos). */
   protected readonly usuario = this.sessao.usuario;
+
+  /** Tema visual atual (escuro/claro), para destacar a opção escolhida. */
+  protected readonly tema = this.temaServico.tema;
 
   /** Campos editáveis do formulário. */
   protected readonly nome = signal(this.usuario()?.nome ?? '');
@@ -40,6 +45,11 @@ export class MeuPerfil {
   protected readonly salvando = signal(false);
   protected readonly mensagemErro = signal('');
   protected readonly mensagemSucesso = signal('');
+
+  /** Aplica o tema visual escolhido (escuro ou claro). */
+  protected escolherTema(tema: Tema): void {
+    this.temaServico.definir(tema);
+  }
 
   /** Rótulo amigável do perfil (só leitura). */
   protected rotuloPerfil(): string {

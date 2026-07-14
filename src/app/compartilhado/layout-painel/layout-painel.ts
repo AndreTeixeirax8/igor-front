@@ -3,6 +3,7 @@ import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/rou
 
 import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
 import { AutenticacaoServico } from '../../nucleo/servicos/autenticacao.servico';
+import { TemaServico } from '../../nucleo/servicos/tema.servico';
 import { Logotipo } from '../logotipo/logotipo';
 import { rotuloDoPerfil, PerfilUsuario } from '../../nucleo/modelos/usuario.modelo';
 
@@ -36,10 +37,14 @@ interface ItemMenu {
 export class LayoutPainel {
   private readonly sessao = inject(SessaoServico);
   private readonly autenticacaoServico = inject(AutenticacaoServico);
+  private readonly temaServico = inject(TemaServico);
   private readonly roteador = inject(Router);
 
   /** Usuário autenticado atual (vem da sessão). */
   protected readonly usuario = this.sessao.usuario;
+
+  /** Tema visual atual (escuro/claro), para o ícone de atalho no topo. */
+  protected readonly tema = this.temaServico.tema;
 
   /** Rótulo amigável do perfil do usuário (ex.: "Administrador"). */
   protected readonly rotuloPerfil = computed(() => {
@@ -98,6 +103,11 @@ export class LayoutPainel {
         (perfil !== undefined && item.perfisPermitidos.includes(perfil)),
     );
   });
+
+  /** Alterna o tema visual (escuro ↔ claro) pelo ícone de atalho no topo. */
+  protected alternarTema(): void {
+    this.temaServico.alternar();
+  }
 
   /** Abre/fecha o menu do usuário exibido no topo. */
   protected alternarMenu(): void {

@@ -7,13 +7,27 @@
    para harmonizar com ela em um tema escuro, no estilo de barbearias clássicas.
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   Paleta — tema ESCURO (padrão)
+
+   Todas as cores da interface saem daqui. O tema claro (mais abaixo, no bloco
+   :root[data-tema='claro']) apenas sobrescreve estas mesmas variáveis, então
+   trocar de tema é só mudar o atributo data-tema no elemento <html> — nenhum
+   componente precisa saber qual tema está ativo. Por isso os componentes devem
+   SEMPRE usar var(--...) em vez de cores cravadas.
+   -------------------------------------------------------------------------- */
 :root {
   /* ----- Identidade visual ----- */
   --cor-principal: #e0cd55; /* dourado do logo */
   --cor-principal-clara: #f0e08a;
   --cor-principal-escura: #c4b13f;
 
-  /* ----- Fundo (tema escuro) ----- */
+  /* Tons translúcidos do dourado (itens ativos, seleção, hover). */
+  --cor-principal-tenue: rgba(224, 205, 85, 0.14);
+  --cor-principal-tenue-leve: rgba(224, 205, 85, 0.1);
+  --cor-principal-tenue-forte: rgba(224, 205, 85, 0.2);
+
+  /* ----- Fundo ----- */
   --cor-fundo: #141414;
   --cor-fundo-secundario: #1b1b1b;
   --cor-superficie: #232323;
@@ -24,10 +38,51 @@
   --cor-texto: #f4f1e8;
   --cor-texto-suave: #a8a39a;
   --cor-texto-sobre-dourado: #1a1a1a;
+  --cor-placeholder: #6b675f;
 
   /* ----- Cores de apoio (harmonizadas com o dourado) ----- */
   --cor-sucesso: #5aa874;
   --cor-erro: #c0533f;
+
+  /* ----- Feedback (mensagens de sucesso/erro) ----- */
+  --cor-erro-texto: #e9b4a8;
+  --cor-erro-fundo: rgba(192, 83, 63, 0.12);
+  --cor-erro-borda: rgba(192, 83, 63, 0.3);
+  --cor-sucesso-texto: #abdcbb;
+  --cor-sucesso-fundo: rgba(90, 168, 116, 0.12);
+  --cor-sucesso-borda: rgba(90, 168, 116, 0.3);
+
+  /* ----- "Chips" (selos de perfil e de status de agendamento) -----
+     Reaproveitados em várias telas. Cada cor tem texto, fundo e borda. */
+  --chip-neutro-texto: #cfcabb; /* cliente */
+  --chip-neutro-fundo: rgba(207, 202, 187, 0.12);
+  --chip-neutro-borda: rgba(207, 202, 187, 0.3);
+  --chip-azul-texto: #8fc9d6; /* barbeiro / confirmado */
+  --chip-azul-fundo: rgba(143, 201, 214, 0.12);
+  --chip-azul-borda: rgba(143, 201, 214, 0.3);
+  --chip-roxo-texto: #c2a6e0; /* dono / em andamento */
+  --chip-roxo-fundo: rgba(194, 166, 224, 0.12);
+  --chip-roxo-borda: rgba(194, 166, 224, 0.3);
+  --chip-dourado-texto: var(--cor-principal); /* admin / agendado */
+  --chip-dourado-fundo: rgba(224, 205, 85, 0.14);
+  --chip-dourado-borda: rgba(224, 205, 85, 0.4);
+  --chip-verde-texto: var(--cor-sucesso); /* concluído */
+  --chip-verde-fundo: rgba(90, 168, 116, 0.12);
+  --chip-verde-borda: rgba(90, 168, 116, 0.3);
+  --chip-vermelho-texto: #e9b4a8; /* cancelado / não compareceu */
+  --chip-vermelho-fundo: rgba(192, 83, 63, 0.12);
+  --chip-vermelho-borda: rgba(192, 83, 63, 0.3);
+
+  /* Camada escura sobre imagens (ex.: "trocar foto" no avatar). */
+  --cor-overlay: rgba(0, 0, 0, 0.45);
+
+  /* Fundo decorativo dos painéis de login/cadastro. */
+  --gradiente-destaque: radial-gradient(
+      circle at 20% 20%,
+      rgba(224, 205, 85, 0.12),
+      transparent 55%
+    ),
+    linear-gradient(160deg, #1d1c17 0%, #141414 70%);
 
   /* ----- Tipografia ----- */
   --fonte-titulo: 'Poppins', 'Segoe UI', sans-serif;
@@ -37,6 +92,71 @@
   --raio-borda: 12px;
   --sombra-cartao: 0 10px 30px rgba(0, 0, 0, 0.35);
   --transicao-padrao: 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Paleta — tema CLARO
+
+   Sobrescreve só o que muda entre os temas. O dourado da marca continua o
+   mesmo; o que se ajusta são os fundos, o texto e os tons de feedback/chips,
+   que ganham versões mais escuras para ter bom contraste sobre fundo claro.
+   -------------------------------------------------------------------------- */
+:root[data-tema='claro'] {
+  /* Dourado um tico mais escuro para contrastar sobre fundo claro. */
+  --cor-principal-escura: #b09a2f;
+  --cor-principal-tenue: rgba(224, 205, 85, 0.28);
+  --cor-principal-tenue-leve: rgba(224, 205, 85, 0.18);
+  --cor-principal-tenue-forte: rgba(224, 205, 85, 0.38);
+
+  /* Fundos claros, em tom bege quente para casar com o dourado. */
+  --cor-fundo: #f7f5ef;
+  --cor-fundo-secundario: #efece3;
+  --cor-superficie: #ffffff;
+  --cor-superficie-clara: #f2efe6;
+  --cor-borda: #ddd8cc;
+
+  /* Texto escuro. */
+  --cor-texto: #2a2823;
+  --cor-texto-suave: #6f6a5f;
+  --cor-placeholder: #9a958a;
+
+  /* Feedback com textos escurecidos. */
+  --cor-erro-texto: #a1341f;
+  --cor-erro-fundo: rgba(192, 83, 63, 0.12);
+  --cor-erro-borda: rgba(192, 83, 63, 0.35);
+  --cor-sucesso-texto: #2f7a4c;
+  --cor-sucesso-fundo: rgba(90, 168, 116, 0.15);
+  --cor-sucesso-borda: rgba(90, 168, 116, 0.4);
+
+  /* Chips com textos escurecidos (bom contraste no claro). */
+  --chip-neutro-texto: #6b675f;
+  --chip-neutro-fundo: rgba(120, 115, 105, 0.12);
+  --chip-neutro-borda: rgba(120, 115, 105, 0.3);
+  --chip-azul-texto: #2c7181;
+  --chip-azul-fundo: rgba(44, 113, 129, 0.12);
+  --chip-azul-borda: rgba(44, 113, 129, 0.3);
+  --chip-roxo-texto: #6a4b8c;
+  --chip-roxo-fundo: rgba(106, 75, 140, 0.12);
+  --chip-roxo-borda: rgba(106, 75, 140, 0.3);
+  --chip-dourado-texto: #8a761f;
+  --chip-dourado-fundo: rgba(224, 205, 85, 0.24);
+  --chip-dourado-borda: rgba(196, 177, 63, 0.55);
+  --chip-verde-texto: #2f7a4c;
+  --chip-verde-fundo: rgba(90, 168, 116, 0.15);
+  --chip-verde-borda: rgba(90, 168, 116, 0.4);
+  --chip-vermelho-texto: #a1341f;
+  --chip-vermelho-fundo: rgba(192, 83, 63, 0.12);
+  --chip-vermelho-borda: rgba(192, 83, 63, 0.35);
+
+  --cor-overlay: rgba(0, 0, 0, 0.3);
+  --sombra-cartao: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+  --gradiente-destaque: radial-gradient(
+      circle at 20% 20%,
+      rgba(224, 205, 85, 0.25),
+      transparent 55%
+    ),
+    linear-gradient(160deg, #fbf9f2 0%, #efece3 70%);
 }
 
 * {
@@ -114,7 +234,7 @@ h4 {
 }
 
 .botao--contorno:hover:not(:disabled) {
-  background-color: rgba(224, 205, 85, 0.1);
+  background-color: var(--cor-principal-tenue-leve);
 }
 
 /* ==========================================================================
@@ -147,11 +267,11 @@ h4 {
 }
 
 .campo__entrada::placeholder {
-  color: #6b675f;
+  color: var(--cor-placeholder);
 }
 
 .campo__entrada:focus {
   outline: none;
   border-color: var(--cor-principal);
-  box-shadow: 0 0 0 3px rgba(224, 205, 85, 0.15);
+  box-shadow: 0 0 0 3px var(--cor-principal-tenue);
 }

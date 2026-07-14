@@ -18,10 +18,10 @@
 .agendar__erro {
   margin-bottom: 1.5rem;
   padding: 0.75rem 1rem;
-  background-color: rgba(192, 83, 63, 0.12);
+  background-color: var(--cor-erro-fundo);
   border: 1px solid var(--cor-erro);
   border-radius: var(--raio-borda);
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
   font-size: 0.9rem;
 }
 
@@ -95,7 +95,7 @@
 
 .opcao--ativa {
   border-color: var(--cor-principal);
-  background-color: rgba(224, 205, 85, 0.12);
+  background-color: var(--cor-principal-tenue-leve);
 }
 
 .opcao__nome {
@@ -174,8 +174,8 @@
 /* Dias com horário livre ficam clicáveis e em destaque. */
 .calendario__dia--disponivel {
   color: var(--cor-texto);
-  border-color: rgba(224, 205, 85, 0.4);
-  background-color: rgba(224, 205, 85, 0.1);
+  border-color: var(--chip-dourado-borda);
+  background-color: var(--cor-principal-tenue-leve);
   cursor: pointer;
 }
 

@@ -31,11 +31,23 @@ Estas regras valem para todo o código do front e espelham as do back-end:
 ## 2. Identidade visual
 
 - **Cor principal:** `#E0CD55` (dourado do logo da empresa).
-- **Tema:** escuro, no estilo de barbearias clássicas, para dar destaque ao
-  dourado e ficar elegante na apresentação ao cliente.
+- **Tema:** **escuro por padrão** (estilo de barbearias clássicas, para destacar
+  o dourado), com um **tema claro** opcional. O usuário troca por um item
+  **🌙/☀️ dentro do menu do usuário** (clicar na foto no topo → "Tema claro/
+  escuro") ou pelo seletor no cartão "Aparência" em "Meu perfil". A escolha é
+  lembrada no navegador (`localStorage`).
 - As cores estão todas em variáveis CSS no topo de `src/styles.scss`
-  (`--cor-principal`, `--cor-fundo`, etc.). Para reajustar a paleta, altere
-  apenas ali.
+  (`--cor-principal`, `--cor-fundo`, os tons de feedback `--cor-erro-texto`… e
+  os "chips" de perfil/status `--chip-azul-texto`…). Para reajustar a paleta,
+  altere apenas ali. **Regra:** os componentes usam sempre `var(--...)`, nunca
+  cor cravada — é isso que faz a troca de tema funcionar em toda a tela.
+- **Como o tema funciona:** o `TemaServico`
+  (`nucleo/servicos/tema.servico.ts`) grava `data-tema="claro"` no `<html>`; o
+  bloco `:root[data-tema='claro']` em `styles.scss` sobrescreve as variáveis com
+  a paleta clara (fundos claros + textos/chips escurecidos para contraste). O
+  tema é aplicado no início pela injeção do serviço no componente raiz
+  (`app.ts`). Para um novo tema, basta adicionar outro bloco
+  `:root[data-tema='...']` — nenhum componente precisa mudar.
 - **Fontes:** Poppins (títulos) e Inter (texto), carregadas em `src/index.html`.
 - **Logotipo:** componente `app-logotipo`
   (`src/app/compartilhado/logotipo/`). Ele exibe a imagem oficial salva em
@@ -64,6 +76,7 @@ src/app/
 │   │   ├── servico.servico.ts       # Serviços (corte, barba...)
 │   │   ├── disponibilidade.servico.ts # Grade de horários
 │   │   ├── agendamento.servico.ts   # Agendamentos
+│   │   ├── tema.servico.ts          # Tema escuro/claro (data-tema no <html>)
 │   │   └── resolvedor-nomes.servico.ts # Resolve IDs → nomes (com cache)
 │   ├── modelos/                # Interfaces que espelham o JSON do back
 │   ├── util/
@@ -185,12 +198,14 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - Layout interno compartilhado (barra lateral + topo) reaproveitado pelas telas.
   O menu mostra itens conforme o perfil (Gestão para admin/dono; Clientes só admin).
   No topo, o avatar mostra a **foto do usuário** (ou as iniciais) e, ao ser
-  clicado, abre um **menu** com o nome/perfil, o atalho "Editar meu perfil" e um
-  botão "Sair".
+  clicado, abre um **menu** com o nome/perfil, "Editar meu perfil", o item de
+  **tema 🌙/☀️** (troca escuro/claro; o menu segue aberto para ver o resultado) e
+  "Sair".
 - **Meu perfil** (qualquer usuário): edição do próprio nome, telefone e **foto**
   (`PUT /usuarios/me` + `POST /usuarios/{id}/foto`). Ao salvar, a sessão é
   atualizada para o topo refletir o novo nome/foto na hora. O e-mail (login) e o
-  perfil aparecem apenas para leitura.
+  perfil aparecem apenas para leitura. Tem também o seletor de **tema
+  (escuro/claro)**, aplicado na hora e lembrado no navegador.
 - Tela principal (painel) com identidade visual aplicada.
 - Tela de clientes (admin/dono): tabela com **busca e paginação feitas no
   back-end** e **edição** inline. Admin edita qualquer um (inclusive o perfil);

@@ -44,7 +44,7 @@
 }
 
 .filtro--ativo {
-  background-color: rgba(224, 205, 85, 0.14);
+  background-color: var(--cor-principal-tenue);
   border-color: var(--cor-principal);
   color: var(--cor-principal);
   font-weight: 600;
@@ -53,10 +53,10 @@
 .agenda__erro {
   margin-bottom: 1.25rem;
   padding: 0.75rem 1rem;
-  background-color: rgba(192, 83, 63, 0.12);
+  background-color: var(--cor-erro-fundo);
   border: 1px solid var(--cor-erro);
   border-radius: var(--raio-borda);
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
   font-size: 0.9rem;
 }
 
@@ -142,34 +142,34 @@
 }
 
 .selo--agendado {
-  color: var(--cor-principal);
-  background-color: rgba(224, 205, 85, 0.14);
-  border-color: rgba(224, 205, 85, 0.4);
+  color: var(--chip-dourado-texto);
+  background-color: var(--chip-dourado-fundo);
+  border-color: var(--chip-dourado-borda);
 }
 
 .selo--confirmado {
-  color: #8fc9d6;
-  background-color: rgba(143, 201, 214, 0.12);
-  border-color: rgba(143, 201, 214, 0.3);
+  color: var(--chip-azul-texto);
+  background-color: var(--chip-azul-fundo);
+  border-color: var(--chip-azul-borda);
 }
 
 .selo--em_andamento {
-  color: #c2a6e0;
-  background-color: rgba(194, 166, 224, 0.12);
-  border-color: rgba(194, 166, 224, 0.3);
+  color: var(--chip-roxo-texto);
+  background-color: var(--chip-roxo-fundo);
+  border-color: var(--chip-roxo-borda);
 }
 
 .selo--concluido {
-  color: var(--cor-sucesso);
-  background-color: rgba(90, 168, 116, 0.12);
-  border-color: rgba(90, 168, 116, 0.3);
+  color: var(--chip-verde-texto);
+  background-color: var(--chip-verde-fundo);
+  border-color: var(--chip-verde-borda);
 }
 
 .selo--cancelado,
 .selo--nao_compareceu {
-  color: #e9b4a8;
-  background-color: rgba(192, 83, 63, 0.12);
-  border-color: rgba(192, 83, 63, 0.3);
+  color: var(--chip-vermelho-texto);
+  background-color: var(--chip-vermelho-fundo);
+  border-color: var(--chip-vermelho-borda);
 }
 
 @media (max-width: 720px) {

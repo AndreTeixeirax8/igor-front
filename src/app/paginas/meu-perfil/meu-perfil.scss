@@ -25,14 +25,14 @@
 }
 
 .perfil__feedback--ok {
-  color: #a7d8b0;
-  background-color: rgba(90, 170, 110, 0.12);
-  border: 1px solid rgba(90, 170, 110, 0.4);
+  color: var(--cor-sucesso-texto);
+  background-color: var(--cor-sucesso-fundo);
+  border: 1px solid var(--cor-sucesso-borda);
 }
 
 .perfil__feedback--erro {
-  color: #e9b4a8;
-  background-color: rgba(192, 83, 63, 0.12);
+  color: var(--cor-erro-texto);
+  background-color: var(--cor-erro-fundo);
   border: 1px solid var(--cor-erro);
 }
 
@@ -135,27 +135,92 @@
 }
 
 .selo--cliente {
-  color: #cfcabb;
-  background-color: rgba(207, 202, 187, 0.12);
-  border-color: rgba(207, 202, 187, 0.3);
+  color: var(--chip-neutro-texto);
+  background-color: var(--chip-neutro-fundo);
+  border-color: var(--chip-neutro-borda);
 }
 
 .selo--barbeiro {
-  color: #8fc9d6;
-  background-color: rgba(143, 201, 214, 0.12);
-  border-color: rgba(143, 201, 214, 0.3);
+  color: var(--chip-azul-texto);
+  background-color: var(--chip-azul-fundo);
+  border-color: var(--chip-azul-borda);
 }
 
 .selo--dono {
-  color: #c2a6e0;
-  background-color: rgba(194, 166, 224, 0.12);
-  border-color: rgba(194, 166, 224, 0.3);
+  color: var(--chip-roxo-texto);
+  background-color: var(--chip-roxo-fundo);
+  border-color: var(--chip-roxo-borda);
 }
 
 .selo--admin {
-  color: var(--cor-principal);
-  background-color: rgba(224, 205, 85, 0.14);
-  border-color: rgba(224, 205, 85, 0.4);
+  color: var(--chip-dourado-texto);
+  background-color: var(--chip-dourado-fundo);
+  border-color: var(--chip-dourado-borda);
+}
+
+/* ----- Aparência (seletor de tema) ----- */
+
+.perfil__aparencia {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  max-width: 720px;
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.75rem;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+}
+
+.perfil__aparencia-titulo {
+  font-size: 1.15rem;
+  color: var(--cor-texto);
+}
+
+.perfil__aparencia-descricao {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+}
+
+/* Controle segmentado com as opções de tema. */
+.seletor-tema {
+  display: inline-flex;
+  padding: 0.25rem;
+  gap: 0.25rem;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+}
+
+.seletor-tema__opcao {
+  padding: 0.5rem 1.1rem;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-texto);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transicao-padrao),
+    color var(--transicao-padrao);
+}
+
+.seletor-tema__opcao:hover {
+  color: var(--cor-texto);
+}
+
+/* Opção ativa: recebe o dourado da marca. */
+.seletor-tema__opcao--ativa {
+  background-color: var(--cor-principal);
+  color: var(--cor-texto-sobre-dourado);
+}
+
+.seletor-tema__opcao--ativa:hover {
+  color: var(--cor-texto-sobre-dourado);
 }
 
 /* ----- Responsivo ----- */

@@ -16,12 +16,7 @@
   display: flex;
   align-items: center;
   padding: 4rem;
-  background: radial-gradient(
-      circle at 20% 20%,
-      rgba(224, 205, 85, 0.12),
-      transparent 55%
-    ),
-    linear-gradient(160deg, #1d1c17 0%, #141414 70%);
+  background: var(--gradiente-destaque);
   border-right: 1px solid var(--cor-borda);
 }
 
@@ -98,7 +93,7 @@
 }
 
 .campo__opcional {
-  color: #6b675f;
+  color: var(--cor-placeholder);
   font-weight: 400;
 }
 
@@ -162,10 +157,10 @@
 
 .cadastro__erro {
   padding: 0.75rem 1rem;
-  background-color: rgba(192, 83, 63, 0.12);
+  background-color: var(--cor-erro-fundo);
   border: 1px solid var(--cor-erro);
   border-radius: var(--raio-borda);
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
   font-size: 0.9rem;
 }
 

@@ -24,15 +24,15 @@
 }
 
 .gestao__aviso--erro {
-  background-color: rgba(192, 83, 63, 0.12);
+  background-color: var(--cor-erro-fundo);
   border-color: var(--cor-erro);
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
 }
 
 .gestao__aviso--ok {
-  background-color: rgba(90, 168, 116, 0.12);
+  background-color: var(--cor-sucesso-fundo);
   border-color: var(--cor-sucesso);
-  color: #abdcbb;
+  color: var(--cor-sucesso-texto);
 }
 
 .gestao__contexto {
@@ -90,7 +90,7 @@
 }
 
 .chip--ativo {
-  background-color: rgba(224, 205, 85, 0.14);
+  background-color: var(--cor-principal-tenue);
   border-color: var(--cor-principal);
   color: var(--cor-principal);
   font-weight: 600;
@@ -131,7 +131,7 @@
 .item__remover {
   background: transparent;
   border: none;
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
   font-size: 0.85rem;
   cursor: pointer;
 }
@@ -249,8 +249,8 @@
   gap: 1rem;
   margin-bottom: 0.85rem;
   padding: 0.7rem 1rem;
-  background-color: rgba(224, 205, 85, 0.1);
-  border: 1px solid rgba(224, 205, 85, 0.4);
+  background-color: var(--cor-principal-tenue-leve);
+  border: 1px solid var(--chip-dourado-borda);
   border-radius: var(--raio-borda);
   font-size: 0.9rem;
 }

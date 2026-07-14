@@ -89,6 +89,17 @@
               <span>Editar meu perfil</span>
             </button>
 
+            <!-- Troca de tema (escuro/claro) direto no menu do usuário. O menu
+                 continua aberto para a pessoa ver o resultado da troca. -->
+            <button
+              class="painel__menu-usuario-item"
+              type="button"
+              (click)="alternarTema()"
+            >
+              <span class="painel__menu-icone">{{ tema() === 'escuro' ? '☀️' : '🌙' }}</span>
+              <span>{{ tema() === 'escuro' ? 'Tema claro' : 'Tema escuro' }}</span>
+            </button>
+
             <button
               class="painel__menu-usuario-item painel__menu-usuario-item--sair"
               type="button"

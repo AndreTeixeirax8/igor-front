@@ -42,7 +42,7 @@
 
 .clientes__aviso--erro {
   border-color: var(--cor-erro);
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
 }
 
 /* Faixas de feedback (sucesso/erro de edição) no topo. */
@@ -55,15 +55,15 @@
 }
 
 .clientes__feedback--ok {
-  background-color: rgba(90, 168, 116, 0.12);
+  background-color: var(--cor-sucesso-fundo);
   border-color: var(--cor-sucesso);
-  color: #abdcbb;
+  color: var(--cor-sucesso-texto);
 }
 
 .clientes__feedback--erro {
-  background-color: rgba(192, 83, 63, 0.12);
+  background-color: var(--cor-erro-fundo);
   border-color: var(--cor-erro);
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
 }
 
 /* Ações da tabela (Editar / Salvar / Cancelar). */
@@ -195,8 +195,8 @@
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
-  color: var(--cor-texto);
-  background-color: rgba(0, 0, 0, 0.45);
+  color: #f4f1e8;
+  background-color: var(--cor-overlay);
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -241,14 +241,14 @@
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--cor-principal);
-  background-color: rgba(224, 205, 85, 0.12);
-  border: 1px solid rgba(224, 205, 85, 0.4);
+  background-color: var(--cor-principal-tenue-leve);
+  border: 1px solid var(--chip-dourado-borda);
   border-radius: 999px;
   white-space: nowrap;
 }
 
 .tabela__foto-botao:hover {
-  background-color: rgba(224, 205, 85, 0.2);
+  background-color: var(--cor-principal-tenue-forte);
 }
 
 /* Nome do arquivo escolhido / texto de apoio (feedback antes de salvar). */
@@ -274,27 +274,27 @@
 
 /* Cores distintas por perfil, todas em harmonia com o tema. */
 .selo--cliente {
-  color: #cfcabb;
-  background-color: rgba(207, 202, 187, 0.12);
-  border-color: rgba(207, 202, 187, 0.3);
+  color: var(--chip-neutro-texto);
+  background-color: var(--chip-neutro-fundo);
+  border-color: var(--chip-neutro-borda);
 }
 
 .selo--barbeiro {
-  color: #8fc9d6;
-  background-color: rgba(143, 201, 214, 0.12);
-  border-color: rgba(143, 201, 214, 0.3);
+  color: var(--chip-azul-texto);
+  background-color: var(--chip-azul-fundo);
+  border-color: var(--chip-azul-borda);
 }
 
 .selo--dono {
-  color: #c2a6e0;
-  background-color: rgba(194, 166, 224, 0.12);
-  border-color: rgba(194, 166, 224, 0.3);
+  color: var(--chip-roxo-texto);
+  background-color: var(--chip-roxo-fundo);
+  border-color: var(--chip-roxo-borda);
 }
 
 .selo--admin {
-  color: var(--cor-principal);
-  background-color: rgba(224, 205, 85, 0.14);
-  border-color: rgba(224, 205, 85, 0.4);
+  color: var(--chip-dourado-texto);
+  background-color: var(--chip-dourado-fundo);
+  border-color: var(--chip-dourado-borda);
 }
 
 .clientes__total {

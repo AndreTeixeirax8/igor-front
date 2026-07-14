@@ -95,3 +95,30 @@
     </button>
   </form>
 </div>
+
+<!-- Aparência: escolha do tema (escuro/claro). Aplicado na hora e lembrado. -->
+<div class="perfil__aparencia">
+  <div>
+    <h2 class="perfil__aparencia-titulo">Aparência</h2>
+    <p class="perfil__aparencia-descricao">Escolha o tema da interface.</p>
+  </div>
+
+  <div class="seletor-tema" role="group" aria-label="Tema da interface">
+    <button
+      class="seletor-tema__opcao"
+      type="button"
+      [class.seletor-tema__opcao--ativa]="tema() === 'escuro'"
+      (click)="escolherTema('escuro')"
+    >
+      🌙 Escuro
+    </button>
+    <button
+      class="seletor-tema__opcao"
+      type="button"
+      [class.seletor-tema__opcao--ativa]="tema() === 'claro'"
+      (click)="escolherTema('claro')"
+    >
+      ☀️ Claro
+    </button>
+  </div>
+</div>

@@ -59,7 +59,7 @@
 }
 
 .painel__menu-item--ativo {
-  background-color: rgba(224, 205, 85, 0.14);
+  background-color: var(--cor-principal-tenue);
   color: var(--cor-principal);
   font-weight: 600;
 }
@@ -99,7 +99,7 @@
 
 .painel__sair:hover {
   border-color: var(--cor-erro);
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
 }
 
 /* ----- Conteúdo ----- */
@@ -251,7 +251,7 @@
 
 /* O "Sair" ganha um tom de alerta ao passar o mouse. */
 .painel__menu-usuario-item--sair:hover {
-  color: #e9b4a8;
+  color: var(--cor-erro-texto);
 }
 
 .painel__pagina {
