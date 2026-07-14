@@ -9,6 +9,7 @@ import {
   PerfilUsuario,
   rotuloDoPerfil,
 } from '../../nucleo/modelos/usuario.modelo';
+import { validarArquivoFoto } from '../../nucleo/util/validacao-foto';
 
 /** Quantidade de usuários por página. */
 const TAMANHO_PAGINA = 10;
@@ -20,8 +21,8 @@ const TAMANHO_PAGINA = 10;
  *
  * Regras de edição (aplicadas também no back-end):
  *  - administrador edita qualquer usuário, inclusive o perfil;
- *  - dono edita apenas clientes e barbeiros (não edita admin nem dono) e não
- *    altera o perfil.
+ *  - dono edita qualquer usuário (inclusive o próprio perfil e outros donos),
+ *    menos administradores, e não altera o campo perfil.
  */
 @Component({
   selector: 'app-clientes',
@@ -54,6 +55,9 @@ export class Clientes {
   protected editNome = signal('');
   protected editTelefone = signal('');
   protected editPerfil = signal<PerfilUsuario>('cliente');
+
+  /** Nova foto de perfil escolhida na edição (nula quando não trocada). */
+  protected readonly editFoto = signal<File | null>(null);
 
   /** Perfis disponíveis no seletor (só o admin altera perfil). */
   protected readonly perfisDisponiveis: PerfilUsuario[] = [
@@ -133,13 +137,14 @@ export class Clientes {
 
   /**
    * Indica se o usuário logado pode editar o usuário informado.
-   * Admin edita todos; dono edita apenas clientes e barbeiros.
+   * Admin edita todos; dono edita qualquer usuário (inclusive o próprio perfil
+   * e outros donos), menos administradores.
    */
   protected podeEditar(usuario: Usuario): boolean {
     if (this.ehAdmin()) {
       return true;
     }
-    return usuario.perfil === 'cliente' || usuario.perfil === 'barbeiro';
+    return usuario.perfil !== 'admin';
   }
 
   /** Entra no modo de edição de um usuário, preenchendo o formulário. */
@@ -148,12 +153,36 @@ export class Clientes {
     this.editNome.set(usuario.nome);
     this.editTelefone.set(usuario.telefone ?? '');
     this.editPerfil.set(usuario.perfil);
+    this.editFoto.set(null);
     this.limparMensagens();
   }
 
   /** Cancela a edição em andamento. */
   protected cancelarEdicao(): void {
     this.usuarioEmEdicaoId.set(null);
+    this.editFoto.set(null);
+  }
+
+  /**
+   * Chamado quando uma nova foto é escolhida na edição. Valida tipo e tamanho
+   * no navegador (o back-end valida de novo pelo conteúdo do arquivo).
+   */
+  protected aoSelecionarFoto(evento: Event): void {
+    const entrada = evento.target as HTMLInputElement;
+    const arquivo = entrada.files?.[0] ?? null;
+    if (!arquivo) {
+      return;
+    }
+
+    const erroValidacao = validarArquivoFoto(arquivo);
+    if (erroValidacao) {
+      this.mensagemErro.set(erroValidacao);
+      entrada.value = '';
+      return;
+    }
+
+    this.mensagemErro.set('');
+    this.editFoto.set(arquivo);
   }
 
   /** Salva as alterações do usuário em edição. */
@@ -178,11 +207,27 @@ export class Clientes {
 
     this.usuarioServico.atualizar(id, dados).subscribe({
       next: (atualizado) => {
-        this.mensagemSucesso.set('Usuário atualizado com sucesso.');
-        this.usuarioEmEdicaoId.set(null);
-        this.usuarios.update((lista) =>
-          lista.map((u) => (u.id === atualizado.id ? atualizado : u)),
-        );
+        const novaFoto = this.editFoto();
+
+        // Sem foto nova: encerra a edição com os dados já atualizados.
+        if (!novaFoto) {
+          this.concluirEdicao(atualizado);
+          return;
+        }
+
+        // Com foto nova: envia o arquivo e usa a resposta (que já vem com o
+        // novo url_avatar) para atualizar a linha da tabela.
+        this.usuarioServico.enviarFoto(id, novaFoto).subscribe({
+          next: (comFoto) => this.concluirEdicao(comFoto),
+          error: (erro: HttpErrorResponse) => {
+            // Os demais campos foram salvos; avisamos que só a foto falhou.
+            this.concluirEdicao(atualizado);
+            this.mensagemSucesso.set('');
+            this.mensagemErro.set(
+              erro.error?.erro ?? 'Dados salvos, mas não foi possível enviar a foto.',
+            );
+          },
+        });
       },
       error: (erro: HttpErrorResponse) => {
         this.mensagemErro.set(
@@ -190,6 +235,16 @@ export class Clientes {
         );
       },
     });
+  }
+
+  /** Fecha o modo de edição e reflete o usuário atualizado na tabela. */
+  private concluirEdicao(atualizado: Usuario): void {
+    this.mensagemSucesso.set('Usuário atualizado com sucesso.');
+    this.usuarioEmEdicaoId.set(null);
+    this.editFoto.set(null);
+    this.usuarios.update((lista) =>
+      lista.map((u) => (u.id === atualizado.id ? atualizado : u)),
+    );
   }
 
   /** Devolve o rótulo amigável de um perfil (ex.: "Cliente", "Administrador"). */

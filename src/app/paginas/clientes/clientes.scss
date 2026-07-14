@@ -170,6 +170,95 @@
   font-family: var(--fonte-titulo);
   font-size: 0.8rem;
   font-weight: 700;
+  overflow: hidden; /* mantém a foto dentro do círculo */
+  position: relative;
+}
+
+/* Foto de perfil dentro do círculo do avatar. */
+.tabela__avatar-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* No modo de edição o avatar vira um "botão" que abre o seletor de foto. */
+.tabela__avatar--editavel {
+  cursor: pointer;
+}
+
+/* Lapisinho sobreposto indicando que a foto pode ser trocada. */
+.tabela__avatar-trocar {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: var(--cor-texto);
+  background-color: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.tabela__avatar--editavel:hover .tabela__avatar-trocar {
+  opacity: 1;
+}
+
+/* Marca "✓" no avatar quando uma nova foto já foi escolhida. */
+.tabela__avatar-ok {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  color: var(--cor-texto-sobre-dourado);
+}
+
+/* A entrada de arquivo nativa fica escondida (o botão/avatar a acionam). */
+.tabela__foto-entrada {
+  display: none;
+}
+
+.tabela__nome-edicao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Linha com o botão de foto e o texto de apoio. */
+.tabela__foto {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Botão explícito de enviar/trocar foto (o <label> aciona o input de arquivo). */
+.tabela__foto-botao {
+  cursor: pointer;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cor-principal);
+  background-color: rgba(224, 205, 85, 0.12);
+  border: 1px solid rgba(224, 205, 85, 0.4);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.tabela__foto-botao:hover {
+  background-color: rgba(224, 205, 85, 0.2);
+}
+
+/* Nome do arquivo escolhido / texto de apoio (feedback antes de salvar). */
+.tabela__foto-aviso {
+  font-size: 0.75rem;
+  color: var(--cor-texto-suave);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
 }
 
 /* ----- Selo de perfil ----- */

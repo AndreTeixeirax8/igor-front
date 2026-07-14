@@ -4,8 +4,10 @@ import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { AutenticacaoServico } from '../../nucleo/servicos/autenticacao.servico';
+import { UsuarioServico } from '../../nucleo/servicos/usuario.servico';
 import { Logotipo } from '../../compartilhado/logotipo/logotipo';
 import { RespostaErroApi } from '../../nucleo/modelos/autenticacao.modelo';
+import { validarArquivoFoto } from '../../nucleo/util/validacao-foto';
 
 /**
  * Tela de cadastro de uma nova conta. Coleta nome, e-mail, telefone (opcional)
@@ -20,6 +22,7 @@ import { RespostaErroApi } from '../../nucleo/modelos/autenticacao.modelo';
 })
 export class Cadastro {
   private readonly autenticacaoServico = inject(AutenticacaoServico);
+  private readonly usuarioServico = inject(UsuarioServico);
   private readonly roteador = inject(Router);
 
   /** Valores digitados nos campos do formulário (ligados via ngModel). */
@@ -28,6 +31,10 @@ export class Cadastro {
   protected telefone = signal('');
   protected senha = signal('');
   protected confirmacaoSenha = signal('');
+
+  /** Foto de perfil escolhida (opcional) e a prévia exibida na tela. */
+  protected readonly fotoSelecionada = signal<File | null>(null);
+  protected readonly previaFoto = signal<string | null>(null);
 
   /** Indica que o cadastro está em andamento (desabilita o botão). */
   protected readonly carregando = signal(false);
@@ -60,18 +67,78 @@ export class Cadastro {
         senha: this.senha(),
       })
       .subscribe({
-        next: () => {
-          // Conta criada: volta para o login sinalizando o sucesso, para que a
-          // pessoa entre com as próprias credenciais.
-          this.roteador.navigate(['/login'], {
-            queryParams: { cadastroRealizado: '1' },
-          });
+        next: (resposta) => {
+          const foto = this.fotoSelecionada();
+
+          // Sem foto: encerra o fluxo indo direto para o login.
+          if (!foto) {
+            this.irParaLogin();
+            return;
+          }
+
+          // Com foto: envia usando o token que o registro devolveu (ainda não
+          // há sessão iniciada, então o interceptador não tem o que anexar).
+          // Se o envio da foto falhar, seguimos para o login mesmo assim — a
+          // conta já foi criada e a foto pode ser adicionada depois na edição.
+          this.usuarioServico
+            .enviarFoto(resposta.usuario.id, foto, resposta.token)
+            .subscribe({
+              next: () => this.irParaLogin(),
+              error: () => this.irParaLogin(),
+            });
         },
         error: (erro: HttpErrorResponse) => {
           this.carregando.set(false);
           this.mensagemErro.set(this.traduzirErro(erro));
         },
       });
+  }
+
+  /**
+   * Chamado quando o usuário escolhe um arquivo de foto. Valida tipo e tamanho
+   * e monta a prévia exibida no formulário.
+   */
+  protected aoSelecionarFoto(evento: Event): void {
+    const entrada = evento.target as HTMLInputElement;
+    const arquivo = entrada.files?.[0] ?? null;
+    if (!arquivo) {
+      return;
+    }
+
+    const erroValidacao = validarArquivoFoto(arquivo);
+    if (erroValidacao) {
+      this.mensagemErro.set(erroValidacao);
+      entrada.value = '';
+      return;
+    }
+
+    this.mensagemErro.set('');
+    this.liberarPrevia();
+    this.fotoSelecionada.set(arquivo);
+    this.previaFoto.set(URL.createObjectURL(arquivo));
+  }
+
+  /** Remove a foto escolhida (o cadastro segue sem foto). */
+  protected removerFoto(): void {
+    this.liberarPrevia();
+    this.fotoSelecionada.set(null);
+    this.previaFoto.set(null);
+  }
+
+  /** Volta para a tela de login sinalizando que o cadastro deu certo. */
+  private irParaLogin(): void {
+    this.liberarPrevia();
+    this.roteador.navigate(['/login'], {
+      queryParams: { cadastroRealizado: '1' },
+    });
+  }
+
+  /** Libera da memória a URL temporária usada na prévia da foto. */
+  private liberarPrevia(): void {
+    const previa = this.previaFoto();
+    if (previa) {
+      URL.revokeObjectURL(previa);
+    }
   }
 
   /**

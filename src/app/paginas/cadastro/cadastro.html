@@ -76,6 +76,51 @@
           />
         </div>
 
+        <!-- Foto de perfil (opcional): PNG ou JPG de até 5 MB. -->
+        <div class="campo">
+          <label class="campo__rotulo" for="foto">
+            Foto de perfil <span class="campo__opcional">(opcional)</span>
+          </label>
+
+          <div class="foto">
+            @if (previaFoto()) {
+              <img
+                class="foto__previa"
+                [src]="previaFoto()"
+                alt="Prévia da foto de perfil"
+              />
+            } @else {
+              <span class="foto__previa foto__previa--vazia" aria-hidden="true">
+                📷
+              </span>
+            }
+
+            <div class="foto__acoes">
+              <label class="botao botao--contorno foto__botao" for="foto">
+                {{ fotoSelecionada() ? 'Trocar foto' : 'Escolher foto' }}
+              </label>
+              @if (fotoSelecionada()) {
+                <button
+                  class="foto__remover"
+                  type="button"
+                  (click)="removerFoto()"
+                >
+                  Remover
+                </button>
+              }
+            </div>
+
+            <input
+              id="foto"
+              class="foto__entrada"
+              type="file"
+              name="foto"
+              accept="image/png,image/jpeg"
+              (change)="aoSelecionarFoto($event)"
+            />
+          </div>
+        </div>
+
         <div class="campo">
           <label class="campo__rotulo" for="senha">Senha</label>
           <input

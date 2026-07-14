@@ -67,4 +67,35 @@ export class UsuarioServico {
 
     return this.clienteHttp.put<Usuario>(enderecoCompleto, dados);
   }
+
+  /**
+   * Envia a foto de perfil de um usuário (POST /usuarios/{id}/foto).
+   *
+   * O arquivo vai como formulário multipart (campo "foto"); o back-end valida o
+   * conteúdo (só aceita PNG/JPG de verdade), grava em disco e devolve o usuário
+   * já com o novo caminho em "url_avatar".
+   *
+   * @param id      ID do usuário dono da foto.
+   * @param arquivo Arquivo de imagem escolhido pelo usuário.
+   * @param token   Token JWT opcional. Usado no fluxo de cadastro, quando ainda
+   *                não há sessão iniciada (o interceptador não tem o que anexar)
+   *                mas a API de registro já devolveu um token válido.
+   */
+  enviarFoto(id: number, arquivo: File, token?: string): Observable<Usuario> {
+    const enderecoCompleto =
+      configuracaoApi.enderecoBase +
+      configuracaoApi.rotasUsuario.listar +
+      '/' +
+      id +
+      '/foto';
+
+    const dadosFormulario = new FormData();
+    dadosFormulario.append('foto', arquivo);
+
+    const opcoes = token
+      ? { headers: { Authorization: `Bearer ${token}` } }
+      : {};
+
+    return this.clienteHttp.post<Usuario>(enderecoCompleto, dadosFormulario, opcoes);
+  }
 }

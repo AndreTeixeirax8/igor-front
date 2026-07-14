@@ -63,9 +63,49 @@
             <tr class="tabela__editando">
               <td>
                 <div class="tabela__nome">
-                  <span class="tabela__avatar">{{ iniciais(cliente.nome) }}</span>
-                  <input class="campo__entrada" name="eNome{{ cliente.id }}"
-                    [ngModel]="editNome()" (ngModelChange)="editNome.set($event)" />
+                  <!-- Avatar: mostra a foto atual (ou as iniciais). Também é
+                       clicável para trocar a foto, além do botão ao lado. -->
+                  <label
+                    class="tabela__avatar tabela__avatar--editavel"
+                    for="eFoto{{ cliente.id }}"
+                    title="Trocar a foto de perfil"
+                  >
+                    @if (editFoto()) {
+                      <span class="tabela__avatar-ok" aria-hidden="true">✓</span>
+                    } @else if (cliente.url_avatar) {
+                      <img class="tabela__avatar-imagem" [src]="cliente.url_avatar"
+                        alt="Foto de {{ cliente.nome }}" />
+                    } @else {
+                      {{ iniciais(cliente.nome) }}
+                    }
+                    <span class="tabela__avatar-trocar" aria-hidden="true">✎</span>
+                  </label>
+
+                  <div class="tabela__nome-edicao">
+                    <input class="campo__entrada" name="eNome{{ cliente.id }}"
+                      [ngModel]="editNome()" (ngModelChange)="editNome.set($event)" />
+
+                    <!-- Botão explícito para enviar/trocar a foto de perfil. -->
+                    <div class="tabela__foto">
+                      <label class="tabela__foto-botao" for="eFoto{{ cliente.id }}">
+                        {{ editFoto() ? 'Trocar foto' : 'Enviar foto' }}
+                      </label>
+                      @if (editFoto()) {
+                        <span class="tabela__foto-aviso">{{ editFoto()!.name }}</span>
+                      } @else {
+                        <span class="tabela__foto-aviso">PNG ou JPG (até 5 MB)</span>
+                      }
+                    </div>
+
+                    <input
+                      id="eFoto{{ cliente.id }}"
+                      class="tabela__foto-entrada"
+                      type="file"
+                      name="eFoto{{ cliente.id }}"
+                      accept="image/png,image/jpeg"
+                      (change)="aoSelecionarFoto($event)"
+                    />
+                  </div>
                 </div>
               </td>
               <td>{{ cliente.email }}</td>
@@ -104,7 +144,14 @@
             <tr>
               <td>
                 <div class="tabela__nome">
-                  <span class="tabela__avatar">{{ iniciais(cliente.nome) }}</span>
+                  <span class="tabela__avatar">
+                    @if (cliente.url_avatar) {
+                      <img class="tabela__avatar-imagem" [src]="cliente.url_avatar"
+                        alt="Foto de {{ cliente.nome }}" />
+                    } @else {
+                      {{ iniciais(cliente.nome) }}
+                    }
+                  </span>
                   <span>{{ cliente.nome }}</span>
                 </div>
               </td>

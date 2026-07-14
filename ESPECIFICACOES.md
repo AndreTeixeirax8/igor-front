@@ -114,7 +114,7 @@ completos** (corpo, respostas, permissões) estão em
 | Recurso          | Serviço Angular              | Rotas consumidas                                                            |
 | ---------------- | ---------------------------- | -------------------------------------------------------------------------- |
 | Autenticação     | `autenticacao.servico.ts`    | `POST /auth/login`, `POST /auth/registrar`                                  |
-| Usuários         | `usuario.servico.ts`         | `GET /usuarios` (admin), `GET /usuarios/{id}`                               |
+| Usuários         | `usuario.servico.ts`         | `GET /usuarios` (admin), `GET /usuarios/{id}`, `PUT /{id}`, `POST /{id}/foto` (foto de perfil) |
 | Barbearias       | `barbearia.servico.ts`       | `GET /barbearias`, `GET/POST/{id}`                                          |
 | Barbeiros        | `barbeiro.servico.ts`        | `GET /barbeiros?id_barbearia=`, `GET/{id}`, `POST`                          |
 | Serviços         | `servico.servico.ts`         | `GET /servicos?id_barbearia=`, `GET/{id}`, `POST`, `PUT /{id}` (editar)     |
@@ -172,7 +172,12 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - Opção "Lembrar-me": guarda e-mail e senha no navegador (`localStorage`) e
   pré-preenche o login no próximo acesso. Atenção: a senha fica em texto puro,
   então é indicado apenas para dispositivos de uso pessoal.
-- Tela de cadastro de nova conta (volta ao login com aviso de sucesso).
+- Tela de cadastro de nova conta (volta ao login com aviso de sucesso), com
+  **foto de perfil opcional** (PNG/JPG até 5 MB, com prévia). A foto é enviada
+  logo após o registro usando o token que a própria API de registro devolve;
+  se o envio falhar, o cadastro segue valendo (a foto pode ser posta depois).
+  A validação no navegador (`nucleo/util/validacao-foto.ts`) é só um retorno
+  rápido — quem garante que o arquivo é uma imagem de verdade é o back-end.
 - Sessão persistente (token no `localStorage`) e logout.
 - Proteção de rota: o painel só abre para usuário autenticado; a tela de
   clientes só abre para administradores.
@@ -181,8 +186,11 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
 - Tela principal (painel) com identidade visual aplicada.
 - Tela de clientes (admin/dono): tabela com **busca e paginação feitas no
   back-end** e **edição** inline. Admin edita qualquer um (inclusive o perfil);
-  dono edita só clientes e barbeiros (não edita admin/dono nem altera perfil) —
-  regra também garantida no back.
+  dono edita qualquer usuário (inclusive o próprio perfil e outros donos), menos
+  admin, e não altera o campo perfil — regra também garantida no back. Na
+  edição, clicar no **avatar** abre o seletor
+  de **foto de perfil** (PNG/JPG); a foto é enviada ao salvar e os avatares da
+  tabela mostram a foto quando ela existe (`url_avatar`).
 - **Agendar** (cliente): escolhe barbearia → barbeiro → serviço e então um
   **calendário do mês** mostra os dias com vaga; ao clicar no dia aparecem os
   **horários livres** (calculados no back via `GET
