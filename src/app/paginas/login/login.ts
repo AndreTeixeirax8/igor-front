@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { AutenticacaoServico } from '../../nucleo/servicos/autenticacao.servico';
 import { CredenciaisLembradasServico } from '../../nucleo/servicos/credenciais-lembradas.servico';
 import { Logotipo } from '../../compartilhado/logotipo/logotipo';
-import { RespostaErroApi } from '../../nucleo/modelos/autenticacao.modelo';
+import { Mensagem } from '../../compartilhado/mensagem/mensagem';
+import { mensagemDeErro } from '../../nucleo/util/mensagem-erro';
 
 /**
  * Tela de login. Coleta e-mail e senha, chama o serviço de autenticação e, em
@@ -15,7 +15,7 @@ import { RespostaErroApi } from '../../nucleo/modelos/autenticacao.modelo';
  */
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink, Logotipo],
+  imports: [FormsModule, RouterLink, Logotipo, Mensagem],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -91,28 +91,12 @@ export class Login {
           // Login bem-sucedido: navega para a tela principal.
           this.roteador.navigate(['/principal']);
         },
-        error: (erro: HttpErrorResponse) => {
+        error: (erro: unknown) => {
           this.carregando.set(false);
-          this.mensagemErro.set(this.traduzirErro(erro));
+          this.mensagemErro.set(
+            mensagemDeErro(erro, 'Ocorreu um erro ao tentar entrar. Tente novamente.'),
+          );
         },
       });
-  }
-
-  /**
-   * Converte o erro HTTP em uma mensagem clara para o usuário, aproveitando o
-   * campo "erro" do corpo padronizado do back-end quando ele existir.
-   */
-  private traduzirErro(erro: HttpErrorResponse): string {
-    // O servidor não respondeu (back-end fora do ar ou sem rede).
-    if (erro.status === 0) {
-      return 'Não foi possível falar com o servidor. Verifique se o back-end está no ar.';
-    }
-
-    const corpo = erro.error as RespostaErroApi | null;
-    if (corpo?.erro) {
-      return corpo.erro;
-    }
-
-    return 'Ocorreu um erro ao tentar entrar. Tente novamente.';
   }
 }

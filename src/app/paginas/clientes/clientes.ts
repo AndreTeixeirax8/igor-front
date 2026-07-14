@@ -1,6 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { UsuarioServico } from '../../nucleo/servicos/usuario.servico';
 import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
@@ -9,7 +8,11 @@ import {
   PerfilUsuario,
   rotuloDoPerfil,
 } from '../../nucleo/modelos/usuario.modelo';
-import { validarArquivoFoto } from '../../nucleo/util/validacao-foto';
+import { mensagemDeErro } from '../../nucleo/util/mensagem-erro';
+import { Avatar } from '../../compartilhado/avatar/avatar';
+import { Selo } from '../../compartilhado/selo/selo';
+import { Mensagem } from '../../compartilhado/mensagem/mensagem';
+import { SeletorFoto } from '../../compartilhado/seletor-foto/seletor-foto';
 
 /** Quantidade de usuários por página. */
 const TAMANHO_PAGINA = 10;
@@ -26,7 +29,7 @@ const TAMANHO_PAGINA = 10;
  */
 @Component({
   selector: 'app-clientes',
-  imports: [FormsModule],
+  imports: [FormsModule, Avatar, Selo, Mensagem, SeletorFoto],
   templateUrl: './clientes.html',
   styleUrl: './clientes.scss',
 })
@@ -98,9 +101,11 @@ export class Clientes {
           this.pagina.set(resultado.pagina);
           this.carregando.set(false);
         },
-        error: (erro: HttpErrorResponse) => {
+        error: (erro: unknown) => {
           this.carregando.set(false);
-          this.mensagemErro.set(this.traduzirErro(erro));
+          this.mensagemErro.set(
+            mensagemDeErro(erro, 'Não foi possível carregar os clientes. Tente novamente.'),
+          );
         },
       });
   }
@@ -163,28 +168,6 @@ export class Clientes {
     this.editFoto.set(null);
   }
 
-  /**
-   * Chamado quando uma nova foto é escolhida na edição. Valida tipo e tamanho
-   * no navegador (o back-end valida de novo pelo conteúdo do arquivo).
-   */
-  protected aoSelecionarFoto(evento: Event): void {
-    const entrada = evento.target as HTMLInputElement;
-    const arquivo = entrada.files?.[0] ?? null;
-    if (!arquivo) {
-      return;
-    }
-
-    const erroValidacao = validarArquivoFoto(arquivo);
-    if (erroValidacao) {
-      this.mensagemErro.set(erroValidacao);
-      entrada.value = '';
-      return;
-    }
-
-    this.mensagemErro.set('');
-    this.editFoto.set(arquivo);
-  }
-
   /** Salva as alterações do usuário em edição. */
   protected salvarEdicao(id: number): void {
     if (!this.editNome().trim()) {
@@ -219,19 +202,19 @@ export class Clientes {
         // novo url_avatar) para atualizar a linha da tabela.
         this.usuarioServico.enviarFoto(id, novaFoto).subscribe({
           next: (comFoto) => this.concluirEdicao(comFoto),
-          error: (erro: HttpErrorResponse) => {
+          error: (erro: unknown) => {
             // Os demais campos foram salvos; avisamos que só a foto falhou.
             this.concluirEdicao(atualizado);
             this.mensagemSucesso.set('');
             this.mensagemErro.set(
-              erro.error?.erro ?? 'Dados salvos, mas não foi possível enviar a foto.',
+              mensagemDeErro(erro, 'Dados salvos, mas não foi possível enviar a foto.'),
             );
           },
         });
       },
-      error: (erro: HttpErrorResponse) => {
+      error: (erro: unknown) => {
         this.mensagemErro.set(
-          erro.error?.erro ?? 'Não foi possível salvar as alterações.',
+          mensagemDeErro(erro, 'Não foi possível salvar as alterações.'),
         );
       },
     });
@@ -252,27 +235,8 @@ export class Clientes {
     return rotuloDoPerfil(perfil);
   }
 
-  /** Calcula as iniciais (até duas letras) do nome, exibidas no avatar. */
-  protected iniciais(nome: string): string {
-    const partes = nome.trim().split(/\s+/);
-    const primeira = partes[0]?.charAt(0) ?? '';
-    const ultima = partes.length > 1 ? partes[partes.length - 1].charAt(0) : '';
-    return (primeira + ultima).toUpperCase();
-  }
-
   private limparMensagens(): void {
     this.mensagemErro.set('');
     this.mensagemSucesso.set('');
-  }
-
-  /** Converte o erro HTTP em uma mensagem clara para o usuário. */
-  private traduzirErro(erro: HttpErrorResponse): string {
-    if (erro.status === 0) {
-      return 'Não foi possível falar com o servidor. Verifique se o back-end está no ar.';
-    }
-    if (erro.status === 403) {
-      return 'Você não tem permissão para ver esta lista.';
-    }
-    return 'Não foi possível carregar os clientes. Tente novamente.';
   }
 }

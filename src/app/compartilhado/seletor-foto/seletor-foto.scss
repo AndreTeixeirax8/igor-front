@@ -1,0 +1,50 @@
+.seletor-foto {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Prévia da foto nova (o app-avatar cuida do caso "sem foto"). */
+.seletor-foto__imagem {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--cor-borda);
+}
+
+.seletor-foto__acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+/* O rótulo faz o papel de botão: clicar nele abre o seletor de arquivo. */
+.seletor-foto__botao {
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.9rem;
+}
+
+.seletor-foto__descartar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cor-texto-suave);
+  font-size: 0.82rem;
+  text-decoration: underline;
+}
+
+.seletor-foto__dica {
+  font-size: 0.75rem;
+  color: var(--cor-texto-suave);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+/* A entrada de arquivo nativa fica escondida (o rótulo estilizado a aciona). */
+.seletor-foto__entrada {
+  display: none;
+}

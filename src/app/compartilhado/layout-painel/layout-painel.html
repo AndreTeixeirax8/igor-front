@@ -56,17 +56,11 @@
             <span class="painel__usuario-nome">{{ usuario()?.nome }}</span>
             <span class="painel__usuario-perfil">{{ rotuloPerfil() }}</span>
           </div>
-          <div class="painel__avatar">
-            @if (usuario()?.url_avatar) {
-              <img
-                class="painel__avatar-imagem"
-                [src]="usuario()!.url_avatar"
-                alt="Foto de perfil"
-              />
-            } @else {
-              {{ iniciais() }}
-            }
-          </div>
+          <app-avatar
+            [nome]="usuario()?.nome ?? ''"
+            [url]="usuario()?.url_avatar ?? null"
+            [tamanho]="46"
+          />
         </button>
 
         @if (menuAberto()) {

@@ -7,9 +7,7 @@
   </p>
 </div>
 
-@if (mensagemErro()) {
-  <p class="agendar__erro">{{ mensagemErro() }}</p>
-}
+<app-mensagem tipo="erro" [texto]="mensagemErro()" />
 
 <!-- Passo 1: barbearia -->
 <section class="passo">

@@ -1,0 +1,48 @@
+<!--
+  Seletor de foto: prévia (foto nova, foto atual ou iniciais) + botão de enviar/
+  trocar + descartar + dica, e uma mensagem de erro quando a validação falha.
+-->
+<div class="seletor-foto">
+  <div class="seletor-foto__previa">
+    @if (previa()) {
+      <!-- Prévia da foto recém-escolhida. -->
+      <img
+        class="seletor-foto__imagem"
+        [src]="previa()"
+        [style.width.px]="tamanho()"
+        [style.height.px]="tamanho()"
+        alt="Prévia da nova foto"
+      />
+    } @else {
+      <!-- Sem foto nova: mostra a foto atual (ou as iniciais) via app-avatar. -->
+      <app-avatar [nome]="nome()" [url]="urlAtual()" [tamanho]="tamanho()" />
+    }
+  </div>
+
+  <div class="seletor-foto__acoes">
+    <label class="botao botao--contorno seletor-foto__botao" [attr.for]="idEntrada">
+      {{ arquivo() ? 'Trocar foto' : 'Enviar foto' }}
+    </label>
+
+    @if (arquivo()) {
+      <button class="seletor-foto__descartar" type="button" (click)="descartar()">
+        Descartar
+      </button>
+    }
+
+    <span class="seletor-foto__dica">
+      {{ arquivo() ? arquivo()!.name : 'PNG ou JPG (até 5 MB)' }}
+    </span>
+  </div>
+
+  <!-- Entrada de arquivo nativa (escondida; acionada pelo rótulo estilizado). -->
+  <input
+    [id]="idEntrada"
+    class="seletor-foto__entrada"
+    type="file"
+    accept="image/png,image/jpeg"
+    (change)="aoSelecionar($event)"
+  />
+
+  <app-mensagem tipo="erro" [texto]="erro()" />
+</div>

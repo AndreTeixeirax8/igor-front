@@ -37,9 +37,9 @@
         </div>
 
         <div class="cartao-agendamento__lado">
-          <span class="selo selo--{{ agendamento.status }}">
+          <app-selo [tipo]="agendamento.status">
             {{ rotulo(agendamento.status) }}
-          </span>
+          </app-selo>
           <span class="cartao-agendamento__preco">
             R$ {{ agendamento.preco_no_agendamento.toFixed(2) }}
           </span>

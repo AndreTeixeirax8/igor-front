@@ -1,12 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { UsuarioServico } from '../../nucleo/servicos/usuario.servico';
 import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
 import { TemaServico, Tema } from '../../nucleo/servicos/tema.servico';
 import { Usuario, rotuloDoPerfil } from '../../nucleo/modelos/usuario.modelo';
-import { validarArquivoFoto } from '../../nucleo/util/validacao-foto';
+import { mensagemDeErro } from '../../nucleo/util/mensagem-erro';
+import { Selo } from '../../compartilhado/selo/selo';
+import { Mensagem } from '../../compartilhado/mensagem/mensagem';
+import { SeletorFoto } from '../../compartilhado/seletor-foto/seletor-foto';
 
 /**
  * Tela "Meu perfil": qualquer usuário autenticado edita os próprios dados
@@ -18,7 +20,7 @@ import { validarArquivoFoto } from '../../nucleo/util/validacao-foto';
  */
 @Component({
   selector: 'app-meu-perfil',
-  imports: [FormsModule],
+  imports: [FormsModule, Selo, Mensagem, SeletorFoto],
   templateUrl: './meu-perfil.html',
   styleUrl: './meu-perfil.scss',
 })
@@ -37,9 +39,8 @@ export class MeuPerfil {
   protected readonly nome = signal(this.usuario()?.nome ?? '');
   protected readonly telefone = signal(this.usuario()?.telefone ?? '');
 
-  /** Foto escolhida (nula quando não trocada) e prévia exibida na tela. */
+  /** Foto nova escolhida no seletor (nula quando não trocada). */
   protected readonly fotoSelecionada = signal<File | null>(null);
-  protected readonly previaFoto = signal<string | null>(null);
 
   /** Estado de envio e mensagens de feedback. */
   protected readonly salvando = signal(false);
@@ -55,45 +56,6 @@ export class MeuPerfil {
   protected rotuloPerfil(): string {
     const usuario = this.usuario();
     return usuario ? rotuloDoPerfil(usuario.perfil) : '';
-  }
-
-  /** Iniciais do nome, exibidas quando não há foto. */
-  protected iniciais(): string {
-    const partes = (this.usuario()?.nome ?? '').trim().split(/\s+/);
-    const primeira = partes[0]?.charAt(0) ?? '';
-    const ultima = partes.length > 1 ? partes[partes.length - 1].charAt(0) : '';
-    return (primeira + ultima).toUpperCase();
-  }
-
-  /**
-   * Chamado quando o usuário escolhe uma nova foto. Valida tipo e tamanho no
-   * navegador (o back-end valida de novo pelo conteúdo) e monta a prévia.
-   */
-  protected aoSelecionarFoto(evento: Event): void {
-    const entrada = evento.target as HTMLInputElement;
-    const arquivo = entrada.files?.[0] ?? null;
-    if (!arquivo) {
-      return;
-    }
-
-    const erroValidacao = validarArquivoFoto(arquivo);
-    if (erroValidacao) {
-      this.mensagemErro.set(erroValidacao);
-      entrada.value = '';
-      return;
-    }
-
-    this.mensagemErro.set('');
-    this.liberarPrevia();
-    this.fotoSelecionada.set(arquivo);
-    this.previaFoto.set(URL.createObjectURL(arquivo));
-  }
-
-  /** Remove a foto recém-escolhida (mantém a foto atual, se houver). */
-  protected removerFotoSelecionada(): void {
-    this.liberarPrevia();
-    this.fotoSelecionada.set(null);
-    this.previaFoto.set(null);
   }
 
   /** Salva as alterações: primeiro os dados, depois a foto (se houver). */
@@ -131,23 +93,20 @@ export class MeuPerfil {
           // url_avatar) como versão final.
           this.usuarioServico.enviarFoto(usuarioAtual.id, novaFoto).subscribe({
             next: (comFoto) => this.concluir(comFoto),
-            error: (erro: HttpErrorResponse) => {
+            error: (erro: unknown) => {
               // Os dados foram salvos, só a foto falhou: reflete os dados e
               // avisa sobre a foto.
               this.concluir(atualizado);
               this.mensagemSucesso.set('');
               this.mensagemErro.set(
-                erro.error?.erro ??
-                  'Dados salvos, mas não foi possível enviar a foto.',
+                mensagemDeErro(erro, 'Dados salvos, mas não foi possível enviar a foto.'),
               );
             },
           });
         },
-        error: (erro: HttpErrorResponse) => {
+        error: (erro: unknown) => {
           this.salvando.set(false);
-          this.mensagemErro.set(
-            erro.error?.erro ?? 'Não foi possível salvar o perfil.',
-          );
+          this.mensagemErro.set(mensagemDeErro(erro, 'Não foi possível salvar o perfil.'));
         },
       });
   }
@@ -155,16 +114,8 @@ export class MeuPerfil {
   /** Aplica o usuário atualizado à sessão e mostra o sucesso. */
   private concluir(atualizado: Usuario): void {
     this.sessao.atualizarUsuario(atualizado);
-    this.removerFotoSelecionada();
+    this.fotoSelecionada.set(null);
     this.salvando.set(false);
     this.mensagemSucesso.set('Perfil atualizado com sucesso.');
-  }
-
-  /** Libera da memória a URL temporária usada na prévia da foto. */
-  private liberarPrevia(): void {
-    const previa = this.previaFoto();
-    if (previa) {
-      URL.revokeObjectURL(previa);
-    }
   }
 }

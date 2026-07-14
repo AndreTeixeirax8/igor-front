@@ -50,14 +50,10 @@
   font-weight: 600;
 }
 
-.agenda__erro {
+/* A faixa de erro agora é o componente compartilhado <app-mensagem>. */
+app-mensagem {
+  display: block;
   margin-bottom: 1.25rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--cor-erro-fundo);
-  border: 1px solid var(--cor-erro);
-  border-radius: var(--raio-borda);
-  color: var(--cor-erro-texto);
-  font-size: 0.9rem;
 }
 
 .agenda__aviso {
@@ -129,48 +125,7 @@
   font-size: 0.8rem;
 }
 
-/* ----- Selo de status (mesmas cores da tela de agendamentos) ----- */
-
-.selo {
-  display: inline-block;
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-
-.selo--agendado {
-  color: var(--chip-dourado-texto);
-  background-color: var(--chip-dourado-fundo);
-  border-color: var(--chip-dourado-borda);
-}
-
-.selo--confirmado {
-  color: var(--chip-azul-texto);
-  background-color: var(--chip-azul-fundo);
-  border-color: var(--chip-azul-borda);
-}
-
-.selo--em_andamento {
-  color: var(--chip-roxo-texto);
-  background-color: var(--chip-roxo-fundo);
-  border-color: var(--chip-roxo-borda);
-}
-
-.selo--concluido {
-  color: var(--chip-verde-texto);
-  background-color: var(--chip-verde-fundo);
-  border-color: var(--chip-verde-borda);
-}
-
-.selo--cancelado,
-.selo--nao_compareceu {
-  color: var(--chip-vermelho-texto);
-  background-color: var(--chip-vermelho-fundo);
-  border-color: var(--chip-vermelho-borda);
-}
+/* O selo de status agora é o componente compartilhado <app-selo>. */
 
 @media (max-width: 720px) {
   .linha-agenda {

@@ -45,25 +45,10 @@
   color: var(--cor-erro-texto);
 }
 
-/* Faixas de feedback (sucesso/erro de edição) no topo. */
-.clientes__feedback {
+/* As faixas de feedback no topo agora são o componente <app-mensagem>. */
+app-mensagem {
+  display: block;
   margin-bottom: 1.25rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--raio-borda);
-  font-size: 0.9rem;
-  border: 1px solid transparent;
-}
-
-.clientes__feedback--ok {
-  background-color: var(--cor-sucesso-fundo);
-  border-color: var(--cor-sucesso);
-  color: var(--cor-sucesso-texto);
-}
-
-.clientes__feedback--erro {
-  background-color: var(--cor-erro-fundo);
-  border-color: var(--cor-erro);
-  color: var(--cor-erro-texto);
 }
 
 /* Ações da tabela (Editar / Salvar / Cancelar). */
@@ -153,148 +138,13 @@
   font-weight: 500;
 }
 
-.tabela__avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: linear-gradient(
-    140deg,
-    var(--cor-principal) 0%,
-    var(--cor-principal-escura) 100%
-  );
-  color: var(--cor-texto-sobre-dourado);
-  font-family: var(--fonte-titulo);
-  font-size: 0.8rem;
-  font-weight: 700;
-  overflow: hidden; /* mantém a foto dentro do círculo */
-  position: relative;
-}
-
-/* Foto de perfil dentro do círculo do avatar. */
-.tabela__avatar-imagem {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-/* No modo de edição o avatar vira um "botão" que abre o seletor de foto. */
-.tabela__avatar--editavel {
-  cursor: pointer;
-}
-
-/* Lapisinho sobreposto indicando que a foto pode ser trocada. */
-.tabela__avatar-trocar {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  color: #f4f1e8;
-  background-color: var(--cor-overlay);
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.tabela__avatar--editavel:hover .tabela__avatar-trocar {
-  opacity: 1;
-}
-
-/* Marca "✓" no avatar quando uma nova foto já foi escolhida. */
-.tabela__avatar-ok {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 1rem;
-  color: var(--cor-texto-sobre-dourado);
-}
-
-/* A entrada de arquivo nativa fica escondida (o botão/avatar a acionam). */
-.tabela__foto-entrada {
-  display: none;
-}
-
-.tabela__nome-edicao {
-  display: flex;
+/* No modo de edição, o nome e o seletor de foto ficam empilhados. O avatar,
+   o selo de perfil e o seletor de foto agora são componentes compartilhados
+   (<app-avatar>, <app-selo>, <app-seletor-foto>). */
+.tabela__nome--edicao {
   flex-direction: column;
-  gap: 0.35rem;
-}
-
-/* Linha com o botão de foto e o texto de apoio. */
-.tabela__foto {
-  display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 0.5rem;
-}
-
-/* Botão explícito de enviar/trocar foto (o <label> aciona o input de arquivo). */
-.tabela__foto-botao {
-  cursor: pointer;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--cor-principal);
-  background-color: var(--cor-principal-tenue-leve);
-  border: 1px solid var(--chip-dourado-borda);
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.tabela__foto-botao:hover {
-  background-color: var(--cor-principal-tenue-forte);
-}
-
-/* Nome do arquivo escolhido / texto de apoio (feedback antes de salvar). */
-.tabela__foto-aviso {
-  font-size: 0.75rem;
-  color: var(--cor-texto-suave);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 140px;
-}
-
-/* ----- Selo de perfil ----- */
-
-.selo {
-  display: inline-block;
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  border: 1px solid transparent;
-}
-
-/* Cores distintas por perfil, todas em harmonia com o tema. */
-.selo--cliente {
-  color: var(--chip-neutro-texto);
-  background-color: var(--chip-neutro-fundo);
-  border-color: var(--chip-neutro-borda);
-}
-
-.selo--barbeiro {
-  color: var(--chip-azul-texto);
-  background-color: var(--chip-azul-fundo);
-  border-color: var(--chip-azul-borda);
-}
-
-.selo--dono {
-  color: var(--chip-roxo-texto);
-  background-color: var(--chip-roxo-fundo);
-  border-color: var(--chip-roxo-borda);
-}
-
-.selo--admin {
-  color: var(--chip-dourado-texto);
-  background-color: var(--chip-dourado-fundo);
-  border-color: var(--chip-dourado-borda);
 }
 
 .clientes__total {

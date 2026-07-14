@@ -159,30 +159,7 @@
   color: var(--cor-principal);
 }
 
-.painel__avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: linear-gradient(
-    140deg,
-    var(--cor-principal) 0%,
-    var(--cor-principal-escura) 100%
-  );
-  color: var(--cor-texto-sobre-dourado);
-  font-family: var(--fonte-titulo);
-  font-weight: 700;
-  overflow: hidden; /* mantém a foto dentro do círculo */
-}
-
-/* Foto de perfil exibida dentro do círculo do avatar. */
-.painel__avatar-imagem {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* O avatar do topo agora é o componente compartilhado <app-avatar>. */
 
 /* ----- Menu do usuário (suspenso, aberto pelo topo) ----- */
 

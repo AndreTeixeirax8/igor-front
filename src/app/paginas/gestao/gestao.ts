@@ -1,7 +1,8 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 
+import { Mensagem } from '../../compartilhado/mensagem/mensagem';
+import { mensagemDeErro } from '../../nucleo/util/mensagem-erro';
 import { BarbeariaServico } from '../../nucleo/servicos/barbearia.servico';
 import { BarbeiroServico } from '../../nucleo/servicos/barbeiro.servico';
 import { ServicoServico } from '../../nucleo/servicos/servico.servico';
@@ -25,7 +26,7 @@ import {
  */
 @Component({
   selector: 'app-gestao',
-  imports: [FormsModule],
+  imports: [FormsModule, Mensagem],
   templateUrl: './gestao.html',
   styleUrl: './gestao.scss',
 })
@@ -384,7 +385,7 @@ export class Gestao {
     this.mensagemSucesso.set('');
   }
 
-  private mostrarErro(erro: HttpErrorResponse): void {
-    this.mensagemErro.set(erro.error?.erro ?? 'Ocorreu um erro na operação.');
+  private mostrarErro(erro: unknown): void {
+    this.mensagemErro.set(mensagemDeErro(erro, 'Ocorreu um erro na operação.'));
   }
 }

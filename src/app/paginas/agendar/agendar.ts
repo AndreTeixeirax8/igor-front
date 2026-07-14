@@ -13,6 +13,8 @@ import { Barbearia } from '../../nucleo/modelos/barbearia.modelo';
 import { Barbeiro } from '../../nucleo/modelos/barbeiro.modelo';
 import { Servico } from '../../nucleo/modelos/servico.modelo';
 import { paraRFC3339ComFusoLocal } from '../../nucleo/util/data-hora';
+import { mensagemDeErro } from '../../nucleo/util/mensagem-erro';
+import { Mensagem } from '../../compartilhado/mensagem/mensagem';
 
 /** Uma célula do calendário (dia do mês). */
 interface CelulaCalendario {
@@ -39,7 +41,7 @@ const NOMES_MESES = [
  */
 @Component({
   selector: 'app-agendar',
-  imports: [FormsModule],
+  imports: [FormsModule, Mensagem],
   templateUrl: './agendar.html',
   styleUrl: './agendar.scss',
 })
@@ -273,7 +275,7 @@ export class Agendar {
             return;
           }
           this.mensagemErro.set(
-            erro.error?.erro ?? 'Não foi possível concluir o agendamento.',
+            mensagemDeErro(erro, 'Não foi possível concluir o agendamento.'),
           );
         },
       });

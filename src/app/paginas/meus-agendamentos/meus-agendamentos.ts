@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { AgendamentoServico } from '../../nucleo/servicos/agendamento.servico';
 import { ResolvedorNomesServico } from '../../nucleo/servicos/resolvedor-nomes.servico';
@@ -10,6 +9,8 @@ import {
   statusEncerrado,
 } from '../../nucleo/modelos/agendamento.modelo';
 import { formatarDataHora } from '../../nucleo/util/data-hora';
+import { mensagemDeErro } from '../../nucleo/util/mensagem-erro';
+import { Selo } from '../../compartilhado/selo/selo';
 
 /**
  * Tela "Meus agendamentos": lista os agendamentos do usuário autenticado e
@@ -17,7 +18,7 @@ import { formatarDataHora } from '../../nucleo/util/data-hora';
  */
 @Component({
   selector: 'app-meus-agendamentos',
-  imports: [],
+  imports: [Selo],
   templateUrl: './meus-agendamentos.html',
   styleUrl: './meus-agendamentos.scss',
 })
@@ -80,10 +81,10 @@ export class MeusAgendamentos {
         this.cancelandoId.set(null);
         this.carregar();
       },
-      error: (erro: HttpErrorResponse) => {
+      error: (erro: unknown) => {
         this.cancelandoId.set(null);
         this.mensagemErro.set(
-          erro.error?.erro ?? 'Não foi possível cancelar o agendamento.',
+          mensagemDeErro(erro, 'Não foi possível cancelar o agendamento.'),
         );
       },
     });

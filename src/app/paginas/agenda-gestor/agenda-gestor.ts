@@ -1,5 +1,4 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { AgendamentoServico } from '../../nucleo/servicos/agendamento.servico';
 import { ResolvedorNomesServico } from '../../nucleo/servicos/resolvedor-nomes.servico';
@@ -9,6 +8,9 @@ import {
   rotuloStatus,
 } from '../../nucleo/modelos/agendamento.modelo';
 import { formatarDataHora } from '../../nucleo/util/data-hora';
+import { mensagemDeErro } from '../../nucleo/util/mensagem-erro';
+import { Selo } from '../../compartilhado/selo/selo';
+import { Mensagem } from '../../compartilhado/mensagem/mensagem';
 
 /** Uma ação de mudança de status disponível para um agendamento. */
 interface AcaoStatus {
@@ -23,7 +25,7 @@ interface AcaoStatus {
  */
 @Component({
   selector: 'app-agenda-gestor',
-  imports: [],
+  imports: [Selo, Mensagem],
   templateUrl: './agenda-gestor.html',
   styleUrl: './agenda-gestor.scss',
 })
@@ -121,11 +123,9 @@ export class AgendaGestor {
           lista.map((a) => (a.id === atualizado.id ? atualizado : a)),
         );
       },
-      error: (erro: HttpErrorResponse) => {
+      error: (erro: unknown) => {
         this.atualizandoId.set(null);
-        this.mensagemErro.set(
-          erro.error?.erro ?? 'Não foi possível mudar o status.',
-        );
+        this.mensagemErro.set(mensagemDeErro(erro, 'Não foi possível mudar o status.'));
       },
     });
   }

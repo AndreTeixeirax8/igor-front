@@ -78,47 +78,14 @@
 
         <!-- Foto de perfil (opcional): PNG ou JPG de até 5 MB. -->
         <div class="campo">
-          <label class="campo__rotulo" for="foto">
+          <label class="campo__rotulo">
             Foto de perfil <span class="campo__opcional">(opcional)</span>
           </label>
-
-          <div class="foto">
-            @if (previaFoto()) {
-              <img
-                class="foto__previa"
-                [src]="previaFoto()"
-                alt="Prévia da foto de perfil"
-              />
-            } @else {
-              <span class="foto__previa foto__previa--vazia" aria-hidden="true">
-                📷
-              </span>
-            }
-
-            <div class="foto__acoes">
-              <label class="botao botao--contorno foto__botao" for="foto">
-                {{ fotoSelecionada() ? 'Trocar foto' : 'Escolher foto' }}
-              </label>
-              @if (fotoSelecionada()) {
-                <button
-                  class="foto__remover"
-                  type="button"
-                  (click)="removerFoto()"
-                >
-                  Remover
-                </button>
-              }
-            </div>
-
-            <input
-              id="foto"
-              class="foto__entrada"
-              type="file"
-              name="foto"
-              accept="image/png,image/jpeg"
-              (change)="aoSelecionarFoto($event)"
-            />
-          </div>
+          <app-seletor-foto
+            [nome]="nome()"
+            [tamanho]="72"
+            (mudou)="fotoSelecionada.set($event)"
+          />
         </div>
 
         <div class="campo">
@@ -152,9 +119,7 @@
         </div>
 
         <!-- Área de mensagem de erro (só aparece quando há erro). -->
-        @if (mensagemErro()) {
-          <p class="cadastro__erro">{{ mensagemErro() }}</p>
-        }
+        <app-mensagem tipo="erro" [texto]="mensagemErro()" />
 
         <button
           class="botao botao--principal cadastro__botao"

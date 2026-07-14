@@ -1,0 +1,48 @@
+/* Selo/chip: pílula colorida. As cores saem das variáveis --chip-* (que já
+   trocam sozinhas entre os temas escuro e claro). */
+.selo {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.selo--neutro {
+  color: var(--chip-neutro-texto);
+  background-color: var(--chip-neutro-fundo);
+  border-color: var(--chip-neutro-borda);
+}
+
+.selo--azul {
+  color: var(--chip-azul-texto);
+  background-color: var(--chip-azul-fundo);
+  border-color: var(--chip-azul-borda);
+}
+
+.selo--roxo {
+  color: var(--chip-roxo-texto);
+  background-color: var(--chip-roxo-fundo);
+  border-color: var(--chip-roxo-borda);
+}
+
+.selo--dourado {
+  color: var(--chip-dourado-texto);
+  background-color: var(--chip-dourado-fundo);
+  border-color: var(--chip-dourado-borda);
+}
+
+.selo--verde {
+  color: var(--chip-verde-texto);
+  background-color: var(--chip-verde-fundo);
+  border-color: var(--chip-verde-borda);
+}
+
+.selo--vermelho {
+  color: var(--chip-vermelho-texto);
+  background-color: var(--chip-vermelho-fundo);
+  border-color: var(--chip-vermelho-borda);
+}

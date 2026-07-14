@@ -22,11 +22,9 @@
   </div>
 </div>
 
-@if (mensagemSucesso()) {
-  <p class="clientes__feedback clientes__feedback--ok">{{ mensagemSucesso() }}</p>
-}
-@if (mensagemErro() && usuarios().length > 0) {
-  <p class="clientes__feedback clientes__feedback--erro">{{ mensagemErro() }}</p>
+<app-mensagem tipo="sucesso" [texto]="mensagemSucesso()" />
+@if (usuarios().length > 0) {
+  <app-mensagem tipo="erro" [texto]="mensagemErro()" />
 }
 
 @if (carregando()) {
@@ -62,50 +60,17 @@
             <!-- Linha em modo de edição -->
             <tr class="tabela__editando">
               <td>
-                <div class="tabela__nome">
-                  <!-- Avatar: mostra a foto atual (ou as iniciais). Também é
-                       clicável para trocar a foto, além do botão ao lado. -->
-                  <label
-                    class="tabela__avatar tabela__avatar--editavel"
-                    for="eFoto{{ cliente.id }}"
-                    title="Trocar a foto de perfil"
-                  >
-                    @if (editFoto()) {
-                      <span class="tabela__avatar-ok" aria-hidden="true">✓</span>
-                    } @else if (cliente.url_avatar) {
-                      <img class="tabela__avatar-imagem" [src]="cliente.url_avatar"
-                        alt="Foto de {{ cliente.nome }}" />
-                    } @else {
-                      {{ iniciais(cliente.nome) }}
-                    }
-                    <span class="tabela__avatar-trocar" aria-hidden="true">✎</span>
-                  </label>
+                <div class="tabela__nome tabela__nome--edicao">
+                  <input class="campo__entrada" name="eNome{{ cliente.id }}"
+                    [ngModel]="editNome()" (ngModelChange)="editNome.set($event)" />
 
-                  <div class="tabela__nome-edicao">
-                    <input class="campo__entrada" name="eNome{{ cliente.id }}"
-                      [ngModel]="editNome()" (ngModelChange)="editNome.set($event)" />
-
-                    <!-- Botão explícito para enviar/trocar a foto de perfil. -->
-                    <div class="tabela__foto">
-                      <label class="tabela__foto-botao" for="eFoto{{ cliente.id }}">
-                        {{ editFoto() ? 'Trocar foto' : 'Enviar foto' }}
-                      </label>
-                      @if (editFoto()) {
-                        <span class="tabela__foto-aviso">{{ editFoto()!.name }}</span>
-                      } @else {
-                        <span class="tabela__foto-aviso">PNG ou JPG (até 5 MB)</span>
-                      }
-                    </div>
-
-                    <input
-                      id="eFoto{{ cliente.id }}"
-                      class="tabela__foto-entrada"
-                      type="file"
-                      name="eFoto{{ cliente.id }}"
-                      accept="image/png,image/jpeg"
-                      (change)="aoSelecionarFoto($event)"
-                    />
-                  </div>
+                  <!-- Envio/troca da foto de perfil (componente compartilhado). -->
+                  <app-seletor-foto
+                    [urlAtual]="cliente.url_avatar"
+                    [nome]="cliente.nome"
+                    [tamanho]="40"
+                    (mudou)="editFoto.set($event)"
+                  />
                 </div>
               </td>
               <td>{{ cliente.email }}</td>
@@ -123,9 +88,9 @@
                     }
                   </select>
                 } @else {
-                  <span class="selo selo--{{ cliente.perfil }}">
+                  <app-selo [tipo]="cliente.perfil">
                     {{ rotuloPerfil(cliente.perfil) }}
-                  </span>
+                  </app-selo>
                 }
               </td>
               <td>
@@ -144,23 +109,16 @@
             <tr>
               <td>
                 <div class="tabela__nome">
-                  <span class="tabela__avatar">
-                    @if (cliente.url_avatar) {
-                      <img class="tabela__avatar-imagem" [src]="cliente.url_avatar"
-                        alt="Foto de {{ cliente.nome }}" />
-                    } @else {
-                      {{ iniciais(cliente.nome) }}
-                    }
-                  </span>
+                  <app-avatar [nome]="cliente.nome" [url]="cliente.url_avatar" [tamanho]="36" />
                   <span>{{ cliente.nome }}</span>
                 </div>
               </td>
               <td>{{ cliente.email }}</td>
               <td>{{ cliente.telefone || '—' }}</td>
               <td>
-                <span class="selo selo--{{ cliente.perfil }}">
+                <app-selo [tipo]="cliente.perfil">
                   {{ rotuloPerfil(cliente.perfil) }}
-                </span>
+                </app-selo>
               </td>
               <td>
                 @if (podeEditar(cliente)) {

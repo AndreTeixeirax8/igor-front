@@ -7,6 +7,9 @@ agendamento da barbearia **Igor Style's**. Conversa com o back-end em Go
 Este documento descreve as convenções do projeto e como rodar. Ele segue a mesma
 "pegada" do back-end: **tudo em português, sem abreviações e com comentários**.
 
+> **Antes de criar tela ou componente, leia [`ARQUITETURA.md`](ARQUITETURA.md)** —
+> guia de reúso (componentes/utils compartilhados) e o checklist do que seguir.
+
 ---
 
 ## 1. Convenções de código
@@ -79,8 +82,11 @@ src/app/
 │   │   ├── tema.servico.ts          # Tema escuro/claro (data-tema no <html>)
 │   │   └── resolvedor-nomes.servico.ts # Resolve IDs → nomes (com cache)
 │   ├── modelos/                # Interfaces que espelham o JSON do back
-│   ├── util/
-│   │   └── data-hora.ts             # RFC 3339 com fuso local + formatação
+│   ├── util/                   # Funções puras reutilizáveis (sem tela)
+│   │   ├── data-hora.ts             # RFC 3339 com fuso local + formatação
+│   │   ├── mensagem-erro.ts         # mensagemDeErro(erro): erro HTTP → texto pt
+│   │   ├── iniciais.ts              # calcularIniciais(nome)
+│   │   └── validacao-foto.ts        # valida PNG/JPG até 5 MB
 │   ├── interceptadores/
 │   │   └── token.interceptador.ts   # Anexa "Authorization: Bearer <token>"
 │   └── guardas/
@@ -90,7 +96,11 @@ src/app/
 │
 ├── compartilhado/              # Componentes reutilizáveis de interface
 │   ├── logotipo/
-│   └── layout-painel/          # Casca das telas internas (barra lateral + topo)
+│   ├── layout-painel/          # Casca das telas internas (barra lateral + topo)
+│   ├── avatar/                 # Foto do usuário ou iniciais (app-avatar)
+│   ├── selo/                   # Pílula de perfil/status (app-selo)
+│   ├── mensagem/               # Faixa de feedback erro/sucesso (app-mensagem)
+│   └── seletor-foto/           # Enviar/trocar foto com prévia (app-seletor-foto)
 │
 ├── paginas/                    # As telas do sistema
 │   ├── login/                  # Tela de login

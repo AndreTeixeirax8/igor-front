@@ -1,0 +1,24 @@
+/* Círculo do avatar: mostra a foto (recortada) ou as iniciais sobre o dourado. */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden; /* mantém a foto dentro do círculo */
+  background: linear-gradient(
+    140deg,
+    var(--cor-principal) 0%,
+    var(--cor-principal-escura) 100%
+  );
+  color: var(--cor-texto-sobre-dourado);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.avatar__imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -24,9 +24,7 @@
   }
 </div>
 
-@if (mensagemErro()) {
-  <p class="agenda__erro">{{ mensagemErro() }}</p>
-}
+<app-mensagem tipo="erro" [texto]="mensagemErro()" />
 
 @if (carregando()) {
   <div class="agenda__aviso">Carregando a agenda...</div>
@@ -49,9 +47,9 @@
         </div>
 
         <div class="linha-agenda__acoes">
-          <span class="selo selo--{{ agendamento.status }}">
+          <app-selo [tipo]="agendamento.status">
             {{ rotulo(agendamento.status) }}
-          </span>
+          </app-selo>
 
           <div class="linha-agenda__botoes">
             @for (acao of acoes(agendamento.status); track acao.status) {

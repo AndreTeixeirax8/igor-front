@@ -5,43 +5,17 @@
   <p class="perfil__subtitulo">Edite seus dados de cadastro e sua foto.</p>
 </div>
 
-@if (mensagemSucesso()) {
-  <p class="perfil__feedback perfil__feedback--ok">{{ mensagemSucesso() }}</p>
-}
-@if (mensagemErro()) {
-  <p class="perfil__feedback perfil__feedback--erro">{{ mensagemErro() }}</p>
-}
+<app-mensagem tipo="sucesso" [texto]="mensagemSucesso()" />
+<app-mensagem tipo="erro" [texto]="mensagemErro()" />
 
 <div class="perfil__cartao">
-  <!-- Foto de perfil (atual ou prévia da nova) -->
+  <!-- Foto de perfil: atual ou prévia da nova, com validação (componente). -->
   <div class="perfil__foto">
-    @if (previaFoto()) {
-      <img class="perfil__foto-imagem" [src]="previaFoto()" alt="Prévia da nova foto" />
-    } @else if (usuario()?.url_avatar) {
-      <img class="perfil__foto-imagem" [src]="usuario()!.url_avatar" alt="Foto atual" />
-    } @else {
-      <span class="perfil__foto-iniciais">{{ iniciais() }}</span>
-    }
-
-    <div class="perfil__foto-acoes">
-      <label class="botao botao--contorno" for="foto">
-        {{ fotoSelecionada() ? 'Trocar foto' : 'Enviar foto' }}
-      </label>
-      @if (fotoSelecionada()) {
-        <button class="perfil__foto-remover" type="button" (click)="removerFotoSelecionada()">
-          Descartar
-        </button>
-      }
-      <span class="perfil__foto-dica">PNG ou JPG (até 5 MB)</span>
-    </div>
-
-    <input
-      id="foto"
-      class="perfil__foto-entrada"
-      type="file"
-      name="foto"
-      accept="image/png,image/jpeg"
-      (change)="aoSelecionarFoto($event)"
+    <app-seletor-foto
+      [urlAtual]="usuario()?.url_avatar ?? null"
+      [nome]="usuario()?.nome ?? ''"
+      [tamanho]="120"
+      (mudou)="fotoSelecionada.set($event)"
     />
   </div>
 
@@ -87,7 +61,9 @@
 
     <div class="campo">
       <label class="campo__rotulo">Perfil</label>
-      <span class="selo selo--{{ usuario()?.perfil }}">{{ rotuloPerfil() }}</span>
+      @if (usuario(); as u) {
+        <app-selo [tipo]="u.perfil">{{ rotuloPerfil() }}</app-selo>
+      }
     </div>
 
     <button class="botao botao--principal perfil__salvar" type="submit" [disabled]="salvando()">

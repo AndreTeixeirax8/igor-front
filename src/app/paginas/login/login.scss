@@ -117,23 +117,10 @@
   cursor: pointer;
 }
 
-.login__erro {
-  padding: 0.75rem 1rem;
-  background-color: var(--cor-erro-fundo);
-  border: 1px solid var(--cor-erro);
-  border-radius: var(--raio-borda);
-  color: var(--cor-erro-texto);
-  font-size: 0.9rem;
-}
-
-.login__sucesso {
+/* Feedback (erro/sucesso) agora é o componente compartilhado <app-mensagem>. */
+app-mensagem {
+  display: block;
   margin-bottom: 1.25rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--cor-sucesso-fundo);
-  border: 1px solid var(--cor-sucesso);
-  border-radius: var(--raio-borda);
-  color: var(--cor-sucesso-texto);
-  font-size: 0.9rem;
 }
 
 /* Separador "ou" entre o login e a opção de criar conta. */

@@ -32,9 +32,7 @@
       </div>
 
       <!-- Aviso de sucesso (ex.: logo após criar uma conta). -->
-      @if (mensagemSucesso()) {
-        <p class="login__sucesso">{{ mensagemSucesso() }}</p>
-      }
+      <app-mensagem tipo="sucesso" [texto]="mensagemSucesso()" />
 
       <form class="login__formulario" (ngSubmit)="aoEnviar()">
         <div class="campo">
@@ -77,9 +75,7 @@
         </label>
 
         <!-- Área de mensagem de erro (só aparece quando há erro). -->
-        @if (mensagemErro()) {
-          <p class="login__erro">{{ mensagemErro() }}</p>
-        }
+        <app-mensagem tipo="erro" [texto]="mensagemErro()" />
 
         <button
           class="botao botao--principal login__botao"

@@ -5,6 +5,7 @@ import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
 import { AutenticacaoServico } from '../../nucleo/servicos/autenticacao.servico';
 import { TemaServico } from '../../nucleo/servicos/tema.servico';
 import { Logotipo } from '../logotipo/logotipo';
+import { Avatar } from '../avatar/avatar';
 import { rotuloDoPerfil, PerfilUsuario } from '../../nucleo/modelos/usuario.modelo';
 
 /**
@@ -30,7 +31,7 @@ interface ItemMenu {
  */
 @Component({
   selector: 'app-layout-painel',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, Logotipo],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Logotipo, Avatar],
   templateUrl: './layout-painel.html',
   styleUrl: './layout-painel.scss',
 })
@@ -51,9 +52,6 @@ export class LayoutPainel {
     const usuario = this.usuario();
     return usuario ? rotuloDoPerfil(usuario.perfil) : '';
   });
-
-  /** Iniciais do usuário, exibidas no avatar quando não há foto. */
-  protected readonly iniciais = computed(() => this.calcularIniciais());
 
   /** Controla a abertura do menu do usuário (ao clicar na foto/nome no topo). */
   protected readonly menuAberto = signal(false);
@@ -132,22 +130,5 @@ export class LayoutPainel {
     this.fecharMenu();
     this.autenticacaoServico.sair();
     this.roteador.navigate(['/login']);
-  }
-
-  /**
-   * Calcula as iniciais (até duas letras) a partir do nome do usuário.
-   */
-  private calcularIniciais(): string {
-    const usuario = this.usuario();
-    if (!usuario) {
-      return '';
-    }
-
-    const partesNome = usuario.nome.trim().split(/\s+/);
-    const primeiraLetra = partesNome[0]?.charAt(0) ?? '';
-    const ultimaLetra =
-      partesNome.length > 1 ? partesNome[partesNome.length - 1].charAt(0) : '';
-
-    return (primeiraLetra + ultimaLetra).toUpperCase();
   }
 }

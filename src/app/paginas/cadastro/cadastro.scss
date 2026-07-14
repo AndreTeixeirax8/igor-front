@@ -102,68 +102,6 @@
   width: 100%;
 }
 
-/* ----- Foto de perfil (opcional) ----- */
-
-.foto {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Prévia redonda da imagem escolhida (ou um marcador quando não há foto). */
-.foto__previa {
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  border: 1px solid var(--cor-borda);
-  object-fit: cover;
-}
-
-.foto__previa--vazia {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  background-color: var(--cor-superficie);
-}
-
-.foto__acoes {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* O rótulo faz o papel de botão: clicar nele abre o seletor de arquivo. */
-.foto__botao {
-  cursor: pointer;
-  font-size: 0.85rem;
-  padding: 0.5rem 0.9rem;
-}
-
-.foto__remover {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--cor-texto-suave);
-  font-size: 0.85rem;
-  text-decoration: underline;
-}
-
-/* A entrada de arquivo nativa fica escondida (o rótulo estilizado a aciona). */
-.foto__entrada {
-  display: none;
-}
-
-.cadastro__erro {
-  padding: 0.75rem 1rem;
-  background-color: var(--cor-erro-fundo);
-  border: 1px solid var(--cor-erro);
-  border-radius: var(--raio-borda);
-  color: var(--cor-erro-texto);
-  font-size: 0.9rem;
-}
-
 .cadastro__voltar {
   margin-top: 1.75rem;
   text-align: center;
