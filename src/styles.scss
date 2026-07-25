@@ -238,6 +238,27 @@ h4 {
 }
 
 /* ==========================================================================
+   Paginação reutilizável (usada nas listagens paginadas: clientes, agenda...)
+   ========================================================================== */
+
+.paginacao {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.paginacao__botao {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.paginacao__info {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
    Campos de formulário reutilizáveis
    ========================================================================== */
 

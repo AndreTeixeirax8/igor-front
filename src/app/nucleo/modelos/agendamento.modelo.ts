@@ -30,6 +30,17 @@ export interface Agendamento {
 }
 
 /**
+ * Página de agendamentos devolvida pela listagem paginada (GET /agendamentos).
+ * Mesmo formato da paginação de usuários.
+ */
+export interface PaginaAgendamentos {
+  itens: Agendamento[];
+  total: number;
+  pagina: number;
+  tamanho: number;
+}
+
+/**
  * Horários livres de um barbeiro em um dia específico.
  * "data" no formato "AAAA-MM-DD"; "horarios" no formato "HH:MM".
  */

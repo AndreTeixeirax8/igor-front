@@ -17,7 +17,7 @@
       type="button"
       class="filtro"
       [class.filtro--ativo]="filtro() === opcao.valor"
-      (click)="filtro.set(opcao.valor)"
+      (click)="aoFiltrar(opcao.valor)"
     >
       {{ opcao.rotulo }}
     </button>
@@ -28,11 +28,11 @@
 
 @if (carregando()) {
   <div class="agenda__aviso">Carregando a agenda...</div>
-} @else if (agendamentosFiltrados().length === 0) {
+} @else if (agendamentos().length === 0) {
   <div class="agenda__aviso">Nenhum agendamento para este filtro.</div>
 } @else {
   <div class="agenda__lista">
-    @for (agendamento of agendamentosFiltrados(); track agendamento.id) {
+    @for (agendamento of agendamentos(); track agendamento.id) {
       <article class="linha-agenda">
         <div class="linha-agenda__info">
           <p class="linha-agenda__data">{{ formatar(agendamento.inicio_em) }}</p>
@@ -66,5 +66,34 @@
         </div>
       </article>
     }
+  </div>
+
+  <!-- Rodapé: total e navegação de páginas -->
+  <div class="agenda__rodape">
+    <span class="agenda__total">
+      {{ total() }} {{ total() === 1 ? 'agendamento' : 'agendamentos' }}
+    </span>
+
+    <div class="paginacao">
+      <button
+        class="botao botao--contorno paginacao__botao"
+        type="button"
+        [disabled]="pagina() <= 1"
+        (click)="paginaAnterior()"
+      >
+        ‹ Anterior
+      </button>
+      <span class="paginacao__info">
+        Página {{ pagina() }} de {{ totalPaginas() }}
+      </span>
+      <button
+        class="botao botao--contorno paginacao__botao"
+        type="button"
+        [disabled]="pagina() >= totalPaginas()"
+        (click)="proximaPagina()"
+      >
+        Próxima ›
+      </button>
+    </div>
   </div>
 }

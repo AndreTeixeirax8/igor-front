@@ -162,22 +162,8 @@ app-mensagem {
   flex-wrap: wrap;
 }
 
-.paginacao {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.paginacao__botao {
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-}
-
-.paginacao__info {
-  font-size: 0.85rem;
-  color: var(--cor-texto-suave);
-  white-space: nowrap;
-}
+/* Os estilos de .paginacao* agora são globais (src/styles.scss), reaproveitados
+   por todas as listagens paginadas. */
 
 /* ----- Responsivo ----- */
 

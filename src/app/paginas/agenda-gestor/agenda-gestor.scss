@@ -127,6 +127,22 @@ app-mensagem {
 
 /* O selo de status agora é o componente compartilhado <app-selo>. */
 
+/* ----- Rodapé: total + paginação -----
+   As classes .paginacao* são globais (src/styles.scss), reaproveitadas aqui. */
+.agenda__rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.agenda__total {
+  color: var(--cor-texto-suave);
+  font-size: 0.85rem;
+}
+
 @media (max-width: 720px) {
   .linha-agenda {
     flex-direction: column;

@@ -1,6 +1,9 @@
 import { Component, inject, signal, computed } from '@angular/core';
 
 import { AgendamentoServico } from '../../nucleo/servicos/agendamento.servico';
+/** Quantidade de agendamentos por página (paginação feita no back-end). */
+const TAMANHO_PAGINA = 20;
+
 import { ResolvedorNomesServico } from '../../nucleo/servicos/resolvedor-nomes.servico';
 import {
   Agendamento,
@@ -33,8 +36,15 @@ export class AgendaGestor {
   private readonly agendamentoServico = inject(AgendamentoServico);
   private readonly resolvedor = inject(ResolvedorNomesServico);
 
-  /** Lista completa de agendamentos. */
-  private readonly agendamentos = signal<Agendamento[]>([]);
+  /** Agendamentos da página atual (a paginação e o filtro são feitos no back). */
+  protected readonly agendamentos = signal<Agendamento[]>([]);
+
+  /** Tamanho da página (exposto ao template). */
+  protected readonly tamanhoPagina = TAMANHO_PAGINA;
+
+  /** Estado da paginação. */
+  protected readonly pagina = signal(1);
+  protected readonly total = signal(0);
 
   /** Filtro por status ("todos" ou um status específico). */
   protected readonly filtro = signal<'todos' | StatusAgendamento>('todos');
@@ -80,28 +90,30 @@ export class AgendaGestor {
     nao_compareceu: [],
   };
 
-  /** Agendamentos exibidos após aplicar o filtro. */
-  protected readonly agendamentosFiltrados = computed(() => {
-    const filtroAtual = this.filtro();
-    if (filtroAtual === 'todos') {
-      return this.agendamentos();
-    }
-    return this.agendamentos().filter((a) => a.status === filtroAtual);
-  });
+  /** Total de páginas, calculado a partir do total e do tamanho da página. */
+  protected readonly totalPaginas = computed(() =>
+    Math.max(1, Math.ceil(this.total() / TAMANHO_PAGINA)),
+  );
 
   constructor() {
     this.carregar();
   }
 
-  /** Busca todos os agendamentos e resolve os nomes. */
+  /** Busca a página atual de agendamentos (já filtrada no back) e resolve os nomes. */
   protected carregar(): void {
     this.carregando.set(true);
     this.mensagemErro.set('');
 
-    this.agendamentoServico.listarTodos().subscribe({
-      next: (lista) => {
-        this.agendamentos.set(lista);
-        this.resolverNomes(lista);
+    // "todos" vira filtro vazio; qualquer outro valor vai como status ao back.
+    const filtroAtual = this.filtro();
+    const status = filtroAtual === 'todos' ? '' : filtroAtual;
+
+    this.agendamentoServico.listarPagina(this.pagina(), TAMANHO_PAGINA, status).subscribe({
+      next: (resultado) => {
+        this.agendamentos.set(resultado.itens);
+        this.total.set(resultado.total);
+        this.pagina.set(resultado.pagina);
+        this.resolverNomes(resultado.itens);
         this.carregando.set(false);
       },
       error: () => {
@@ -111,7 +123,30 @@ export class AgendaGestor {
     });
   }
 
-  /** Aplica uma nova situação ao agendamento e atualiza a lista no lugar. */
+  /** Troca o filtro de status, volta para a primeira página e recarrega. */
+  protected aoFiltrar(valor: 'todos' | StatusAgendamento): void {
+    this.filtro.set(valor);
+    this.pagina.set(1);
+    this.carregar();
+  }
+
+  /** Vai para a página anterior, se houver. */
+  protected paginaAnterior(): void {
+    if (this.pagina() > 1) {
+      this.pagina.update((p) => p - 1);
+      this.carregar();
+    }
+  }
+
+  /** Vai para a próxima página, se houver. */
+  protected proximaPagina(): void {
+    if (this.pagina() < this.totalPaginas()) {
+      this.pagina.update((p) => p + 1);
+      this.carregar();
+    }
+  }
+
+  /** Aplica uma nova situação ao agendamento. */
   protected mudarStatus(agendamento: Agendamento, novoStatus: StatusAgendamento): void {
     this.atualizandoId.set(agendamento.id);
     this.mensagemErro.set('');
@@ -119,6 +154,14 @@ export class AgendaGestor {
     this.agendamentoServico.atualizarStatus(agendamento.id, novoStatus).subscribe({
       next: (atualizado) => {
         this.atualizandoId.set(null);
+
+        // Com um filtro específico ativo, o item pode ter deixado de pertencer à
+        // página (mudou de status); recarrega para refletir isso corretamente.
+        // Sem filtro ("todos"), basta atualizar a linha no lugar.
+        if (this.filtro() !== 'todos') {
+          this.carregar();
+          return;
+        }
         this.agendamentos.update((lista) =>
           lista.map((a) => (a.id === atualizado.id ? atualizado : a)),
         );
