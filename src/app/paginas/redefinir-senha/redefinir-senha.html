@@ -1,0 +1,81 @@
+<!-- Tela de redefinição de senha (aberta pelo link do e-mail). -->
+<div class="auth-simples">
+  <div class="auth-simples__cartao">
+    <div class="auth-simples__topo">
+      <app-logotipo [tamanho]="72" />
+      <h1 class="auth-simples__titulo">Nova senha</h1>
+      @if (!concluido()) {
+        <p class="auth-simples__descricao">
+          Escolha uma nova senha para a sua conta.
+        </p>
+      }
+    </div>
+
+    @if (!temToken) {
+      <!-- Link aberto sem token: não dá para redefinir. -->
+      <app-mensagem
+        tipo="erro"
+        texto="Link inválido. Abra o link mais recente enviado para o seu e-mail ou peça um novo."
+      />
+      <p class="auth-simples__voltar">
+        <a class="auth-simples__link" routerLink="/esqueci-senha">
+          Pedir um novo link
+        </a>
+      </p>
+    } @else if (concluido()) {
+      <!-- Sucesso: senha trocada. -->
+      <app-mensagem
+        tipo="sucesso"
+        texto="Senha redefinida com sucesso! Agora é só entrar com a nova senha."
+      />
+      <a class="botao botao--principal auth-simples__botao" routerLink="/login">
+        Ir para o login
+      </a>
+    } @else {
+      <!-- Formulário de nova senha. -->
+      <form class="auth-simples__formulario" (ngSubmit)="aoEnviar()">
+        <div class="campo">
+          <label class="campo__rotulo" for="novaSenha">Nova senha</label>
+          <input
+            id="novaSenha"
+            class="campo__entrada"
+            type="password"
+            name="novaSenha"
+            placeholder="Mínimo de 6 caracteres"
+            autocomplete="new-password"
+            [ngModel]="novaSenha()"
+            (ngModelChange)="novaSenha.set($event)"
+          />
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="confirmacaoSenha">Confirmar senha</label>
+          <input
+            id="confirmacaoSenha"
+            class="campo__entrada"
+            type="password"
+            name="confirmacaoSenha"
+            placeholder="Repita a nova senha"
+            autocomplete="new-password"
+            [ngModel]="confirmacaoSenha()"
+            (ngModelChange)="confirmacaoSenha.set($event)"
+          />
+        </div>
+
+        <app-mensagem tipo="erro" [texto]="mensagemErro()" />
+
+        <button
+          class="botao botao--principal auth-simples__botao"
+          type="submit"
+          [disabled]="carregando()"
+        >
+          {{ carregando() ? 'Salvando...' : 'Redefinir senha' }}
+        </button>
+      </form>
+
+      <p class="auth-simples__voltar">
+        <a class="auth-simples__link" routerLink="/login">Voltar para o login</a>
+      </p>
+    }
+  </div>
+</div>

@@ -10,10 +10,13 @@ export const configuracaoApi = {
   /** Caminho base de todas as rotas da API. */
   enderecoBase: '/api',
 
-  /** Rotas de autenticação (login e registro). */
+  /** Rotas de autenticação (login, registro e redefinição de senha). */
   rotasAutenticacao: {
     login: '/auth/login',
     registrar: '/auth/registrar',
+    // Fluxo "esqueci minha senha": pedir o link e efetivar a nova senha.
+    esqueciSenha: '/auth/esqueci-senha',
+    redefinirSenha: '/auth/redefinir-senha',
   },
 
   /** Rotas do módulo de usuários. */

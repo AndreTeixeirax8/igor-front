@@ -27,6 +27,20 @@ export const routes: Routes = [
       import('./paginas/cadastro/cadastro').then((modulo) => modulo.Cadastro),
   },
   {
+    path: 'esqueci-senha',
+    loadComponent: () =>
+      import('./paginas/esqueci-senha/esqueci-senha').then(
+        (modulo) => modulo.EsqueciSenha,
+      ),
+  },
+  {
+    path: 'redefinir-senha',
+    loadComponent: () =>
+      import('./paginas/redefinir-senha/redefinir-senha').then(
+        (modulo) => modulo.RedefinirSenha,
+      ),
+  },
+  {
     path: '',
     component: LayoutPainel,
     canActivate: [autenticacaoGuarda],

@@ -98,6 +98,19 @@
   width: 100%;
 }
 
+/* Atalho "Esqueci minha senha". */
+.login__esqueci {
+  align-self: flex-end;
+  margin-top: -0.35rem;
+  color: var(--cor-principal);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.login__esqueci:hover {
+  text-decoration: underline;
+}
+
 /* Opção "Lembrar-me". */
 .login__lembrar {
   display: flex;

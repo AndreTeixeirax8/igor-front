@@ -57,6 +57,38 @@ export class AutenticacaoServico {
   }
 
   /**
+   * Solicita o e-mail de redefinição de senha (rota /auth/esqueci-senha).
+   *
+   * Por segurança, o back responde sempre a mesma mensagem, exista ou não o
+   * e-mail — então não dá para descobrir quais e-mails estão cadastrados.
+   *
+   * @param email E-mail informado pela pessoa.
+   */
+  solicitarRedefinicaoSenha(email: string): Observable<{ mensagem: string }> {
+    const enderecoCompleto =
+      configuracaoApi.enderecoBase + configuracaoApi.rotasAutenticacao.esqueciSenha;
+
+    return this.clienteHttp.post<{ mensagem: string }>(enderecoCompleto, { email });
+  }
+
+  /**
+   * Efetiva a nova senha usando o token recebido por e-mail (rota
+   * /auth/redefinir-senha).
+   *
+   * @param token     Token que veio no link do e-mail.
+   * @param novaSenha Nova senha escolhida pela pessoa.
+   */
+  redefinirSenha(token: string, novaSenha: string): Observable<{ mensagem: string }> {
+    const enderecoCompleto =
+      configuracaoApi.enderecoBase + configuracaoApi.rotasAutenticacao.redefinirSenha;
+
+    return this.clienteHttp.post<{ mensagem: string }>(enderecoCompleto, {
+      token,
+      nova_senha: novaSenha,
+    });
+  }
+
+  /**
    * Encerra a sessão do usuário atual (logout local).
    */
   sair(): void {

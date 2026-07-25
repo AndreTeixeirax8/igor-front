@@ -1,0 +1,46 @@
+<!-- Tela "esqueci minha senha": cartão central, no mesmo estilo visual do login. -->
+<div class="auth-simples">
+  <div class="auth-simples__cartao">
+    <div class="auth-simples__topo">
+      <app-logotipo [tamanho]="72" />
+      <h1 class="auth-simples__titulo">Esqueceu a senha?</h1>
+      <p class="auth-simples__descricao">
+        Informe o seu e-mail e enviaremos um link para você criar uma nova senha.
+      </p>
+    </div>
+
+    <!-- Mensagem de sucesso (link enviado). -->
+    <app-mensagem tipo="sucesso" [texto]="mensagemSucesso()" />
+
+    <form class="auth-simples__formulario" (ngSubmit)="aoEnviar()">
+      <div class="campo">
+        <label class="campo__rotulo" for="email">E-mail</label>
+        <input
+          id="email"
+          class="campo__entrada"
+          type="email"
+          name="email"
+          placeholder="voce@exemplo.com"
+          autocomplete="email"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+        />
+      </div>
+
+      <app-mensagem tipo="erro" [texto]="mensagemErro()" />
+
+      <button
+        class="botao botao--principal auth-simples__botao"
+        type="submit"
+        [disabled]="carregando()"
+      >
+        {{ carregando() ? 'Enviando...' : 'Enviar link' }}
+      </button>
+    </form>
+
+    <p class="auth-simples__voltar">
+      Lembrou a senha?
+      <a class="auth-simples__link" routerLink="/login">Voltar para o login</a>
+    </p>
+  </div>
+</div>
