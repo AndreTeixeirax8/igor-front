@@ -22,6 +22,13 @@
   --cor-principal-clara: #f0e08a;
   --cor-principal-escura: #c4b13f;
 
+  /* Dourado para TEXTO. Existe separado do --cor-principal porque o dourado da
+     marca só tem contraste suficiente sobre fundo escuro: sobre o fundo claro ele
+     fica em 1,5:1 (praticamente ilegível). No tema claro esta variável vira um
+     dourado bem mais escuro, mantendo a identidade sem sacrificar a leitura.
+     REGRA: use --cor-principal em fundo/borda; --cor-principal-texto em texto. */
+  --cor-principal-texto: #e0cd55;
+
   /* Tons translúcidos do dourado (itens ativos, seleção, hover). */
   --cor-principal-tenue: rgba(224, 205, 85, 0.14);
   --cor-principal-tenue-leve: rgba(224, 205, 85, 0.1);
@@ -38,7 +45,9 @@
   --cor-texto: #f4f1e8;
   --cor-texto-suave: #a8a39a;
   --cor-texto-sobre-dourado: #1a1a1a;
-  --cor-placeholder: #6b675f;
+  /* Clareado: o tom anterior (#6b675f) ficava em 3,1:1 sobre o campo, abaixo do
+     mínimo de 4,5:1 recomendado para texto. */
+  --cor-placeholder: #8b8579;
 
   /* ----- Cores de apoio (harmonizadas com o dourado) ----- */
   --cor-sucesso: #5aa874;
@@ -84,7 +93,11 @@
     ),
     linear-gradient(160deg, #1d1c17 0%, #141414 70%);
 
-  /* ----- Tipografia ----- */
+  /* ----- Tipografia -----
+     A Inter é mantida como fonte de texto por ser a referência atual para
+     interfaces: foi desenhada para telas, tem altura de x grande e letras
+     "abertas", o que a torna legível em tamanhos pequenos. A Poppins segue
+     apenas nos títulos, onde o peso decorativo ajuda e o texto é grande. */
   --fonte-titulo: 'Poppins', 'Segoe UI', sans-serif;
   --fonte-texto: 'Inter', 'Segoe UI', sans-serif;
 
@@ -104,6 +117,11 @@
 :root[data-tema='claro'] {
   /* Dourado um tico mais escuro para contrastar sobre fundo claro. */
   --cor-principal-escura: #b09a2f;
+
+  /* Dourado de TEXTO bem mais escuro. O dourado da marca (#e0cd55) sobre o fundo
+     claro rende só 1,5:1 — muito abaixo do mínimo de 4,5:1 —, e era a principal
+     causa de o tema claro parecer "lavado". Este tom fica em ~4,8:1. */
+  --cor-principal-texto: #7d6c1a;
   --cor-principal-tenue: rgba(224, 205, 85, 0.28);
   --cor-principal-tenue-leve: rgba(224, 205, 85, 0.18);
   --cor-principal-tenue-forte: rgba(224, 205, 85, 0.38);
@@ -115,10 +133,11 @@
   --cor-superficie-clara: #f2efe6;
   --cor-borda: #ddd8cc;
 
-  /* Texto escuro. */
+  /* Texto escuro. O tom "suave" foi escurecido (era #6f6a5f, no limite de 4,9:1)
+     e o placeholder também (era #9a958a, reprovado em 2,5:1). */
   --cor-texto: #2a2823;
-  --cor-texto-suave: #6f6a5f;
-  --cor-placeholder: #9a958a;
+  --cor-texto-suave: #5f5a50;
+  --cor-placeholder: #6a665c;
 
   /* Feedback com textos escurecidos. */
   --cor-erro-texto: #a1341f;
@@ -138,7 +157,8 @@
   --chip-roxo-texto: #6a4b8c;
   --chip-roxo-fundo: rgba(106, 75, 140, 0.12);
   --chip-roxo-borda: rgba(106, 75, 140, 0.3);
-  --chip-dourado-texto: #8a761f;
+  /* Mesmo dourado escuro do texto, para o selo não ficar abaixo do mínimo. */
+  --chip-dourado-texto: var(--cor-principal-texto);
   --chip-dourado-fundo: rgba(224, 205, 85, 0.24);
   --chip-dourado-borda: rgba(196, 177, 63, 0.55);
   --chip-verde-texto: #2f7a4c;
@@ -174,8 +194,13 @@ body {
   font-family: var(--fonte-texto);
   background-color: var(--cor-fundo);
   color: var(--cor-texto);
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.5;
+  /* Sem "-webkit-font-smoothing: antialiased": ele AFINA os traços das letras e
+     prejudica justamente a leitura do texto miúdo. Deixamos o sistema operacional
+     renderizar com a espessura cheia. */
+  /* Deixa a fonte variável ajustar o desenho ao tamanho usado (eixo opsz). */
+  font-optical-sizing: auto;
+  /* 1.6 dá um respiro a mais entre as linhas — recomendado para textos de tela. */
+  line-height: 1.6;
 }
 
 h1,
@@ -185,6 +210,13 @@ h4 {
   font-family: var(--fonte-titulo);
   font-weight: 600;
   line-height: 1.2;
+}
+
+/* Números "tabulares" (todos os dígitos com a mesma largura) nas tabelas. Num
+   sistema de agendamento isso importa: horários, datas e preços ficam alinhados
+   em coluna e não mudam de largura quando o valor é atualizado. */
+table {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ==========================================================================
@@ -229,7 +261,7 @@ h4 {
 /* Botão secundário: contornado, para ações menos importantes. */
 .botao--contorno {
   background-color: transparent;
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
   border: 1px solid var(--cor-principal);
 }
 
@@ -249,13 +281,15 @@ h4 {
 
 .paginacao__botao {
   padding: 0.5rem 1rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .paginacao__info {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--cor-texto-suave);
   white-space: nowrap;
+  /* Dígitos de largura fixa: o texto não "pula" ao trocar de página. */
+  font-variant-numeric: tabular-nums;
 }
 
 /* ==========================================================================
@@ -316,7 +350,7 @@ h4 {
 }
 
 .auth-simples__link {
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
   text-decoration: none;
 }
 
@@ -335,7 +369,7 @@ h4 {
 }
 
 .campo__rotulo {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--cor-texto-suave);
 }

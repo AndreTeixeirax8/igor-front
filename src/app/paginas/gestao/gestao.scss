@@ -27,7 +27,7 @@ app-mensagem {
 }
 
 .gestao__contexto strong {
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
 }
 
 /* ----- Blocos ----- */
@@ -78,7 +78,7 @@ app-mensagem {
 .chip--ativo {
   background-color: var(--cor-principal-tenue);
   border-color: var(--cor-principal);
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
   font-weight: 600;
 }
 
@@ -111,14 +111,14 @@ app-mensagem {
 
 .item__detalhe {
   color: var(--cor-texto-suave);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .item__remover {
   background: transparent;
   border: none;
   color: var(--cor-erro-texto);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   cursor: pointer;
 }
 
@@ -145,8 +145,8 @@ app-mensagem {
 .item__acao {
   background: transparent;
   border: none;
-  color: var(--cor-principal);
-  font-size: 0.85rem;
+  color: var(--cor-principal-texto);
+  font-size: 0.9rem;
   cursor: pointer;
 }
 
@@ -182,7 +182,7 @@ app-mensagem {
 
 .formulario__dica {
   margin-top: 0.6rem;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: var(--cor-texto-suave);
 }
 
@@ -225,7 +225,7 @@ app-mensagem {
 }
 
 .seletor-usuario__email {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: var(--cor-texto-suave);
 }
 
@@ -242,5 +242,5 @@ app-mensagem {
 }
 
 .seletor-usuario__escolhido strong {
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
 }

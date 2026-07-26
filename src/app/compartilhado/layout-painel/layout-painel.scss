@@ -60,7 +60,7 @@
 
 .painel__menu-item--ativo {
   background-color: var(--cor-principal-tenue);
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
   font-weight: 600;
 }
 
@@ -155,8 +155,8 @@
 }
 
 .painel__usuario-perfil {
-  font-size: 0.8rem;
-  color: var(--cor-principal);
+  font-size: 0.875rem;
+  color: var(--cor-principal-texto);
 }
 
 /* O avatar do topo agora é o componente compartilhado <app-avatar>. */
@@ -199,8 +199,8 @@
 }
 
 .painel__menu-usuario-perfil {
-  font-size: 0.8rem;
-  color: var(--cor-principal);
+  font-size: 0.875rem;
+  color: var(--cor-principal-texto);
 }
 
 /* Itens clicáveis do menu (editar perfil, sair). */

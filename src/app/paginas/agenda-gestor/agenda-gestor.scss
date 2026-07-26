@@ -34,7 +34,7 @@
   border: 1px solid var(--cor-borda);
   border-radius: 999px;
   color: var(--cor-texto-suave);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: border-color var(--transicao-padrao), color var(--transicao-padrao);
 }
@@ -46,7 +46,7 @@
 .filtro--ativo {
   background-color: var(--cor-principal-tenue);
   border-color: var(--cor-principal);
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
   font-weight: 600;
 }
 
@@ -88,6 +88,8 @@ app-mensagem {
   font-family: var(--fonte-titulo);
   font-size: 1.05rem;
   font-weight: 600;
+  /* Dígitos de largura fixa: as datas/horas ficam alinhadas entre as linhas. */
+  font-variant-numeric: tabular-nums;
 }
 
 .linha-agenda__detalhe {
@@ -97,12 +99,12 @@ app-mensagem {
 }
 
 .linha-agenda__detalhe strong {
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
 }
 
 .linha-agenda__servico {
   margin-top: 0.2rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--cor-texto-suave);
 }
 
@@ -122,7 +124,7 @@ app-mensagem {
 
 .linha-agenda__botao {
   padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
 }
 
 /* O selo de status agora é o componente compartilhado <app-selo>. */
@@ -140,7 +142,7 @@ app-mensagem {
 
 .agenda__total {
   color: var(--cor-texto-suave);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 720px) {

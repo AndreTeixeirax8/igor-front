@@ -48,6 +48,13 @@ Regra rápida de decisão:
 - **Cor é sempre `var(--...)`** de `src/styles.scss`. Nunca hex/rgba cravado num
   componente — quebra o tema escuro/claro. Se precisar de uma cor nova,
   adicione uma variável no `:root` (e no bloco `[data-tema='claro']`).
+- **Dourado: `--cor-principal` em fundo/borda, `--cor-principal-texto` em TEXTO.**
+  O dourado da marca (`#e0cd55`) só tem contraste sobre fundo escuro — sobre o
+  fundo claro fica em 1,5:1, ilegível. A variável `--cor-principal-texto` vira um
+  dourado escuro no tema claro. **Nunca** use `color: var(--cor-principal)`.
+- **Contraste mínimo de 4,5:1** entre texto e fundo, nos dois temas (WCAG AA).
+- **Texto não fica abaixo de `0.875rem` (14px).** A escala em uso é 0.875 / 0.9 /
+  0.95 / 1rem; `line-height` do corpo é 1.6.
 - Campos que vêm/vão para a API mantêm o nome do JSON do back (snake_case em
   português, ex.: `url_avatar`, `criado_em`).
 
@@ -97,7 +104,8 @@ do modelo, não espalhado nas telas.
    `.campo__entrada` (globais em `styles.scss`). **Não** recriar esses estilos.
 4. **Erros:** no `error:` do `subscribe`, usar `mensagemDeErro(erro, '...')` e
    exibir com `<app-mensagem>`.
-5. **Cores:** só `var(--...)`. Conferir que a tela fica legível no tema claro.
+5. **Cores:** só `var(--...)`; dourado em texto é `--cor-principal-texto`.
+   Conferir que a tela fica legível **no tema claro** (é onde o contraste falha).
 6. **Idioma/comentários:** português, sem abreviações, comentado.
 7. **Build:** `npx ng build --configuration development` sem erros.
 8. **Doc:** atualizar `ESPECIFICACOES.md` (e este guia, se criar um componente
@@ -111,6 +119,10 @@ do modelo, não espalhado nas telas.
   ✅ Usar o componente compartilhado correspondente.
 - ❌ Cor cravada (`#e9b4a8`, `rgba(...)`) num `.scss` de componente.
   ✅ `var(--...)`; criar a variável no `styles.scss` se faltar.
+- ❌ `color: var(--cor-principal)` (dourado some no tema claro: 1,5:1).
+  ✅ `color: var(--cor-principal-texto)`.
+- ❌ `font-size` abaixo de `0.875rem` (14px).
+  ✅ Mínimo `0.875rem`; texto secundário em `0.9rem`.
 - ❌ Um `traduzirErro` privado novo em cada tela.
   ✅ `mensagemDeErro()` do `nucleo/util`.
 - ❌ Nomes/So comentários em inglês ou abreviados.

@@ -65,13 +65,13 @@
 
 .cartao-agendamento__detalhe {
   margin-top: 0.3rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--cor-texto-suave);
 }
 
 .cartao-agendamento__obs {
   margin-top: 0.4rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-style: italic;
   color: var(--cor-texto-suave);
 }
@@ -86,12 +86,12 @@
 .cartao-agendamento__preco {
   font-family: var(--fonte-titulo);
   font-weight: 700;
-  color: var(--cor-principal);
+  color: var(--cor-principal-texto);
 }
 
 .cartao-agendamento__cancelar {
   padding: 0.5rem 1rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 /* O selo de status agora é o componente compartilhado <app-selo>. */

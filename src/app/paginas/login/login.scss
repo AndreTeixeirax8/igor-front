@@ -102,8 +102,8 @@
 .login__esqueci {
   align-self: flex-end;
   margin-top: -0.35rem;
-  color: var(--cor-principal);
-  font-size: 0.85rem;
+  color: var(--cor-principal-texto);
+  font-size: 0.9rem;
   text-decoration: none;
 }
 
@@ -143,7 +143,7 @@ app-mensagem {
   gap: 1rem;
   margin: 1.5rem 0;
   color: var(--cor-texto-suave);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .login__separador::before,
@@ -163,7 +163,7 @@ app-mensagem {
   margin-top: 2.5rem;
   text-align: center;
   color: var(--cor-texto-suave);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
 }
 
 /* ----- Responsivo: em telas estreitas, esconde o painel de destaque ----- */
