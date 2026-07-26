@@ -53,6 +53,13 @@ Regra rápida de decisão:
   fundo claro fica em 1,5:1, ilegível. A variável `--cor-principal-texto` vira um
   dourado escuro no tema claro. **Nunca** use `color: var(--cor-principal)`.
 - **Contraste mínimo de 4,5:1** entre texto e fundo, nos dois temas (WCAG AA).
+- **Tabela no celular vira cartão.** Abaixo de 768px, `<tr>` vira um cartão
+  empilhado e cada `<td>` vira "rótulo: valor" — o rótulo sai do atributo
+  `data-rotulo` do próprio `<td>` (não duplique marcação só para o mobile). Veja
+  o exemplo pronto em `paginas/clientes/clientes.scss`. Motivo: uma tabela de 5
+  colunas precisa de ~686px; num celular de 375px ela transbordava e o
+  `overflow: hidden` do cartão **cortava a coluna de ações**, deixando o botão
+  "Editar" inalcançável. Botões de ação no mobile têm `min-height: 44px`.
 - **Texto não fica abaixo de `0.875rem` (14px).** A escala em uso é 0.875 / 0.9 /
   0.95 / 1rem; `line-height` do corpo é 1.6.
 - Campos que vêm/vão para a API mantêm o nome do JSON do back (snake_case em
@@ -123,6 +130,9 @@ do modelo, não espalhado nas telas.
   ✅ `color: var(--cor-principal-texto)`.
 - ❌ `font-size` abaixo de `0.875rem` (14px).
   ✅ Mínimo `0.875rem`; texto secundário em `0.9rem`.
+- ❌ Resolver tabela larga no celular escondendo colunas (`display: none`) — os
+  dados somem e o que transborda continua cortado pelo `overflow: hidden`.
+  ✅ Transformar as linhas em cartões empilhados (padrão em `clientes.scss`).
 - ❌ Um `traduzirErro` privado novo em cada tela.
   ✅ `mensagemDeErro()` do `nucleo/util`.
 - ❌ Nomes/So comentários em inglês ou abreviados.

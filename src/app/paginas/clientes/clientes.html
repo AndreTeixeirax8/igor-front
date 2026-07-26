@@ -73,13 +73,13 @@
                   />
                 </div>
               </td>
-              <td>{{ cliente.email }}</td>
-              <td>
+              <td data-rotulo="E-mail">{{ cliente.email }}</td>
+              <td data-rotulo="Telefone">
                 <input class="campo__entrada" name="eTel{{ cliente.id }}"
                   placeholder="—"
                   [ngModel]="editTelefone()" (ngModelChange)="editTelefone.set($event)" />
               </td>
-              <td>
+              <td class="tabela__celula-perfil">
                 @if (ehAdmin()) {
                   <select class="campo__entrada" name="ePerfil{{ cliente.id }}"
                     [ngModel]="editPerfil()" (ngModelChange)="editPerfil.set($event)">
@@ -93,7 +93,7 @@
                   </app-selo>
                 }
               </td>
-              <td>
+              <td class="tabela__celula-acoes">
                 <div class="tabela__acoes">
                   <button class="tabela__acao" type="button" (click)="salvarEdicao(cliente.id)">
                     Salvar
@@ -113,14 +113,14 @@
                   <span>{{ cliente.nome }}</span>
                 </div>
               </td>
-              <td>{{ cliente.email }}</td>
-              <td>{{ cliente.telefone || '—' }}</td>
-              <td>
+              <td data-rotulo="E-mail">{{ cliente.email }}</td>
+              <td data-rotulo="Telefone">{{ cliente.telefone || '—' }}</td>
+              <td class="tabela__celula-perfil">
                 <app-selo [tipo]="cliente.perfil">
                   {{ rotuloPerfil(cliente.perfil) }}
                 </app-selo>
               </td>
-              <td>
+              <td class="tabela__celula-acoes">
                 @if (podeEditar(cliente)) {
                   <button class="tabela__acao" type="button" (click)="iniciarEdicao(cliente)">
                     Editar

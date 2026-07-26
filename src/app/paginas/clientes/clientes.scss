@@ -165,16 +165,121 @@ app-mensagem {
 /* Os estilos de .paginacao* agora são globais (src/styles.scss), reaproveitados
    por todas as listagens paginadas. */
 
-/* ----- Responsivo ----- */
+/* ----- Responsivo -----
+
+   Abaixo de 768px a TABELA VIRA CARTÕES empilhados.
+
+   Motivo: com 5 colunas a tabela precisa de ~686px de largura. Num celular de
+   375px (cartão útil de 343px) ela transbordava 345px e, como o .clientes__cartao
+   tem overflow:hidden, a última coluna — justamente o botão "Editar" — era
+   cortada e ficava inalcançável, sem nem poder rolar de lado.
+
+   Cada <tr> vira um cartão e cada <td> vira uma linha "rótulo: valor". O rótulo
+   sai do atributo data-rotulo do HTML, então não precisamos duplicar a marcação
+   só para o celular. */
 
 @media (max-width: 640px) {
   .clientes__busca {
     max-width: none;
   }
+}
 
-  /* Em telas pequenas, a coluna de telefone é ocultada para caber melhor. */
-  .tabela th:nth-child(3),
-  .tabela td:nth-child(3) {
+@media (max-width: 768px) {
+  /* Sem colunas, o cabeçalho da tabela perde o sentido. */
+  .tabela thead {
     display: none;
+  }
+
+  .tabela,
+  .tabela tbody,
+  .tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Cada linha vira um cartão. */
+  .tabela tbody tr {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .tabela tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  /* Ordem dentro do cartão: nome, perfil, e-mail, telefone e as ações por
+     último. Sem isto o perfil cairia depois do telefone (a ordem das colunas). */
+  .tabela tbody td:nth-child(1) {
+    order: 1;
+    padding-bottom: 0.5rem;
+  }
+  .tabela tbody .tabela__celula-perfil {
+    order: 2;
+  }
+  .tabela tbody td:nth-child(2) {
+    order: 3;
+  }
+  .tabela tbody td:nth-child(3) {
+    order: 4;
+  }
+  .tabela tbody .tabela__celula-acoes {
+    order: 5;
+  }
+
+  .tabela tbody td {
+    padding: 0.35rem 0;
+    border-bottom: none;
+  }
+
+  /* Linhas de dado: rótulo à esquerda, valor à direita. */
+  .tabela tbody td[data-rotulo] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    text-align: right;
+    /* E-mails longos quebram em vez de esticar o cartão. */
+    word-break: break-word;
+  }
+
+  .tabela tbody td[data-rotulo]::before {
+    content: attr(data-rotulo);
+    flex: 0 0 auto;
+    color: var(--cor-texto-suave);
+    font-size: 0.875rem;
+    text-align: left;
+  }
+
+  /* Ações viram botões de verdade, ocupando a largura toda: não há como
+     "sumirem" e o alvo de toque fica confortável. */
+  .tabela tbody .tabela__celula-acoes {
+    margin-top: 0.85rem;
+    padding: 0;
+  }
+
+  .tabela__acao {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--cor-principal);
+    border-radius: var(--raio-borda);
+    /* 44px é o alvo de toque mínimo recomendado para dedos. */
+    min-height: 44px;
+  }
+
+  .tabela__acao--neutra {
+    border-color: var(--cor-borda);
+  }
+
+  /* Botão único (o "Editar") também ocupa a linha inteira. */
+  .tabela tbody .tabela__celula-acoes > .tabela__acao {
+    width: 100%;
+  }
+
+  /* No modo de edição os campos ficam confortáveis para digitar no celular. */
+  .tabela__editando .campo__entrada {
+    padding: 0.6rem 0.75rem;
+    font-size: 1rem;
   }
 }
