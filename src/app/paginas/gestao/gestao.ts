@@ -63,16 +63,18 @@ export class Gestao {
   protected barbeariaEstado = signal('');
   protected barbeariaTelefone = signal('');
 
-  /** Formulário: novo serviço. */
+  /** Formulário: novo serviço. Pontos começam em 10 (valor sugerido). */
   protected servicoNome = signal('');
   protected servicoDuracao = signal<number | null>(null);
   protected servicoPreco = signal<number | null>(null);
+  protected servicoPontos = signal<number>(10);
 
   /** Edição de serviço: ID em edição (nulo quando nenhum) e campos do formulário. */
   protected readonly servicoEmEdicaoId = signal<number | null>(null);
   protected editServicoNome = signal('');
   protected editServicoDuracao = signal<number | null>(null);
   protected editServicoPreco = signal<number | null>(null);
+  protected editServicoPontos = signal<number>(0);
 
   /** Formulário: novo barbeiro. */
   protected barbeiroIdUsuario = signal<number | null>(null);
@@ -210,6 +212,7 @@ export class Gestao {
         nome: this.servicoNome().trim(),
         duracao_minutos: this.servicoDuracao()!,
         preco: this.servicoPreco()!,
+        pontos: this.servicoPontos() ?? 0,
       })
       .subscribe({
         next: (criado) => {
@@ -217,6 +220,7 @@ export class Gestao {
           this.servicoNome.set('');
           this.servicoDuracao.set(null);
           this.servicoPreco.set(null);
+          this.servicoPontos.set(10);
           this.servicos.update((lista) => [...lista, criado]);
         },
         error: (erro) => this.mostrarErro(erro),
@@ -229,6 +233,7 @@ export class Gestao {
     this.editServicoNome.set(servico.nome);
     this.editServicoDuracao.set(servico.duracao_minutos);
     this.editServicoPreco.set(servico.preco);
+    this.editServicoPontos.set(servico.pontos);
     this.limparMensagens();
   }
 
@@ -250,6 +255,7 @@ export class Gestao {
         nome: this.editServicoNome().trim(),
         duracao_minutos: this.editServicoDuracao()!,
         preco: this.editServicoPreco()!,
+        pontos: this.editServicoPontos() ?? 0,
       })
       .subscribe({
         next: (atualizado) => {

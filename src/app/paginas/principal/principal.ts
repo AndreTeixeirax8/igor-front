@@ -3,8 +3,11 @@ import { RouterLink } from '@angular/router';
 
 import { SessaoServico } from '../../nucleo/servicos/sessao.servico';
 import { AgendamentoServico } from '../../nucleo/servicos/agendamento.servico';
+import { GamificacaoServico } from '../../nucleo/servicos/gamificacao.servico';
 import { Agendamento, statusEncerrado } from '../../nucleo/modelos/agendamento.modelo';
+import { ProgressoGamificacao } from '../../nucleo/modelos/gamificacao.modelo';
 import { formatarDataHora } from '../../nucleo/util/data-hora';
+import { CartaoNivel } from '../../compartilhado/cartao-nivel/cartao-nivel';
 
 /** Um cartão de resumo exibido no painel. */
 interface CartaoResumo {
@@ -20,17 +23,21 @@ interface CartaoResumo {
  */
 @Component({
   selector: 'app-principal',
-  imports: [RouterLink],
+  imports: [RouterLink, CartaoNivel],
   templateUrl: './principal.html',
   styleUrl: './principal.scss',
 })
 export class Principal {
   private readonly sessao = inject(SessaoServico);
   private readonly agendamentoServico = inject(AgendamentoServico);
+  private readonly gamificacaoServico = inject(GamificacaoServico);
 
   /** Agendamentos do próprio usuário e (para gestores) de toda a barbearia. */
   private readonly meusAgendamentos = signal<Agendamento[]>([]);
   private readonly todosAgendamentos = signal<Agendamento[]>([]);
+
+  /** Progresso de gamificação; nulo enquanto carrega ou se a busca falhar. */
+  protected readonly progresso = signal<ProgressoGamificacao | null>(null);
 
   /** Primeiro nome do usuário, usado na saudação. */
   protected readonly primeiroNome = computed(() => {
@@ -102,6 +109,13 @@ export class Principal {
     this.agendamentoServico.listarMeus().subscribe({
       next: (lista) => this.meusAgendamentos.set(lista),
       error: () => this.meusAgendamentos.set([]),
+    });
+
+    // Nível e pontos do cliente. Uma falha aqui não atrapalha o resto do painel:
+    // o cartão simplesmente não aparece.
+    this.gamificacaoServico.meuProgresso().subscribe({
+      next: (dados) => this.progresso.set(dados),
+      error: () => this.progresso.set(null),
     });
 
     if (this.ehGestor()) {

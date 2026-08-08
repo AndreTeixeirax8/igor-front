@@ -8,6 +8,8 @@ export interface Servico {
   descricao: string | null;
   duracao_minutos: number;
   preco: number;
+  /** Pontos de gamificação que o cliente ganha ao concluir este serviço. */
+  pontos: number;
   ativo: boolean;
   criado_em: string;
   atualizado_em: string;
@@ -22,6 +24,7 @@ export interface DadosCriacaoServico {
   descricao?: string | null;
   duracao_minutos: number;
   preco: number;
+  pontos: number;
 }
 
 /**
@@ -33,5 +36,6 @@ export interface DadosAtualizacaoServico {
   descricao?: string | null;
   duracao_minutos?: number;
   preco?: number;
+  pontos?: number;
   ativo?: boolean;
 }

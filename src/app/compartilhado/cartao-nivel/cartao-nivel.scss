@@ -1,0 +1,103 @@
+/* Cartão de nível e XP. Todas as cores saem das variáveis do styles.scss para
+   funcionar nos dois temas. */
+
+.nivel {
+  padding: 1.25rem 1.5rem;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+}
+
+.nivel__topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.nivel__rotulo {
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave);
+}
+
+.nivel__nome {
+  margin-top: 0.15rem;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* O "Lv 3" ganha destaque dourado, como um selo de RPG. */
+.nivel__numero {
+  padding: 0.15rem 0.55rem;
+  background-color: var(--cor-principal-tenue);
+  border: 1px solid var(--cor-principal);
+  border-radius: 999px;
+  color: var(--cor-principal-texto);
+  font-family: var(--fonte-texto);
+  font-size: 0.875rem;
+  font-weight: 600;
+  /* Dígitos de largura fixa: o selo não muda de tamanho ao subir de nível. */
+  font-variant-numeric: tabular-nums;
+}
+
+.nivel__saldo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+}
+
+.nivel__saldo-valor {
+  font-family: var(--fonte-titulo);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--cor-principal-texto);
+  font-variant-numeric: tabular-nums;
+}
+
+.nivel__saldo-rotulo {
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave);
+}
+
+/* ----- Barra de progresso ----- */
+
+.nivel__barra {
+  height: 10px;
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.nivel__barra-preenchida {
+  height: 100%;
+  background-color: var(--cor-principal);
+  border-radius: 999px;
+  transition: width var(--transicao-padrao);
+}
+
+.nivel__legenda {
+  margin-top: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.nivel__legenda strong {
+  color: var(--cor-texto);
+}
+
+@media (max-width: 480px) {
+  .nivel__topo {
+    flex-direction: column;
+  }
+
+  .nivel__saldo {
+    align-items: flex-start;
+  }
+}

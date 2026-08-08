@@ -66,6 +66,10 @@
                 [ngModel]="editServicoDuracao()" (ngModelChange)="editServicoDuracao.set($event)" />
               <input class="campo__entrada campo--curto" type="number" step="0.01" placeholder="Preço" name="ePreco{{ servico.id }}"
                 [ngModel]="editServicoPreco()" (ngModelChange)="editServicoPreco.set($event)" />
+              <!-- Pontos da gamificação creditados ao concluir o atendimento. -->
+              <input class="campo__entrada campo--curto" type="number" min="0" placeholder="Pontos"
+                title="Pontos que o cliente ganha ao concluir este serviço" name="ePontos{{ servico.id }}"
+                [ngModel]="editServicoPontos()" (ngModelChange)="editServicoPontos.set($event)" />
               <button class="botao botao--principal" type="button" (click)="salvarEdicaoServico(servico.id)">
                 Salvar
               </button>
@@ -79,6 +83,7 @@
               <span [class.item__inativo]="!servico.ativo">{{ servico.nome }}</span>
               <span class="item__detalhe">
                 {{ servico.duracao_minutos }} min · R$ {{ servico.preco.toFixed(2) }}
+                · {{ servico.pontos }} {{ servico.pontos === 1 ? 'ponto' : 'pontos' }}
                 @if (!servico.ativo) { · <em>inativo</em> }
               </span>
             </div>
@@ -105,6 +110,10 @@
           [ngModel]="servicoDuracao()" (ngModelChange)="servicoDuracao.set($event)" />
         <input class="campo__entrada campo--curto" type="number" step="0.01" placeholder="Preço *" name="sPreco"
           [ngModel]="servicoPreco()" (ngModelChange)="servicoPreco.set($event)" />
+        <!-- Pontos da gamificação creditados ao concluir o atendimento. -->
+        <input class="campo__entrada campo--curto" type="number" min="0" placeholder="Pontos"
+          title="Pontos que o cliente ganha ao concluir este serviço" name="sPontos"
+          [ngModel]="servicoPontos()" (ngModelChange)="servicoPontos.set($event)" />
         <button class="botao botao--principal" type="submit">Adicionar</button>
       </div>
     </form>

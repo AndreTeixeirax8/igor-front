@@ -1,0 +1,46 @@
+<!-- Cartão de nível e XP do cliente. -->
+<section class="nivel">
+  <div class="nivel__topo">
+    <div>
+      <p class="nivel__rotulo">Seu nível</p>
+      <h3 class="nivel__nome">
+        <span class="nivel__numero">Lv {{ progresso().nivel }}</span>
+        {{ progresso().nome_nivel }}
+      </h3>
+    </div>
+
+    <div class="nivel__saldo">
+      <span class="nivel__saldo-valor">{{ progresso().saldo_pontos }}</span>
+      <span class="nivel__saldo-rotulo">
+        {{ progresso().saldo_pontos === 1 ? 'ponto' : 'pontos' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Barra de progresso até o próximo nível. -->
+  <div
+    class="nivel__barra"
+    role="progressbar"
+    [attr.aria-valuenow]="progresso().progresso_percentual"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-label]="'Progresso para o próximo nível'"
+  >
+    <div
+      class="nivel__barra-preenchida"
+      [style.width.%]="progresso().progresso_percentual"
+    ></div>
+  </div>
+
+  @if (progresso().eh_nivel_maximo) {
+    <p class="nivel__legenda">
+      Você chegou ao nível máximo. {{ progresso().xp_total }} XP acumulados!
+    </p>
+  } @else {
+    <p class="nivel__legenda">
+      {{ progresso().xp_no_nivel_atual }} / {{ progresso().xp_para_proximo_nivel }} XP
+      — faltam <strong>{{ progresso().xp_faltando }}</strong> para
+      {{ progresso().nome_proximo_nivel }}
+    </p>
+  }
+</section>

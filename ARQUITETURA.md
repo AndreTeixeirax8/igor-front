@@ -80,6 +80,7 @@ Antes de escrever qualquer coisa nova, confira se já existe:
 | `app-mensagem`      | Faixa de feedback erro/sucesso | `<app-mensagem tipo="erro" [texto]="mensagemErro()" />` |
 | `app-seletor-foto`  | Enviar/trocar foto (prévia + validação) | `<app-seletor-foto [urlAtual]="u.url_avatar" [nome]="u.nome" (mudou)="foto.set($event)" />` |
 | `app-logotipo`      | Logo da marca | `<app-logotipo [tamanho]="56" />` |
+| `app-cartao-nivel`  | Nível, barra de XP e saldo de pontos do cliente | `<app-cartao-nivel [progresso]="dadosProgresso" />` |
 | `app-layout-painel` | Casca das telas internas (menu + topo) | Usado pelas rotas internas |
 
 ### Utils (`nucleo/util/`)

@@ -43,4 +43,11 @@ export const configuracaoApi = {
     base: '/agendamentos',
     meus: '/agendamentos/meus',
   },
+
+  /** Rotas da gamificação (pontos, XP e níveis). */
+  rotasGamificacao: {
+    meuProgresso: '/gamificacao/meu-progresso',
+    meuExtrato: '/gamificacao/meu-extrato',
+    niveis: '/gamificacao/niveis',
+  },
 };

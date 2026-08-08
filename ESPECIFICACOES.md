@@ -143,7 +143,8 @@ completos** (corpo, respostas, permissões) estão em
 | Barbeiros        | `barbeiro.servico.ts`        | `GET /barbeiros?id_barbearia=`, `GET/{id}`, `POST`                          |
 | Serviços         | `servico.servico.ts`         | `GET /servicos?id_barbearia=`, `GET/{id}`, `POST`, `PUT /{id}` (editar)     |
 | Disponibilidades | `disponibilidade.servico.ts` | `GET /disponibilidades?id_barbeiro=`, `POST`, `DELETE /{id}`                |
-| Agendamentos     | `agendamento.servico.ts`     | `POST`, `GET /meus`, `GET /horarios-disponiveis`, `GET` (gestor), `PATCH /{id}/cancelar`, `PATCH /{id}/status` |
+| Agendamentos     | `agendamento.servico.ts`     | `POST`, `GET /meus`, `GET /horarios-disponiveis`, `GET` (gestor, **paginado**: `?pagina=&tamanho=&status=`), `PATCH /{id}/cancelar`, `PATCH /{id}/status` |
+| Gamificação      | `gamificacao.servico.ts`     | `GET /gamificacao/meu-progresso`, `GET /meu-extrato`, `GET /niveis` |
 
 > Permissões (resumo): leitura para qualquer autenticado; gestão de
 > barbearia/barbeiro/serviço/grade para **admin ou dono**; agenda e mudança de
@@ -216,9 +217,20 @@ Pré-requisitos: **Node 24+** e **Angular CLI 21** (já instalados nesta máquin
   atualizada para o topo refletir o novo nome/foto na hora. O e-mail (login) e o
   perfil aparecem apenas para leitura. Tem também o seletor de **tema
   (escuro/claro)**, aplicado na hora e lembrado no navegador.
-- Tela principal (painel) com identidade visual aplicada.
+- Tela principal (painel) com identidade visual aplicada e, no topo, o
+  **cartão de nível** (`app-cartao-nivel`): nível atual, barra de progresso até
+  o próximo e saldo de pontos. Os números vêm prontos de
+  `GET /gamificacao/meu-progresso` — o front **não** conhece a escada de níveis,
+  então mudar a curva no banco não exige alterar tela nenhuma. Se a chamada
+  falhar, o cartão simplesmente não aparece e o resto do painel funciona.
+  A explicação completa da gamificação está na **seção 7.8** de
+  [`back/ESPECIFICACOES-API.md`](../back/ESPECIFICACOES-API.md).
+- Na tela de **Gestão**, o cadastro/edição de serviço tem o campo **Pontos** —
+  é quanto o cliente ganha quando aquele serviço é concluído.
 - Tela de clientes (admin/dono): tabela com **busca e paginação feitas no
-  back-end** e **edição** inline. Admin edita qualquer um (inclusive o perfil);
+  back-end** e **edição** inline. **No celular (até 768px) a tabela vira cartões
+  empilhados**, com o botão "Editar" em largura total — antes ele era cortado
+  pelo `overflow: hidden` e ficava inalcançável. Admin edita qualquer um (inclusive o perfil);
   dono edita qualquer usuário (inclusive o próprio perfil e outros donos), menos
   admin, e não altera o campo perfil — regra também garantida no back. Na
   edição, clicar no **avatar** abre o seletor
